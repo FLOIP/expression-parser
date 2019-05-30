@@ -22,11 +22,15 @@
 }
 
 
-Start = ws* head:$Text* expr:(Expression* ws*/ Text*) { return {head:head, expr:expr} }
+Start = ws* head:$Text* expr:(ex:Expression* ws* {return ex}/ &Text* ) { return expr }
 
-Expression = Identifier exp:((mem:Member_Access {return {mem:mem}} / func:Method_Call {return {func:func}} / text:$Text+ {return {text:text}} ))* {return {exp:exp}}
-Member_Access = OpenParen? lhs:$valid_variable_characters+'.'rhs:$valid_variable_characters+ CloseParen? {return {loc: location(), lhs:lhs, rhs:rhs}}
-Method_Call = OpenParen exp:valid_expression_characters+ (MethodCall / CloseParen) {return "Hello"}
+Expression = Identifier OpenParen? exp:((func:Method_Call {return {func:func}} / mem:Member_Access {return {var:mem}} / text:$Text+ {return {text:text}} ) CloseParen?)* {return {exp:exp}}
+
+// Method_Call = OpenParen exp:valid_expression_characters+ (MemberAccess / CloseParen) {return "Hello"}
+Method_Call = call:$valid_expression_characters+ next:(OpenParen inner:(Member_Access / Method_Call) CloseParen {return {...inner}}) {return {call:call, next:next}}
+
+// Member access -- contact.name | contact
+Member_Access = lhs:$AtomicExpression+ rhs:('.' inner:$AtomicExpression+ {return inner})? {return {type: 'MemberAccess', obj: lhs, key:rhs, loc: location()}}
 
 
 /*Block = lhs:Text? ex:Expression* rhs:Text?*/
@@ -60,5 +64,5 @@ ws "whitespace"
   = [ \t\n\r]
 char "character" = [^ \t\n\r]*
 valid_variable_characters = [a-zA-Z0-9_]
-valid_expression_characters = [A-Z]
+valid_expression_characters = [A-Z_]
               
