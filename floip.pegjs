@@ -22,35 +22,30 @@
 }
 
 
-Start = ws* Text* ex:(ex:Expression ws* {return ex})* Text* {return ex}
 
-Expression = Identifier OpenParen? exp:((func:Method_Call {return {type: "func", data:func}} / mem:Member_Access {return {type: "obj", data:mem}} / $Text+ {}) CloseParen?)* {return {exp:exp}}
+Block = expr:(Escaped_Identifier / ex:Expression / $Text+ {} )* {
+    return expr
+}
 
-// Method_Call looks like @(SOME_METHOD(arguments))
-Method_Call = call:$valid_expression_characters+ args:(OpenParen inner:Method_Args* CloseParen {return {inner}}) {return {call:call, args:args.inner}}
+// An expression can look like -- @(FUNC_CALL(args/expression)) / @(member.access) / @(member) / @member.access / @member
+Expression = ws* Text* Identifier OpenParen? ex:(Function / Member_Access) CloseParen? ws* {return ex}
 
-Method_Args = arg:(Method_Call / Member_Access) {return arg} / (',' ws*) {}
+// Function looks like @(SOME_METHOD(arguments))
+Function = call:$valid_expression_characters+ args:(OpenParen inner:Function_Args* CloseParen {return {inner}}) {return {type: 'FUNCTION', call:call, loc: location(), args:args.inner}}
+
+Function_Args = arg:(Function / Member_Access) {return arg} / (',' ws*) {}
 // Member access -- contact.name | contact
-Member_Access = lhs:$AtomicExpression+ rhs:('.' inner:$AtomicExpression+ {return inner})? {return {type: 'MemberAccess', obj: lhs, key:rhs, loc: location()}}
+Member_Access = lhs:$AtomicExpression+ rhs:('.' inner:$AtomicExpression+ {return inner})? {return {type: 'ACCESS', obj: lhs, key:rhs, loc: location()}}
 
 
-/*Block = lhs:Text? ex:Expression* rhs:Text?*/
-
-Text = [^@]
-
-/*Expression = '@' stuff:(ParenExpression / VariableExpression){return stuff}
-VariableExpression = Text [^ \t\n\r]*
-ParenExpression = OpenParen Text CloseParen*/
 OpenParen = '('
 CloseParen = ')'
-
-Identifier = '@'
+Identifier = '@' 
+Escaped_Identifier = Identifier Identifier {return {type: 'ESCAPE', loc: location()}}
 AtomicExpression = valid_variable_characters
-
-
+Text = [^@]
 ws "whitespace"
   = [ \t\n\r]
-char "character" = [^ \t\n\r]*
 valid_variable_characters = [a-zA-Z0-9_]
 valid_expression_characters = [A-Z_]
 valid_math_characters = [-+*/]
