@@ -22,9 +22,9 @@
 }
 
 
-Start = ws* head:$Text* expr:(ex:Expression* ws* {return ex}/ &Text* ) { return expr }
+Start = ws* Text* ex:(ex:Expression ws* {return ex})* Text* {return ex}
 
-Expression = Identifier OpenParen? exp:((func:Method_Call {return {func:func}} / mem:Member_Access {return {var:mem}} / text:$Text+ {return {text:text}} ) CloseParen?)* {return {exp:exp}}
+Expression = Identifier OpenParen? exp:((func:Method_Call {return {type: "func", data:func}} / mem:Member_Access {return {type: "obj", data:mem}} / $Text+ {}) CloseParen?)* {return {exp:exp}}
 
 // Method_Call looks like @(SOME_METHOD(arguments))
 Method_Call = call:$valid_expression_characters+ args:(OpenParen inner:Method_Args* CloseParen {return {inner}}) {return {call:call, args:args.inner}}
@@ -45,9 +45,6 @@ OpenParen = '('
 CloseParen = ')'
 
 Identifier = '@'
-Expr = Identifier exp:(MethodCall* / MemberAccess*)  {return exp}
-MethodCall = (OpenParen $AtomicExpression CloseParen)
-MemberAccess = lhs:AtomicExpression+ rhs:('.' inner:AtomicExpression+ {return inner}) {return {type: 'MemberAccess', lhs: lhs, rhs:rhs}}
 AtomicExpression = valid_variable_characters
 
 
