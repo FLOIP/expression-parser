@@ -33,7 +33,8 @@ Expression = ws* Text* Identifier OpenParen? ex:(Function / Member_Access) Close
 // Function looks like @(SOME_METHOD(arguments))
 Function = call:$valid_expression_characters+ args:(OpenParen inner:Function_Args* CloseParen {return {inner}}) {return {type: 'FUNCTION', call:call, loc: location(), args:args.inner}}
 
-Function_Args = arg:(Function / Member_Access) {return arg} / (',' ws*) {}
+Function_Args = arg:(arg:Function Arg_Delimiter? {return arg} / arg:Member_Access Arg_Delimiter? {return arg}) {return arg}
+
 // Member access -- contact.name | contact
 Member_Access = lhs:$AtomicExpression+ rhs:('.' inner:$AtomicExpression+ {return inner})? {return {type: 'ACCESS', obj: lhs, key:rhs, loc: location()}}
 
@@ -41,6 +42,7 @@ Member_Access = lhs:$AtomicExpression+ rhs:('.' inner:$AtomicExpression+ {return
 OpenParen = '('
 CloseParen = ')'
 Identifier = '@' 
+Arg_Delimiter = (',' ws*)
 Escaped_Identifier = Identifier Identifier {return {type: 'ESCAPE', loc: location()}}
 AtomicExpression = valid_variable_characters
 Text = [^@]
