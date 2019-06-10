@@ -48,14 +48,14 @@ Expression = ws* Text* Identifier OpenParen? ex:(Function / Math / Logic / Membe
 // Function looks like @(SOME_METHOD(arguments))
 Function = call:$valid_expression_characters+ OpenParen args:( Function_Args* ) CloseParen {return new method(call, args, location())}
 
-Function_Args = arg:(arg:Function Arg_Delimiter? {return arg} / arg:(Math / Logic / Member_Access / $Chars+) Arg_Delimiter? {return arg}) {return arg}
+Function_Args = arg:(arg:Function Arg_Delimiter? {return arg} / arg:(Math / Logic / Member_Access / $[a-zA-Z0-9 ]+) Arg_Delimiter? {return arg}) {return arg}
 
 // Member access -- contact.name | contact
 Member_Access = lhs:$AtomicExpression+ rhs:('.' inner:$AtomicExpression+ {return inner})? {return new member(lhs, rhs, location())}
 
 // Logic
-Math = lhs:(Member_Access / $numbers+) ws+ op:$math_chars ws+ rhs:(Member_Access / $numbers+) ws* {return new math(lhs, rhs, op, location())}
-Logic = lhs:(Member_Access / $numbers+) ws+ op:$logic_chars ws+ rhs:(Member_Access / $numbers+) ws* {return new logic(lhs, rhs, op, location())}
+Math = lhs:(Member_Access / $numbers+) ws* op:$math_chars ws+ rhs:(Member_Access / $numbers+) ws* {return new math(lhs, rhs, op, location())}
+Logic = lhs:(Member_Access / $numbers+) ws* op:$logic_chars ws+ rhs:(Member_Access / $numbers+) ws* {return new logic(lhs, rhs, op, location())}
 
 
 OpenParen = '('
@@ -69,10 +69,10 @@ Chars = [a-zA-Z0-9]
 ws "whitespace"
   = [ \t\n\r]
 valid_variable_characters = [a-zA-Z_]
-valid_expression_characters = [A-Z_]
+valid_expression_characters = valid_variable_characters
 
 logic_chars = [=<>!]
 
-math_chars = [-+*/]
+math_chars = [-+*\^/]
 numbers = [0-9.]
 valid_logic_characters = [=<>!]
