@@ -16,9 +16,9 @@
     },
     "autoload": {
         "psr-4": {
-            "Floip\\": "src/php/",
-            "Floip\\Parser\\": "dist/"
-        }
+            "Floip\\": "src/php/"
+        },
+        "classmap": ["dist/"]
     },
     "autoload-dev": {
         "psr-4": {

@@ -261,21 +261,21 @@ class Parser {
         return $ex;
       }
     private function peg_f3($call, $args) {
-        return _method(($call, $args, $this->location()))
+        return $this->_method($call, $args, $this->location());
       }
     private function peg_f4($arg) { return $arg;}
     private function peg_f5($lhs, $inner) { return $inner;}
     private function peg_f6($lhs, $rhs) {
-        return _member($lhs, $rhs, $this->location());
+        return $this->_member($lhs, $rhs, $this->location());
       }
     private function peg_f7($lhs, $op, $rhs) {
-        return _math($lhs, $rhs, $op, $this->location());
+        return $this->_math($lhs, $rhs, $op, $this->location());
       }
     private function peg_f8($lhs, $op, $rhs) {
-        return _logic($lhs, $rhs, $op, $this->location());
+        return $this->_logic($lhs, $rhs, $op, $this->location());
       }
     private function peg_f9() {
-        return _escape($this->location());
+        return $this->_escape($this->location());
       }
 
     private function peg_parseBlock() {
@@ -854,6 +854,28 @@ class Parser {
       return $s0;
     }
 
+    private function peg_parseEscaped_Identifier() {
+
+      $s0 = $this->peg_currPos;
+      $s1 = $this->peg_parseIdentifier();
+      if ($s1 !== $this->peg_FAILED) {
+        $s2 = $this->peg_parseIdentifier();
+        if ($s2 !== $this->peg_FAILED) {
+          $this->peg_reportedPos = $s0;
+          $s1 = $this->peg_f9();
+          $s0 = $s1;
+        } else {
+          $this->peg_currPos = $s0;
+          $s0 = $this->peg_FAILED;
+        }
+      } else {
+        $this->peg_currPos = $s0;
+        $s0 = $this->peg_FAILED;
+      }
+
+      return $s0;
+    }
+
     private function peg_parseOpenParen() {
 
       if ($this->input_substr($this->peg_currPos, 1) === $this->peg_c2) {
@@ -920,28 +942,6 @@ class Parser {
         }
         if ($s2 !== $this->peg_FAILED) {
           $s1 = array($s1, $s2);
-          $s0 = $s1;
-        } else {
-          $this->peg_currPos = $s0;
-          $s0 = $this->peg_FAILED;
-        }
-      } else {
-        $this->peg_currPos = $s0;
-        $s0 = $this->peg_FAILED;
-      }
-
-      return $s0;
-    }
-
-    private function peg_parseEscaped_Identifier() {
-
-      $s0 = $this->peg_currPos;
-      $s1 = $this->peg_parseIdentifier();
-      if ($s1 !== $this->peg_FAILED) {
-        $s2 = $this->peg_parseIdentifier();
-        if ($s2 !== $this->peg_FAILED) {
-          $this->peg_reportedPos = $s0;
-          $s1 = $this->peg_f9();
           $s0 = $s1;
         } else {
           $this->peg_currPos = $s0;
@@ -1123,25 +1123,25 @@ class Parser {
 
     /* BEGIN initializer code */
 
-      function _member($key, $value, $location) {
+      $this->_member = function($key, $value, $location) {
         return (object)[
           'type' => 'MEMBER',
           'key' => $key,
           'value' => $value,
           'location' => $location
         ];
-      }
+      };
       
-      function _method($key, $call, $args, $location) {
+      $this->_method = function($call, $args, $location) {
         return (object)[
           'type' => 'MEMBER',
           'call' => $call,
           'args' => $args,
           'location' => $location
         ];
-      }
+      };
       
-      function _math($lhs, $rhs, $operator, $location) {
+      $this->_math = function($lhs, $rhs, $operator, $location) {
         return (object)[
           'type' => 'MATH',
           'rhs' => $rhs,
@@ -1149,9 +1149,9 @@ class Parser {
           'operator' => $operator,
           'location' => $location
         ];
-      }
+      };
       
-      function _logic($lhs, $rhs, $operator, $location) {
+      $this->_logic = function($lhs, $rhs, $operator, $location) {
         return (object)[
           'type' => 'LOGIC',
           'rhs' => $rhs,
@@ -1159,14 +1159,14 @@ class Parser {
           'operator' => $operator,
           'location' => $location
         ];
-      }
+      };
       
-        function _escape($location) {
+        $this->_escape = function($location) {
           return (object)[
             'type' => 'ESCAPE',
             'location' => $location
           ];
-        }
+        };
       
     /* END initializer code */
 
