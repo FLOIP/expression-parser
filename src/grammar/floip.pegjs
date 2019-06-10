@@ -159,7 +159,5 @@ valid_variable_characters = [a-zA-Z_]
 valid_expression_characters = valid_variable_characters
 
 logic_chars = [=<>!]
-
 math_chars = [-+*\^/]
 numbers = [0-9.]
-valid_logic_characters = [=<>!]
