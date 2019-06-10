@@ -9,15 +9,15 @@
     }
   }
   /** <?php
-  $member = function($key, $value, $location) {
+  function _member($key, $value, $location) {
     return (object)[
       'type' => 'MEMBER',
-      'key: => $key,
+      'key' => $key,
       'value' => $value,
       'location' => $location
     ];
   }
-  */
+  ?> **/
   var method = function(call, args, location) {
     return {
       type: 'METHOD',
@@ -27,15 +27,15 @@
     }
   }
   /** <?php
-  $method = function($key, $call, $args, $location) {
+  function _method($key, $call, $args, $location) {
     return (object)[
       'type' => 'MEMBER',
-      'call: => $key,
+      'call' => $call,
       'args' => $args,
       'location' => $location
     ];
   }
-  */
+  ?> **/
   var math = function(lhs, rhs, operator, location) {
     return {
       type: 'MATH',
@@ -46,16 +46,16 @@
     }
   }
   /** <?php
-  $math = function($lhs, $rhs, $operator, $location) {
+  function _math($lhs, $rhs, $operator, $location) {
     return (object)[
       'type' => 'MATH',
-      'rhs: => $rhs,
+      'rhs' => $rhs,
       'lhs' => $lhs,
-      'operator' => 'operator',
+      'operator' => $operator,
       'location' => $location
     ];
   }
-  */
+  ?> **/
   var logic = function(lhs, rhs, operator, location) {
     return {
       type: 'LOGIC',
@@ -66,43 +66,90 @@
     }
   }
   /** <?php
-  $logic = function($lhs, $rhs, $operator, $location) {
+  function _logic($lhs, $rhs, $operator, $location) {
     return (object)[
       'type' => 'LOGIC',
-      'rhs: => $rhs,
+      'rhs' => $rhs,
       'lhs' => $lhs,
-      'operator' => 'operator',
+      'operator' => $operator,
       'location' => $location
     ];
   }
-  */
+  ?> **/
+  var escape = function(location) {
+    return {
+      type: 'ESCAPE',
+      location: location
+    }
+  }
+  /** <?php
+    function _escape($location) {
+      return (object)[
+        'type' => 'ESCAPE',
+        'location' => $location
+      ];
+    }
+  ?> **/
 }
 
 Block = expr:(Escaped_Identifier / ex:Expression / $Text+ {} )* {
     return expr
+    /** <?php
+      return $expr;
+    ?> **/
 }
 
 // An expression can look like -- @(FUNC_CALL(args/expression)) / @(member.access) / @(member) / @member.access / @member
-Expression = ws* Text* Identifier OpenParen? ex:(Function / Math / Logic / Member_Access) CloseParen? ws* {return ex}
+Expression = ws* Text* Identifier OpenParen? ex:(Function / Math / Logic / Member_Access) CloseParen? ws* {
+  return ex
+  /** <?php
+    return $ex;
+  ?> **/
+}
 
 // Function looks like @(SOME_METHOD(arguments))
-Function = call:$valid_expression_characters+ OpenParen args:( Function_Args* ) CloseParen {return new method(call, args, location())}
+Function = call:$valid_expression_characters+ OpenParen args:( Function_Args* ) CloseParen {
+  return new method(call, args, location())
+  /** <?php
+    return _method(($call, $args, $this->location()))
+  ?> **/
+  }
 
-Function_Args = arg:(arg:Function Arg_Delimiter? {return arg} / arg:(Math / Logic / Member_Access / $chars+) Arg_Delimiter? {return arg}) {return arg}
+Function_Args = arg:(arg:Function Arg_Delimiter? {return arg /**<?php return $arg;?> **/} / arg:(Math / Logic / Member_Access / $chars+) Arg_Delimiter? {return arg /**<?php return $arg;?> **/}) {return arg /**<?php return $arg;?> **/}
 
 // Member access -- contact.name | contact
-Member_Access = lhs:$AtomicExpression+ rhs:('.' inner:$AtomicExpression+ {return inner})? {return new member(lhs, rhs, location())}
+Member_Access = lhs:$AtomicExpression+ rhs:('.' inner:$AtomicExpression+ {return inner /**<?php return $inner;?> **/})? {
+  return new member(lhs, rhs, location())
+  /** <?php
+    return _member($lhs, $rhs, $this->location());
+  ?> **/
+}
 
 // Logic
-Math = lhs:(Member_Access / $numbers+) ws* op:$math_chars ws+ rhs:(Member_Access / $numbers+) ws* {return new math(lhs, rhs, op, location())}
-Logic = lhs:(Member_Access / $numbers+) ws* op:$logic_chars ws+ rhs:(Member_Access / $numbers+) ws* {return new logic(lhs, rhs, op, location())}
+Math = lhs:(Member_Access / $numbers+) ws* op:$math_chars ws+ rhs:(Member_Access / $numbers+) ws* {
+  return new math(lhs, rhs, op, location())
+  /** <?php
+    return _math($lhs, $rhs, $op, $this->location());
+  ?> **/
+}
+Logic = lhs:(Member_Access / $numbers+) ws* op:$logic_chars ws+ rhs:(Member_Access / $numbers+) ws* {
+  return new logic(lhs, rhs, op, location())
+  /** <?php
+    return _logic($lhs, $rhs, $op, $this->location());
+  ?> **/
+}
 
 
 OpenParen = '('
 CloseParen = ')'
 Identifier = '@' 
 Arg_Delimiter = (',' ws*)
-Escaped_Identifier = Identifier Identifier {return {type: 'ESCAPE', loc: location()}}
+Escaped_Identifier = Identifier Identifier {
+  return new escape(location())
+  /** <?php
+    return _escape($this->location());
+  ?> **/
+}
 AtomicExpression = valid_variable_characters
 Text = [^@]
 chars = [a-zA-Z0-9 ]
