@@ -1,0 +1,31 @@
+{
+    "name": "kyle/floip-eval",
+    "authors": [
+        {
+            "name": "Kyle Seifert",
+            "email": "kyle.seifert@viamo.io"
+        }
+    ],
+    "config": {
+        "platform": {
+            "php": "5.5.9"
+        }
+    },
+    "require": {
+        "nesbot/carbon": "^1.38"
+    },
+    "autoload": {
+        "psr-4": {
+            "Floip\\": "src/php/",
+            "Floip\\Parser\\": "dist/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^4.8"
+    }
+}

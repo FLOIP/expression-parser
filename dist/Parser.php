@@ -5,18 +5,18 @@
  * http://pegjs.majda.cz/
  */
 
-namespace PhpPegJs;
+namespace Floip;
 
 /* Useful functions: */
 
 /* chr_unicode - get unicode character from its char code */
-if (!function_exists("PhpPegJs\\chr_unicode")) {
+if (!function_exists("Floip\\chr_unicode")) {
     function chr_unicode($code) {
         return html_entity_decode("&#$code;", ENT_QUOTES, "UTF-8");
     }
 }
 /* ord_unicode - get unicode char code from string */
-if (!function_exists("PhpPegJs\\ord_unicode")) {
+if (!function_exists("Floip\\ord_unicode")) {
     function ord_unicode($character) {
         if (strlen($character) === 1) {
             return ord($character);
@@ -32,7 +32,7 @@ if (!function_exists("PhpPegJs\\ord_unicode")) {
     }
 }
 /* peg_regex_test - multibyte regex test */
-if (!function_exists("PhpPegJs\\peg_regex_test")) {
+if (!function_exists("Floip\\peg_regex_test")) {
     function peg_regex_test($pattern, $string) {
         if (substr($pattern, -1) == "i") {
             return mb_eregi(substr($pattern, 1, -2), $string);
@@ -43,7 +43,7 @@ if (!function_exists("PhpPegJs\\peg_regex_test")) {
 }
 
 /* Syntax error exception */
-if (!class_exists("PhpPegJs\\SyntaxError", false)) {
+if (!class_exists("Floip\\SyntaxError", false)) {
     class SyntaxError extends \Exception {
         public $expected;
         public $found;
