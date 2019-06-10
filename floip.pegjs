@@ -43,20 +43,20 @@ Block = expr:(Escaped_Identifier / ex:Expression / $Text+ {} )* {
 // todo -- logic / math expressions @(contact.age + 2) @(contact.age <= 18)
 
 // An expression can look like -- @(FUNC_CALL(args/expression)) / @(member.access) / @(member) / @member.access / @member
-Expression = ws* Text* Identifier OpenParen? ex:(Function / Math / Member_Access) CloseParen? ws* {return ex}
+Expression = ws* Text* Identifier OpenParen? ex:(Function / Math / Logic / Member_Access) CloseParen? ws* {return ex}
 
 // Function looks like @(SOME_METHOD(arguments))
-Function = call:$valid_expression_characters+ args:(OpenParen inner:Function_Args* CloseParen {return {inner}}) {return new method(call, args, location())}
+Function = call:$valid_expression_characters+ OpenParen args:( Function_Args* ) CloseParen {return new method(call, args, location())}
 
-Function_Args = arg:(arg:Function Arg_Delimiter? {return arg} / arg:(Math / Member_Access) Arg_Delimiter? {return arg}) {return arg}
+Function_Args = arg:(arg:Function Arg_Delimiter? {return arg} / arg:(Math / Logic / Member_Access) Arg_Delimiter? {return arg}) {return arg}
+
 
 // Member access -- contact.name | contact
 Member_Access = lhs:$AtomicExpression+ rhs:('.' inner:$AtomicExpression+ {return inner})? {return new member(lhs, rhs, location())}
 
 // Logic
 Math = lhs:(Member_Access / $not_math_chars+) ws+ op:$math_chars ws+ rhs:(Member_Access / $not_math_chars+) ws* {return new math(lhs, rhs, op, location())}
-Comparison = .+
-
+Logic = lhs:(Member_Access / $not_logic_chars+) ws+ op:$logic_chars ws+ rhs:(Member_Access / $not_logic_chars+) ws* {return new logic(lhs, rhs, op, location())}
 
 
 OpenParen = '('
@@ -70,6 +70,9 @@ ws "whitespace"
   = [ \t\n\r]
 valid_variable_characters = [a-zA-Z_]
 valid_expression_characters = [A-Z_]
+
+logic_chars = [=<>!]
+not_logic_chars = [^=<>!()]
 math_chars = [-+*/]
 not_math_chars = [^-+*/()]
 valid_logic_characters = [=<>!]
