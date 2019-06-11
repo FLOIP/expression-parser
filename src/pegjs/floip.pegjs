@@ -10,7 +10,7 @@
   }
   /** <?php
   $this->_member = function($key, $value) {
-    return (object)[
+    return [
       'type' => 'MEMBER',
       'key' => $key,
       'value' => $value,
@@ -28,8 +28,8 @@
   }
   /** <?php
   $this->_method = function($call, $args) {
-    return (object)[
-      'type' => 'MEMBER',
+    return [
+      'type' => 'METHOD',
       'call' => $call,
       'args' => $args,
       'location' => call_user_func($this->_location)
@@ -47,7 +47,7 @@
   }
   /** <?php
   $this->_math = function($lhs, $rhs, $operator) {
-    return (object)[
+    return [
       'type' => 'MATH',
       'rhs' => $rhs,
       'lhs' => $lhs,
@@ -67,7 +67,7 @@
   }
   /** <?php
   $this->_logic = function($lhs, $rhs, $operator) {
-    return (object)[
+    return [
       'type' => 'LOGIC',
       'rhs' => $rhs,
       'lhs' => $lhs,
@@ -84,7 +84,7 @@
   }
   /** <?php
     $this->_escape = function($location) {
-      return (object)[
+      return [
         'type' => 'ESCAPE',
         'location' => call_user_func($this->_location)
       ];
@@ -93,7 +93,7 @@
 
   /** <?php
     $_location = function() {
-      return (object)[
+      return [
         'offset' => $this->offset(),
         'line' => $this->line(),
         'column' => $this->column()
@@ -127,7 +127,7 @@ Function = call:$valid_expression_characters+ OpenParen args:( Function_Args* ) 
   ?> **/
   }
 
-Function_Args = arg:(arg:Function Arg_Delimiter? {return arg /**<?php return $arg;?> **/} / arg:(Math / Logic / Member_Access / $chars+) Arg_Delimiter? {return arg /**<?php return $arg;?> **/}) {return arg /**<?php return $arg;?> **/}
+Function_Args = arg:(arg:Function Arg_Delimiter? {return arg /**<?php return $arg;?> **/} / arg:(Math / Logic / Member_Access / '"' ch:$chars+ '"' {return ch /**<?php return $ch; ?>**/} / $numbers+) Arg_Delimiter? {return arg /**<?php return $arg;?> **/}) {return arg /**<?php return $arg;?> **/}
 
 // Member access -- contact.name | contact
 Member_Access = lhs:$AtomicExpression+ rhs:('.' inner:$AtomicExpression+ {return inner /**<?php return $inner;?> **/})? {
