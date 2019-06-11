@@ -97,7 +97,7 @@ class ParserTest extends TestCase
     /**
      * @dataProvider simpleMathProvider
      */
-    public function testParserParsesSimpleMathExpresion($string, $lhs, $rhs, $operator, array $location)
+    public function testParserParsesSimpleMathExpression($string, $lhs, $rhs, $operator, array $location)
     {
         $ast = $this->parser->parse($string);
         $this->assertNotEmpty($ast);
@@ -115,6 +115,29 @@ class ParserTest extends TestCase
         $node = $ast[0];
         $expected = compact('lhs', 'rhs');
         $this->assertArraySubset($expected, $node);
+    }
+
+    /**
+     * @dataProvider simpleLogicProvider
+     */
+    public function testParserParsesSimpleLogicExpression($string, $lhs, $rhs, $operator, array $location)
+    {
+        $ast = $this->parser->parse($string);
+        $this->assertNotEmpty($ast);
+        $node = $ast[0];
+        $expected = ['type' => 'LOGIC', 'lhs' => $lhs, 'rhs' => $rhs, 'operator' => $operator, 'location' => $location];
+        $this->assertArraySubset($expected, $node);
+    }
+
+    /**
+     * @dataProvider logicWithExpressionOperandsProvider
+     */
+    public function testParserParsesLogicWithExpressionsAsOperands($string, $lhs, $rhs, $operator)
+    {
+        $ast = $this->parser->parse($string);
+        $node = $ast[0];
+        $expected = compact('lhs', 'rhs');
+        $this->assertArraySubset($expected, $node);        
     }
 
     public function plainStringProvider()
@@ -197,6 +220,28 @@ class ParserTest extends TestCase
             ['@(some.number - other.number) is a number', ['type' => 'MEMBER'], ['type' => 'MEMBER'], '-'],
             ['@(SOMEFUNC() + OTHERFUNC())', ['type' => 'METHOD'], ['type' => 'METHOD'], '+'],
             ['@(SOMEFUNC() / some.member)', ['type' => 'METHOD'], ['type' => 'MEMBER'], '/'],
+        ];
+    }
+
+    public function simpleLogicProvider()
+    {
+        // after string, params are lhs, rhs, operator
+        // last param is location: offset / line / column
+        return [
+            ['Some logic is @(1 < 2)', 1, 2, '<', $this->buildLocation([14, 1, 15], [22, 1, 23])],
+            ['@(0 = 0) no spaces', 0, 0, '=', $this->buildLocation([0, 1, 1], [8, 1, 9])],
+            ['@(6 >= 2) is true', 6, 2, '>=', $this->buildLocation([0, 1, 1], [9, 1, 10])],
+            ['@(7 <= 77) is false', 7, 77, '<=', $this->buildLocation([0, 1, 1], [10, 1, 11])],
+        ];        
+    }
+
+    public function logicWithExpressionOperandsProvider()
+    {
+        // lhs, rhs, operator
+        return [
+            ['@(some.number > other.number) is a number', ['type' => 'MEMBER'], ['type' => 'MEMBER'], '-'],
+            ['@(SOMEFUNC() = OTHERFUNC())', ['type' => 'METHOD'], ['type' => 'METHOD'], '+'],
+            ['@(SOMEFUNC() <= some.member)', ['type' => 'METHOD'], ['type' => 'MEMBER'], '/'],
         ];
     }
 }
