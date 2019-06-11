@@ -125,9 +125,14 @@ Block = expr:(Escaped_Identifier / ex:Expression / $Text+ {} )* {
 }
 
 // An expression can look like -- @(FUNC_CALL(args/expression)) / @(member.access) / @(member) / @member.access / @member
-Expression = ws* Text* Identifier OpenParen? ex:(Function / Math / Logic / Member_Access) CloseParen? ws* {
+Expression = ws* Text* id:(Identifier {return location() /**<?php return call_user_func($this->_location); ?>**/}) OpenParen? ex:(Function / Math / Logic / Member_Access) cp:(CloseParen? {return location() /**<?php return call_user_func($this->_location); ?>**/}) ws* {
+  // we want the location to begin with the identifier for a given expression
+  ex.location.start = id.start;
+  // we want the location to end with the closing paren (or where it would be if absent)
+  ex.location.end = cp.end;
   return ex
   /** <?php
+    $ex['location'] = ['start' => $id['start'], 'end' => $cp['end']];
     return $ex;
   ?> **/
 }

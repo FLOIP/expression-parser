@@ -121,11 +121,11 @@ class ParserTest extends TestCase
     {
         // last element is location start/end: offset / line / column
         return [
-            ['Hello @contact.name', 'contact', 'name', $this->buildLocation([7,1,8], [19,1,20])],
-            ['Hello @contact', 'contact', null, $this->buildLocation([7, 1, 8], [14, 1, 15])],
-            ['@person.lastname you are special', 'person', 'lastname', $this->buildLocation([1, 1, 2], [16, 1, 17])],
-            ['Hello @(contact.name)', 'contact', 'name', $this->buildLocation([8, 1, 9], [20, 1, 21])],
-            ['Hello @(contact)', 'contact', null, $this->buildLocation([8, 1, 9], [15, 1, 16])],
+            ['Hello @contact.name', 'contact', 'name', $this->buildLocation([6, 1, 7], [19, 1, 20])],
+            ['Hello @contact', 'contact', null, $this->buildLocation([6, 1, 7], [14, 1, 15])],
+            ['@person.lastname you are special', 'person', 'lastname', $this->buildLocation([0, 1, 1], [16, 1, 17])],
+            ['Hello @(contact.name)', 'contact', 'name', $this->buildLocation([6, 1, 7], [21, 1, 22])],
+            ['Hello @(contact)', 'contact', null, $this->buildLocation([6, 1, 7], [16, 1, 17])],
         ];
     }
 
@@ -141,9 +141,9 @@ class ParserTest extends TestCase
     public function simpleFunctionProvider()
     {
         return [
-            ['The date is @(NOW())', 'NOW', [], $this->buildLocation([14, 1, 15], [19, 1, 20])],
-            ['@(DATE(2012, 12, 25)) was a holiday.', 'DATE', [2012, 12, 25], $this->buildLocation([1, 1, 2], [20, 1, 21])],
-            ['This @(upper("hello")) is a function.', 'upper', ["hello"], $this->buildLocation([7, 1, 8], [21, 1, 22])],
+            ['The date is @(NOW())', 'NOW', [], $this->buildLocation([12, 1, 13], [20, 1, 21])],
+            ['@(DATE(2012, 12, 25)) was a holiday.', 'DATE', [2012, 12, 25], $this->buildLocation([0, 1, 1], [21, 1, 22])],
+            ['This @(upper("hello")) is a function.', 'upper', ["hello"], $this->buildLocation([5, 1, 6], [22, 1, 23])],
         ];
     }
 
@@ -172,8 +172,8 @@ class ParserTest extends TestCase
         // after string, params are lhs, rhs, operator
         // last param is location: offset / line / column
         return [
-            ['Some math is @(1 + 2)', 1, 2, '+', $this->buildLocation([15, 1, 16], [20, 1, 21])],
-            ['@(4 - 3) no spaces', 4, 3, '-', $this->buildLocation([2, 1, 3], [7, 1, 8])],
+            ['Some math is @(1 + 2)', 1, 2, '+', $this->buildLocation([13, 1, 14], [21, 1, 22])],
+            ['@(4 - 3) no spaces', 4, 3, '-', $this->buildLocation([0, 1, 1], [8, 1, 9])],
         ];
     }
 }
