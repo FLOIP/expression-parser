@@ -125,7 +125,7 @@ Block = expr:(Escaped_Identifier / ex:Expression / $Text+ {} )* {
 }
 
 // An expression can look like -- @(FUNC_CALL(args/expression)) / @(member.access) / @(member) / @member.access / @member
-Expression = ws* Text* id:(Identifier {return location() /**<?php return call_user_func($this->_location); ?>**/}) OpenParen? ex:(Function / Math / Logic / Member_Access) cp:(CloseParen? {return location() /**<?php return call_user_func($this->_location); ?>**/}) ws* {
+Expression = ws* Text* id:(Identifier {return location() /**<?php return call_user_func($this->_location); ?>**/}) OpenParen? ex:Expression_Types cp:(CloseParen? {return location() /**<?php return call_user_func($this->_location); ?>**/}) ws* {
   // we want the location to begin with the identifier for a given expression
   ex.location.start = id.start;
   // we want the location to end with the closing paren (or where it would be if absent)
@@ -136,6 +136,9 @@ Expression = ws* Text* id:(Identifier {return location() /**<?php return call_us
     return $ex;
   ?> **/
 }
+
+// Precedence is important here
+Expression_Types = Math / Logic / Function / Member_Access
 
 // Function looks like @(SOME_METHOD(arguments))
 Function = call:$valid_expression_characters+ OpenParen args:( Function_Args* ) CloseParen {
@@ -156,13 +159,13 @@ Member_Access = lhs:$AtomicExpression+ rhs:('.' inner:$AtomicExpression+ {return
 }
 
 // Logic
-Math = lhs:(Member_Access / $numbers+) ws* op:$math_chars ws+ rhs:(Member_Access / $numbers+) ws* {
+Math = lhs:(Function / Member_Access / $numbers+) ws* op:$math_chars ws+ rhs:(Function / Member_Access / $numbers+) ws* {
   return new math(lhs, rhs, op, location())
   /** <?php
     return call_user_func_array($this->_math, [$lhs, $rhs, $op]);
   ?> **/
 }
-Logic = lhs:(Member_Access / $numbers+) ws* op:$logic_chars ws+ rhs:(Member_Access / $numbers+) ws* {
+Logic = lhs:(Function / Member_Access / $numbers+) ws* op:$logic_chars ws+ rhs:(Function / Member_Access / $numbers+) ws* {
   return new logic(lhs, rhs, op, location())
   /** <?php
     return call_user_func_array($this->_logic, [$lhs, $rhs, $op]);

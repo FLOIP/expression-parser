@@ -106,6 +106,17 @@ class ParserTest extends TestCase
         $this->assertArraySubset($expected, $node);
     }
 
+    /**
+     * @dataProvider mathWithExpressionOperandsProvider
+     */
+    public function testParserParsesMathWithExpressionsAsOperands($string, $lhs, $rhs, $operator)
+    {
+        $ast = $this->parser->parse($string);
+        $node = $ast[0];
+        $expected = compact('lhs', 'rhs');
+        $this->assertArraySubset($expected, $node);
+    }
+
     public function plainStringProvider()
     {
         return [
@@ -174,6 +185,18 @@ class ParserTest extends TestCase
         return [
             ['Some math is @(1 + 2)', 1, 2, '+', $this->buildLocation([13, 1, 14], [21, 1, 22])],
             ['@(4 - 3) no spaces', 4, 3, '-', $this->buildLocation([0, 1, 1], [8, 1, 9])],
+            ['@(6 / 2) is three', 6, 2, '/', $this->buildLocation([0, 1, 1], [8, 1, 9])],
+            ['@(7 * 77) is hard', 7, 77, '*', $this->buildLocation([0, 1, 1], [9, 1, 10])],
+        ];
+    }
+
+    public function mathWithExpressionOperandsProvider()
+    {
+        // lhs, rhs, operator
+        return [
+            ['@(some.number - other.number) is a number', ['type' => 'MEMBER'], ['type' => 'MEMBER'], '-'],
+            ['@(SOMEFUNC() + OTHERFUNC())', ['type' => 'METHOD'], ['type' => 'METHOD'], '+'],
+            ['@(SOMEFUNC() / some.member)', ['type' => 'METHOD'], ['type' => 'MEMBER'], '/'],
         ];
     }
 }
