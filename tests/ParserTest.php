@@ -67,6 +67,26 @@ class ParserTest extends TestCase
         $this->assertArraySubset($expected, $node);
     }
 
+    /**
+     * @dataProvider multipleExpressionProvider
+     */
+    public function testParserParsesMultipleExpressions($string, $expectedCount)
+    {
+        $ast = $this->parser->parse($string);
+        $this->assertEquals($expectedCount, count($ast));
+    }
+
+    /**
+     * @dataProvider nestedFunctionProvider
+     */
+    public function testFunctionsCanHaveExpressionsAsArguments($string, $expectedExpressionArgs)
+    {
+        $ast = $this->parser->parse($string);
+        $node = $ast[0];
+        $args = $node['args'];
+        $this->assertEquals($expectedExpressionArgs, count($args));
+    }
+
     public function plainStringProvider()
     {
         return [
@@ -79,11 +99,13 @@ class ParserTest extends TestCase
 
     public function simpleMemberAccessProvider()
     {
-        // location is offset / line / column
+        // last element is location: offset / line / column
         return [
             ['Hello @contact.name', 'contact', 'name', [7, 1, 8]],
             ['Hello @contact', 'contact', null, [7, 1, 8]],
             ['@person.lastname you are special', 'person', 'lastname', [1, 1, 2]],
+            ['Hello @(contact.name)', 'contact', 'name', [8, 1, 9]],
+            ['Hello @(contact)', 'contact', null, [8, 1, 9]],
         ];
     }
 
@@ -102,6 +124,25 @@ class ParserTest extends TestCase
             ['The date is @(NOW())', 'NOW', [], [14, 1, 15]],
             ['@(DATE(2012, 12, 25)) was a holiday.', 'DATE', [2012, 12, 25], [1, 1, 2]],
             ['This @(upper("hello")) is a function.', 'upper', ["hello"], [7, 1, 8]],
+        ];
+    }
+
+    public function multipleExpressionProvider()
+    {
+        // last element is number of expected expressions (AST nodes)
+        return [
+            ['Hello @contact.name today is @(NOW())', 2],
+            ['We can be reached at @organization.phone except on @(DATE(2012, 12, 24)) or @(DATE(2012, 12, 25))', 3]
+        ];
+    }
+
+    public function nestedFunctionProvider()
+    {
+        // 2nd param is expected the number of expressions as arguments
+        return [
+            ['Your name is @(UPPER(contact.name))', 1],
+            ['Your full name is @(UPPER(contact.firstname, contact.lastname))', 2],
+            ['The sum is @(SUM(contact.age, @MIN(12, contact.age))', 2]
         ];
     }
 }
