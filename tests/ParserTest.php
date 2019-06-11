@@ -15,6 +15,14 @@ class ParserTest extends TestCase
         $this->parser = new Parser;
     }
 
+    private function buildLocation(array $start, array $end)
+    {
+        $keys = ['offset', 'line', 'column'];
+        $start = array_combine($keys, $start);
+        $end = array_combine($keys, $end);
+        return compact('start', 'end');
+    }
+
     /**
      * @dataProvider plainStringProvider
      */
@@ -41,7 +49,6 @@ class ParserTest extends TestCase
     {
         $ast = $this->parser->parse($string);
         $node = $ast[0];
-        $location = array_combine(['offset', 'line', 'column'], $location);
         $expected = ['type' => 'MEMBER', 'key' => $key, 'value' => $value, 'location' => $location];
 
         $this->assertArraySubset($expected, $node);
@@ -87,25 +94,38 @@ class ParserTest extends TestCase
         $this->assertEquals($expectedExpressionArgs, count($args));
     }
 
+    /**
+     * @dataProvider simpleMathProvider
+     */
+    public function testParserParsesSimpleMathExpresion($string, $lhs, $rhs, $operator, array $location)
+    {
+        $ast = $this->parser->parse($string);
+        $this->assertNotEmpty($ast);
+        $node = $ast[0];
+        $expected = ['type' => 'MATH', 'lhs' => $lhs, 'rhs' => $rhs, 'operator' => $operator, 'location' => $location];
+        $this->assertArraySubset($expected, $node);
+    }
+
     public function plainStringProvider()
     {
         return [
             ['Hello World!'],
             ['1 + 2 is math'],
             ['Hey (This is in parens).'],
-            ['Greater > Than']
+            ['Greater > Than'],
+            ['This contact.name looks like an expression']
         ];
     }
 
     public function simpleMemberAccessProvider()
     {
-        // last element is location: offset / line / column
+        // last element is location start/end: offset / line / column
         return [
-            ['Hello @contact.name', 'contact', 'name', [7, 1, 8]],
-            ['Hello @contact', 'contact', null, [7, 1, 8]],
-            ['@person.lastname you are special', 'person', 'lastname', [1, 1, 2]],
-            ['Hello @(contact.name)', 'contact', 'name', [8, 1, 9]],
-            ['Hello @(contact)', 'contact', null, [8, 1, 9]],
+            ['Hello @contact.name', 'contact', 'name', $this->buildLocation([7,1,8], [19,1,20])],
+            ['Hello @contact', 'contact', null, $this->buildLocation([7, 1, 8], [14, 1, 15])],
+            ['@person.lastname you are special', 'person', 'lastname', $this->buildLocation([1, 1, 2], [16, 1, 17])],
+            ['Hello @(contact.name)', 'contact', 'name', $this->buildLocation([8, 1, 9], [20, 1, 21])],
+            ['Hello @(contact)', 'contact', null, $this->buildLocation([8, 1, 9], [15, 1, 16])],
         ];
     }
 
@@ -121,9 +141,9 @@ class ParserTest extends TestCase
     public function simpleFunctionProvider()
     {
         return [
-            ['The date is @(NOW())', 'NOW', [], [14, 1, 15]],
-            ['@(DATE(2012, 12, 25)) was a holiday.', 'DATE', [2012, 12, 25], [1, 1, 2]],
-            ['This @(upper("hello")) is a function.', 'upper', ["hello"], [7, 1, 8]],
+            ['The date is @(NOW())', 'NOW', [], $this->buildLocation([14, 1, 15], [19, 1, 20])],
+            ['@(DATE(2012, 12, 25)) was a holiday.', 'DATE', [2012, 12, 25], $this->buildLocation([1, 1, 2], [20, 1, 21])],
+            ['This @(upper("hello")) is a function.', 'upper', ["hello"], $this->buildLocation([7, 1, 8], [21, 1, 22])],
         ];
     }
 
@@ -142,7 +162,18 @@ class ParserTest extends TestCase
         return [
             ['Your name is @(UPPER(contact.name))', 1],
             ['Your full name is @(UPPER(contact.firstname, contact.lastname))', 2],
-            ['The sum is @(SUM(contact.age, @MIN(12, contact.age))', 2]
+            ['The sum is @(SUM(contact.age, MIN(12, contact.age))', 2],
+            ['The sum is @(SUM(2 + 2, contact.age, 42 / 6, 8 * 2))', 4]
+        ];
+    }
+
+    public function simpleMathProvider()
+    {
+        // after string, params are lhs, rhs, operator
+        // last param is location: offset / line / column
+        return [
+            ['Some math is @(1 + 2)', 1, 2, '+', $this->buildLocation([15, 1, 16], [20, 1, 21])],
+            ['@(4 - 3) no spaces', 4, 3, '-', $this->buildLocation([2, 1, 3], [7, 1, 8])],
         ];
     }
 }

@@ -272,7 +272,7 @@ class Parser {
         return call_user_func_array($this->_member, [$lhs, $rhs]);
       }
     private function peg_f8($lhs, $op, $rhs) {
-        return $this->_math($lhs, $rhs, $op);
+        return call_user_func_array($this->_math, [$lhs, $rhs, $op]);
       }
     private function peg_f9($lhs, $op, $rhs) {
         return call_user_func_array($this->_logic, [$lhs, $rhs, $op]);
@@ -1204,8 +1204,8 @@ class Parser {
       $this->_math = function($lhs, $rhs, $operator) {
         return [
           'type' => 'MATH',
-          'rhs' => $rhs,
           'lhs' => $lhs,
+          'rhs' => $rhs,
           'operator' => $operator,
           'location' => call_user_func($this->_location)
         ];
@@ -1228,14 +1228,27 @@ class Parser {
           ];
         };
       
+        // we can build the location information the same way as
+        // it is available in js via location()
         $_location = function() {
+            $offset_start = $this->peg_reportedPos;
+            $offset_end = $this->peg_currPos;
+            $compute_pd_start = $this->peg_computePosDetails($offset_start);
+            $compute_pd_end = $this->peg_computePosDetails($offset_end);
           return [
-            'offset' => $this->offset(),
-            'line' => $this->line(),
-            'column' => $this->column()
+            'start' => [
+              'offset' => $offset_start,
+              'line' => $compute_pd_start['line'],
+              'column' => $compute_pd_start['column'],
+            ],
+            'end' => [
+              'offset' => $offset_end,
+              'line' => $compute_pd_end['line'],
+              'column' => $compute_pd_end['column'],
+            ]
           ];
         };
-        // Bind the location fn to the parser instance to allow private method access
+        // Bind the location fn to the parser instance to allow private access
         $this->_location = $_location->bindTo($this);
       
     /* END initializer code */
