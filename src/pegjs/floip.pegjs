@@ -9,12 +9,12 @@
     }
   }
   /** <?php
-  $this->_member = function($key, $value, $location) {
+  $this->_member = function($key, $value) {
     return (object)[
       'type' => 'MEMBER',
       'key' => $key,
       'value' => $value,
-      'location' => $location
+      'location' => call_user_func($this->_location)
     ];
   };
   ?> **/
@@ -27,12 +27,12 @@
     }
   }
   /** <?php
-  $this->_method = function($call, $args, $location) {
+  $this->_method = function($call, $args) {
     return (object)[
       'type' => 'MEMBER',
       'call' => $call,
       'args' => $args,
-      'location' => $location
+      'location' => call_user_func($this->_location)
     ];
   };
   ?> **/
@@ -46,13 +46,13 @@
     }
   }
   /** <?php
-  $this->_math = function($lhs, $rhs, $operator, $location) {
+  $this->_math = function($lhs, $rhs, $operator) {
     return (object)[
       'type' => 'MATH',
       'rhs' => $rhs,
       'lhs' => $lhs,
       'operator' => $operator,
-      'location' => $location
+      'location' => call_user_func($this->_location)
     ];
   };
   ?> **/
@@ -66,13 +66,13 @@
     }
   }
   /** <?php
-  $this->_logic = function($lhs, $rhs, $operator, $location) {
+  $this->_logic = function($lhs, $rhs, $operator) {
     return (object)[
       'type' => 'LOGIC',
       'rhs' => $rhs,
       'lhs' => $lhs,
       'operator' => $operator,
-      'location' => $location
+      'location' => call_user_func($this->_location)
     ];
   };
   ?> **/
@@ -86,9 +86,21 @@
     $this->_escape = function($location) {
       return (object)[
         'type' => 'ESCAPE',
-        'location' => $location
+        'location' => call_user_func($this->_location)
       ];
     };
+  ?> **/
+
+  /** <?php
+    $_location = function() {
+      return (object)[
+        'offset' => $this->offset(),
+        'line' => $this->line(),
+        'column' => $this->column()
+      ];
+    };
+    // Bind the location fn to the parser instance to allow private method access
+    $this->_location = $_location->bindTo($this);
   ?> **/
 }
 
@@ -111,7 +123,7 @@ Expression = ws* Text* Identifier OpenParen? ex:(Function / Math / Logic / Membe
 Function = call:$valid_expression_characters+ OpenParen args:( Function_Args* ) CloseParen {
   return new method(call, args, location())
   /** <?php
-    return $this->_method($call, $args, $this->location());
+    return call_user_func_array($this->_method, [$call, $args]);
   ?> **/
   }
 
@@ -121,7 +133,7 @@ Function_Args = arg:(arg:Function Arg_Delimiter? {return arg /**<?php return $ar
 Member_Access = lhs:$AtomicExpression+ rhs:('.' inner:$AtomicExpression+ {return inner /**<?php return $inner;?> **/})? {
   return new member(lhs, rhs, location())
   /** <?php
-    return $this->_member($lhs, $rhs, $this->location());
+    return call_user_func_array($this->_member, [$lhs, $rhs]);
   ?> **/
 }
 
@@ -129,20 +141,20 @@ Member_Access = lhs:$AtomicExpression+ rhs:('.' inner:$AtomicExpression+ {return
 Math = lhs:(Member_Access / $numbers+) ws* op:$math_chars ws+ rhs:(Member_Access / $numbers+) ws* {
   return new math(lhs, rhs, op, location())
   /** <?php
-    return $this->_math($lhs, $rhs, $op, $this->location());
+    return $this->_math($lhs, $rhs, $op);
   ?> **/
 }
 Logic = lhs:(Member_Access / $numbers+) ws* op:$logic_chars ws+ rhs:(Member_Access / $numbers+) ws* {
   return new logic(lhs, rhs, op, location())
   /** <?php
-    return $this->_logic($lhs, $rhs, $op, $this->location());
+    return call_user_func_array($this->_logic, [$lhs, $rhs, $op]);
   ?> **/
 }
 
 Escaped_Identifier = Identifier Identifier {
   return new escape(location())
   /** <?php
-    return $this->_escape($this->location());
+    return call_user_func_array($this->_escape, []);
   ?> **/
 }
 

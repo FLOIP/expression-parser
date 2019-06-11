@@ -157,7 +157,7 @@ function peg$parse(input, options) {
       peg$c3 = function(call, args) {
         return new method(call, args, location())
         /** <?php
-          return $this->_method($call, $args, $this->location());
+          return call_user_func_array($this->_method, [$call, $args]);
         ?> **/
         },
       peg$c4 = function(arg) {return arg /**<?php return $arg;?> **/},
@@ -167,25 +167,25 @@ function peg$parse(input, options) {
       peg$c8 = function(lhs, rhs) {
         return new member(lhs, rhs, location())
         /** <?php
-          return $this->_member($lhs, $rhs, $this->location());
+          return call_user_func_array($this->_member, [$lhs, $rhs]);
         ?> **/
       },
       peg$c9 = function(lhs, op, rhs) {
         return new math(lhs, rhs, op, location())
         /** <?php
-          return $this->_math($lhs, $rhs, $op, $this->location());
+          return $this->_math($lhs, $rhs, $op);
         ?> **/
       },
       peg$c10 = function(lhs, op, rhs) {
         return new logic(lhs, rhs, op, location())
         /** <?php
-          return $this->_logic($lhs, $rhs, $op, $this->location());
+          return call_user_func_array($this->_logic, [$lhs, $rhs, $op]);
         ?> **/
       },
       peg$c11 = function() {
         return new escape(location())
         /** <?php
-          return $this->_escape($this->location());
+          return call_user_func_array($this->_escape, []);
         ?> **/
       },
       peg$c12 = "(",
@@ -1141,12 +1141,12 @@ function peg$parse(input, options) {
       }
     }
     /** <?php
-    $this->_member = function($key, $value, $location) {
+    $this->_member = function($key, $value) {
       return (object)[
         'type' => 'MEMBER',
         'key' => $key,
         'value' => $value,
-        'location' => $location
+        'location' => call_user_func($this->_location)
       ];
     };
     ?> **/
@@ -1159,12 +1159,12 @@ function peg$parse(input, options) {
       }
     }
     /** <?php
-    $this->_method = function($call, $args, $location) {
+    $this->_method = function($call, $args) {
       return (object)[
         'type' => 'MEMBER',
         'call' => $call,
         'args' => $args,
-        'location' => $location
+        'location' => call_user_func($this->_location)
       ];
     };
     ?> **/
@@ -1178,13 +1178,13 @@ function peg$parse(input, options) {
       }
     }
     /** <?php
-    $this->_math = function($lhs, $rhs, $operator, $location) {
+    $this->_math = function($lhs, $rhs, $operator) {
       return (object)[
         'type' => 'MATH',
         'rhs' => $rhs,
         'lhs' => $lhs,
         'operator' => $operator,
-        'location' => $location
+        'location' => call_user_func($this->_location)
       ];
     };
     ?> **/
@@ -1198,13 +1198,13 @@ function peg$parse(input, options) {
       }
     }
     /** <?php
-    $this->_logic = function($lhs, $rhs, $operator, $location) {
+    $this->_logic = function($lhs, $rhs, $operator) {
       return (object)[
         'type' => 'LOGIC',
         'rhs' => $rhs,
         'lhs' => $lhs,
         'operator' => $operator,
-        'location' => $location
+        'location' => call_user_func($this->_location)
       ];
     };
     ?> **/
@@ -1218,9 +1218,21 @@ function peg$parse(input, options) {
       $this->_escape = function($location) {
         return (object)[
           'type' => 'ESCAPE',
-          'location' => $location
+          'location' => call_user_func($this->_location)
         ];
       };
+    ?> **/
+
+    /** <?php
+      $_location = function() {
+        return (object)[
+          'offset' => $this->offset(),
+          'line' => $this->line(),
+          'column' => $this->column()
+        ];
+      };
+      // Bind the location fn to the parser instance to allow private method access
+      $this->_location = $_location->bindTo($this);
     ?> **/
 
 
