@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests;
+namespace Floip\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Floip\Parser;

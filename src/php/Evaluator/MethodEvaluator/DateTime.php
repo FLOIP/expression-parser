@@ -1,11 +1,11 @@
 <?php
 
-namespace Floip\Evaluator;
+namespace Floip\Evaluator\MethodEvaluator;
 
-use Floip\Evaluator\Contract\DateTime as DateTimeInterface;
+use Floip\Evaluator\MethodEvaluator\Contract\DateTime as DateTimeInterface;
 use Carbon\Carbon;
 
-class DateTime implements DateTimeInterface
+class DateTime extends AbstractMethodHandler implements DateTimeInterface
 {
     public function date($year, $month, $day)
     {

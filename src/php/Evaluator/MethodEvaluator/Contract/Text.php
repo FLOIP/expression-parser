@@ -1,8 +1,8 @@
 <?php
 
-namespace Floip\Evaluator\Contract;
+namespace Floip\Evaluator\MethodEvaluator\Contract;
 
-interface Text
+interface Text extends EvaluatesMethods
 {
     /**
      * Returns the character specified by a number

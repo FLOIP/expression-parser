@@ -1,8 +1,8 @@
 <?php
 
-namespace Floip\Evaluator\Contract;
+namespace Floip\Evaluator\MethodEvaluator\Contract;
 
-interface Logical
+interface Logical extends EvaluatesMethods
 {
     /**
      * Returns TRUE if and only if all its arguments evaluate to TRUE

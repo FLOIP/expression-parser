@@ -5,8 +5,8 @@ DOCKER_RUN=docker run --rm -it -v `pwd`:/src -u `id -u` -w '/src'
 PEGJS=$(DOCKER_RUN) $(PEGJS_TAG) npx pegjs
 PARSER_NAME=Parser
 PARSER_SOURCE=src/pegjs/floip.pegjs
-PHP_OUT=dist/$(PARSER_NAME).php
-PHPEGJS_OPTIONS={"phpegjs":{"parserNamespace": "Floip"}}
+PHP_OUT=dist/Base$(PARSER_NAME).php
+PHPEGJS_OPTIONS={"phpegjs":{"parserNamespace": "Floip", "parserClassName": "BaseParser"}}
 JS_OUT=dist/$(PARSER_NAME).js
 
 .PHONY: clean default parsers parse-php parse-js

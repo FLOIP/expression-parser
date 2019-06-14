@@ -1,10 +1,10 @@
 <?php
 
-namespace Floip\Evaluator;
+namespace Floip\Evaluator\MethodEvaluator;
 
-use Floip\Evaluator\Contract\Excellent as ExcellentInterface;
+use Floip\Evaluator\MethodEvaluator\Contract\Excellent as ExcellentInterface;
 
-class Excellent implements ExcellentInterface
+class Excellent extends AbstractMethodHandler implements ExcellentInterface
 {
     public function firstWord($string)
     {
@@ -40,9 +40,10 @@ class Excellent implements ExcellentInterface
         }
 
         if ($number < 0) {
-            return $this->stripPunc(\array_reverse($split)[abs(++$number)]);
+            return \array_reverse($split)[abs(++$number)];
         }
         // decrement the 1-indexed number
+        return $split[--$number];
         return $this->stripPunc($split[--$number]);
     }
 
@@ -74,7 +75,11 @@ class Excellent implements ExcellentInterface
     private function splitByPunc($string)
     {
         $punc = static::PUNCTUATION;
-        return preg_split("/\\s*[{$punc}]\\s*|\\s/u", $string, -1, PREG_SPLIT_NO_EMPTY);
+        $result = preg_split("/\\s*[{$punc}]\\s*|\\s/u", $string, -1, PREG_SPLIT_NO_EMPTY);
+        if ($result === false) {
+            throw new \Exception;
+        }
+        return $result;
     }
 
     private function stripPunc($string)

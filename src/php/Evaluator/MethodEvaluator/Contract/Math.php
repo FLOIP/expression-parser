@@ -1,8 +1,8 @@
 <?php
 
-namespace Floip\Evaluator\Contract;
+namespace Floip\Evaluator\MethodEvaluator\Contract;
 
-interface Math
+interface Math extends EvaluatesMethods
 {
     /**
      * Returns the absolute value of a number

@@ -1,10 +1,10 @@
 <?php
 
-namespace Floip\Evaluator;
+namespace Floip\Evaluator\MethodEvaluator;
 
-use Floip\Evaluator\Contract\Text as TextInterface;
+use Floip\Evaluator\MethodEvaluator\Contract\Text as TextInterface;
 
-class Text implements TextInterface
+class Text extends AbstractMethodHandler implements TextInterface
 {
     public function char($asciiCode)
     {
@@ -36,7 +36,7 @@ class Text implements TextInterface
     }
     public function lower($string)
     {
-        return lower($string);
+        return \strtolower($string);
     }
     public function proper($string)
     {
@@ -64,6 +64,6 @@ class Text implements TextInterface
     }
     public function upper($string)
     {
-        return upper($string);
+        return \strtoupper($string);
     }
 }

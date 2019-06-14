@@ -1,10 +1,10 @@
 <?php
 
-namespace Floip\Evaluator;
+namespace Floip\Evaluator\MethodEvaluator;
 
 use Contract\Math as MathInterface;
 
-class Math implements MathInterface
+class Math extends AbstractMethodHandler implements MathInterface
 {
     public function abs($number)
     {

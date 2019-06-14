@@ -1,8 +1,8 @@
 <?php
 
-namespace Floip\Evaluator\Contract;
+namespace Floip\Evaluator\MethodEvaluator\Contract;
 
-interface Excellent
+interface Excellent extends EvaluatesMethods
 {
     const PUNCTUATION=',:;!?.-';
     /**
@@ -34,8 +34,8 @@ interface Excellent
      * Removes the first word from the given text. The remaining text will
      * be unchanged
      *
-     * @param stromg $string
-     * @return stromg
+     * @param string $string
+     * @return string
      */
     public function removeFistWord($string);
 
@@ -50,7 +50,7 @@ interface Excellent
      * @param string $string
      * @param int $number
      * @param bool|null $bySpaces
-     * @return void
+     * @return string
      */
     public function word($string, $number, $bySpaces = null);
 
@@ -61,7 +61,7 @@ interface Excellent
      *
      * @param string $string
      * @param bool|null $bySpaces
-     * @return void
+     * @return int
      */
     public function wordCount($string, $bySpaces = null);
 

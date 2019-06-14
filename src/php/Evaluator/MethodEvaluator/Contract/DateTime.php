@@ -1,10 +1,10 @@
 <?php
 
-namespace Floip\Evaluator\Contract;
+namespace Floip\Evaluator\MethodEvaluator\Contract;
 
 use Carbon\Carbon;
 
-interface DateTime
+interface DateTime extends EvaluatesMethods
 {
     /**
      * Defines a new date value
@@ -27,7 +27,7 @@ interface DateTime
     /**
      * Returns only the day of the month of a date (1 to 31)
      *
-     * @param Carbon|string $date
+     * @param Carbon|string $datetime
      * @return int
      */
     public function day($datetime);
@@ -35,7 +35,7 @@ interface DateTime
     /**
      * Moves a date by the given number of months
      *
-     * @param Carbon\string $date
+     * @param Carbon|string $datetime
      * @param int $months
      * @return Carbon
      */

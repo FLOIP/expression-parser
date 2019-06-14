@@ -1,10 +1,10 @@
 <?php
 
-namespace Floip\Evaluator;
+namespace Floip\Evaluator\MethodEvaluator;
 
-use Floip\Evaluator\Contract\Logical as LogicalInterface;
+use Floip\Evaluator\MethodEvaluator\Contract\Logical as LogicalInterface;
 
-class Logical implements LogicalInterface
+class Logical extends AbstractMethodHandler implements LogicalInterface
 {
     public function and(array $args)
     {
