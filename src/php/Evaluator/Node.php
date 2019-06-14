@@ -43,7 +43,13 @@ class Node implements \ArrayAccess
      */
     public function setValue($value)
     {
-        $this->value = $value;
+        if ($value === true) {
+            $this->value = 'TRUE';
+        } elseif ($value === false) {
+            $this->value = 'FALSE';
+        } else {
+            $this->value = $value;
+        }
         $this->valueSet = true;
         return $this;
     }

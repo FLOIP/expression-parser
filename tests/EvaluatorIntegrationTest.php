@@ -11,6 +11,7 @@ use Floip\Evaluator\MethodEvaluator\DateTime;
 use Floip\Contract\ParsesFloip;
 use Carbon\Carbon;
 use Floip\Evaluator\MethodEvaluator\Math;
+use Floip\Evaluator\MethodEvaluator\Logical;
 
 class EvaluatorIntegrationTest extends TestCase
 {
@@ -129,14 +130,21 @@ class EvaluatorIntegrationTest extends TestCase
      */
     public function testEvaluatesMath($expression, $expected)
     {
-        $context = [];
-
         $this->methodEvaluator->addHandler(new Math);
 
-        $result = $this->evaluator->evaluate($expression, $context);
+        $result = $this->evaluator->evaluate($expression, []);
 
         $this->assertEquals($expected, $result);
     }
+
+    // public function testEvaluatesLogic($expression, $expected)
+    // {
+    //     $this->methodEvaluator->addHandler(new Logical);
+
+    //     $result = $this->evaluator->evaluate($expression, []);
+
+    //     $this->assertEquals($expected, $result);
+    // }
 
     public function mathProvider()
     {
@@ -148,4 +156,11 @@ class EvaluatorIntegrationTest extends TestCase
             ['@(sum(2,3,4))', '9'],
         ];
     }
+
+    // public function logicProvider()
+    // {
+    //     return [
+    //         '@(and())'
+    //     ];
+    // }
 }
