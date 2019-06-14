@@ -1,20 +1,20 @@
 <?php
 
-namespace Floip\Tests;
+namespace Viamo\Floip\Tests;
 
 use PHPUnit\Framework\TestCase;
-use Floip\Parser;
-use Floip\Evaluator;
-use Floip\Evaluator\MethodEvaluator;
-use Floip\Evaluator\MemberEvaluator;
-use Floip\Contract\ParsesFloip;
-use Floip\Contract\EvaluatesExpression;
-use Floip\Evaluator\MethodEvaluator\Logical;
-use Floip\Evaluator\LogicEvaluator;
-use Floip\Evaluator\MethodEvaluator\DateTime;
-use Floip\Evaluator\MethodEvaluator\Math;
+use Viamo\Floip\Parser;
+use Viamo\Floip\Evaluator;
+use Viamo\Floip\Evaluator\MethodEvaluator;
+use Viamo\Floip\Evaluator\MemberEvaluator;
+use Viamo\Floip\Contract\ParsesFloip;
+use Viamo\Floip\Contract\EvaluatesExpression;
+use Viamo\Floip\Evaluator\MethodEvaluator\Logical;
+use Viamo\Floip\Evaluator\LogicEvaluator;
+use Viamo\Floip\Evaluator\MethodEvaluator\DateTime;
+use Viamo\Floip\Evaluator\MethodEvaluator\Math;
 use Carbon\Carbon;
-use Floip\Evaluator\MethodEvaluator\Text;
+use Viamo\Floip\Evaluator\MethodEvaluator\Text;
 
 class EvaluatorIntegrationTest extends TestCase
 {

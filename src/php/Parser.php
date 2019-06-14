@@ -1,10 +1,11 @@
 <?php
 
-namespace Floip;
+namespace Viamo\Floip;
 
-use Floip\Contract\ParsesFloip;
+use Viamo\BaseExpressionParser;
+use Viamo\Floip\Contract\ParsesFloip;
 
-class Parser extends BaseParser implements ParsesFloip
+class Parser extends BaseExpressionParser implements ParsesFloip
 {
     //
 }

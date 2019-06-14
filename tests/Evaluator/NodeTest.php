@@ -1,9 +1,9 @@
 <?php
 
-namespace Floip\Tests\Evaluator;
+namespace Viamo\Floip\Tests\Evaluator;
 
 use PHPUnit\Framework\TestCase;
-use Floip\Evaluator\Node;
+use Viamo\Floip\Evaluator\Node;
 
 class NodeTest extends TestCase
 {

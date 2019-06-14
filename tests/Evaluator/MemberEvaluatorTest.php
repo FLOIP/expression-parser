@@ -1,11 +1,11 @@
 <?php
 
-namespace Floip\Tests\Evaluator;
+namespace Viamo\Floip\Tests\Evaluator;
 
 use PHPUnit\Framework\TestCase;
-use Floip\Evaluator\MemberEvaluator;
-use Floip\Contract\ParsesFloip;
-use Floip\Evaluator\Node;
+use Viamo\Floip\Evaluator\MemberEvaluator;
+use Viamo\Floip\Contract\ParsesFloip;
+use Viamo\Floip\Evaluator\Node;
 
 class MemberEvaluatorTest extends TestCase
 {

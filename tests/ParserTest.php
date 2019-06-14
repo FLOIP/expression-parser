@@ -1,9 +1,9 @@
 <?php
 
-namespace Floip\Tests;
+namespace Viamo\Floip\Tests;
 
 use PHPUnit\Framework\TestCase;
-use Floip\Parser;
+use Viamo\Floip\Parser;
 
 class ParserTest extends TestCase
 {

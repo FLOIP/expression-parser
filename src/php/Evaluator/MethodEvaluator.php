@@ -1,9 +1,12 @@
 <?php
 
-namespace Floip\Evaluator;
+namespace Viamo\Floip\Evaluator;
 
-use Floip\Evaluator\MethodEvaluator\Contract\EvaluatesMethods;
+use Viamo\Floip\Evaluator\MethodEvaluator\Contract\EvaluatesMethods;
 
+/**
+ * Evaluates METHOD nodes -- expressions that look like @(FUNC(arg...))
+ */
 class MethodEvaluator extends AbstractNodeEvaluator
 {
     /** @var array */

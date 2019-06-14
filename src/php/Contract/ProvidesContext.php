@@ -1,6 +1,6 @@
 <?php
 
-namespace Floip\Contract;
+namespace Viamo\Floip\Contract;
 
 interface ProvidesContext
 {

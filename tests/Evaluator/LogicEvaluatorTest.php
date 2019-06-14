@@ -1,10 +1,10 @@
 <?php
 
-namespace Floip\Tests\Evaluator;
+namespace Viamo\Floip\Tests\Evaluator;
 
 use PHPUnit\Framework\TestCase;
-use Floip\Evaluator\LogicEvaluator;
-use Floip\Evaluator\Node;
+use Viamo\Floip\Evaluator\LogicEvaluator;
+use Viamo\Floip\Evaluator\Node;
 
 class LogicEvaluatorTest extends TestCase
 {

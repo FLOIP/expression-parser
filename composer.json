@@ -1,5 +1,5 @@
 {
-    "name": "kyle/floip-eval",
+    "name": "viamo/floip-eval",
     "authors": [
         {
             "name": "Kyle Seifert",
@@ -18,13 +18,13 @@
     },
     "autoload": {
         "psr-4": {
-            "Floip\\": "src/php/"
+            "Viamo\\Floip\\": "src/php/"
         },
         "classmap": ["dist/"]
     },
     "autoload-dev": {
         "psr-4": {
-            "Floip\\Tests\\": "tests/"
+            "Viamo\\Floip\\Tests\\": "tests/"
         }
     },
     "require-dev": {

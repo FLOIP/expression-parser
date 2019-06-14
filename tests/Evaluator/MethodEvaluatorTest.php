@@ -1,12 +1,12 @@
 <?php
 
-namespace Floip\Tests\Evaluator;
+namespace Viamo\Floip\Tests\Evaluator;
 
 use PHPUnit\Framework\TestCase;
-use Floip\Evaluator\MethodEvaluator;
-use Floip\Evaluator\MethodEvaluator\Contract\EvaluatesMethods;
-use Floip\Contract\ParsesFloip;
-use Floip\Evaluator\Node;
+use Viamo\Floip\Evaluator\MethodEvaluator;
+use Viamo\Floip\Evaluator\MethodEvaluator\Contract\EvaluatesMethods;
+use Viamo\Floip\Contract\ParsesFloip;
+use Viamo\Floip\Evaluator\Node;
 
 class MethodEvaluatorTest extends TestCase
 {

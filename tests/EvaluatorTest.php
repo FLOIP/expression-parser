@@ -1,13 +1,13 @@
 <?php
 
-namespace Floip\Tests;
+namespace Viamo\Floip\Tests;
 
 use PHPUnit\Framework\TestCase;
-use Floip\Evaluator;
-use Floip\Parser;
+use Viamo\Floip\Evaluator;
+use Viamo\Floip\Parser;
 use Mockery;
 use Mockery\MockInterface;
-use Floip\Contract\EvaluatesExpression;
+use Viamo\Floip\Contract\EvaluatesExpression;
 
 class EvaluatorTest extends TestCase
 {

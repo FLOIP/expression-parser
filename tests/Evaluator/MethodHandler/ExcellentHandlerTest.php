@@ -1,10 +1,10 @@
 <?php
 
-namespace Floip\Tests\Evaluator\MethodHandler;
+namespace Viamo\Floip\Tests\Evaluator\MethodHandler;
 
 use PHPUnit\Framework\TestCase;
-use Floip\Evaluator\MethodEvaluator\Excellent;
-use Floip\Evaluator\MethodEvaluator\Contract\Excellent as ExcellentContract;
+use Viamo\Floip\Evaluator\MethodEvaluator\Excellent;
+use Viamo\Floip\Evaluator\MethodEvaluator\Contract\Excellent as ExcellentContract;
 
 class ExcellentHandlerTest extends TestCase
 {

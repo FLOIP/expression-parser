@@ -1,6 +1,6 @@
 <?php
 
-namespace Floip\Evaluator;
+namespace Viamo\Floip\Evaluator;
 
 class LogicEvaluator extends AbstractNodeEvaluator 
 {

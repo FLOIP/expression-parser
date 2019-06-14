@@ -1,10 +1,11 @@
 <?php
 
-namespace Floip;
+namespace Viamo\Floip;
 
-use Floip\Contract\ParsesFloip;
-use Floip\Contract\EvaluatesExpression;
-use Floip\Evaluator\Node;
+use Viamo\Floip\Contract\ParsesFloip;
+use Viamo\Floip\Contract\EvaluatesExpression;
+use Viamo\Floip\Evaluator\Node;
+use Viamo\Floip\Evaluator\RecursiveNodeIterator;
 
 class Evaluator
 {
@@ -30,7 +31,6 @@ class Evaluator
         $ast = $this->parser->parse($expression);
 
         $nodes = [];
-
         // transform the AST array into objects
         foreach ($ast as $item) {
             if (Node::isNode($item)) {
@@ -50,7 +50,9 @@ class Evaluator
 
         foreach ($nodes as $node) {
             // every time we modify the expression, we change the length
-            // we should keep track of this offset
+            // we should keep track of this offset, since the locations
+            // in the expression that we will be modifying will change
+            // based on other expressions we evaluate first
             $oldLength = strlen($expression);
             $expression = $this->insert($node, $expression, $node->getValue(), $offset);
             $newLength = strlen($expression);
@@ -100,11 +102,11 @@ class Evaluator
     {
         // we want to recurse over the tree depth-first, starting with the 
         // deepest nodes
-        $arrayIterator = new \Floip\Evaluator\RecursiveNodeIterator($ast);
+        $arrayIterator = new RecursiveNodeIterator($ast);
         return new \RecursiveIteratorIterator($arrayIterator, \RecursiveIteratorIterator::CHILD_FIRST);
     }
 
-    protected function insert(Node $node, $string, $insert, $offset)
+    private function insert(Node $node, $string, $insert, $offset)
     {
         $location = $node['location'];
         $begin = \substr($string, 0, $location['start']['offset'] + $offset);

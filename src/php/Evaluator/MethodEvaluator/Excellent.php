@@ -1,8 +1,8 @@
 <?php
 
-namespace Floip\Evaluator\MethodEvaluator;
+namespace Viamo\Floip\Evaluator\MethodEvaluator;
 
-use Floip\Evaluator\MethodEvaluator\Contract\Excellent as ExcellentInterface;
+use Viamo\Floip\Evaluator\MethodEvaluator\Contract\Excellent as ExcellentInterface;
 
 class Excellent extends AbstractMethodHandler implements ExcellentInterface
 {

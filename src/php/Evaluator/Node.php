@@ -1,6 +1,6 @@
 <?php
 
-namespace Floip\Evaluator;
+namespace Viamo\Floip\Evaluator;
 
 class Node implements \ArrayAccess
 {
@@ -135,7 +135,6 @@ class Node implements \ArrayAccess
         }
         return false;
     }
-
 
     /*
      * Implementation of ArrayAccess

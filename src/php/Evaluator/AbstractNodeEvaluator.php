@@ -1,8 +1,8 @@
 <?php
 
-namespace Floip\Evaluator;
+namespace Viamo\Floip\Evaluator;
 
-use Floip\Contract\EvaluatesExpression;
+use Viamo\Floip\Contract\EvaluatesExpression;
 
 abstract class AbstractNodeEvaluator implements EvaluatesExpression
 {
