@@ -2,7 +2,7 @@
 
 namespace Floip\Evaluator\MethodEvaluator;
 
-use Contract\Math as MathInterface;
+use Floip\Evaluator\MethodEvaluator\Contract\Math as MathInterface;
 
 class Math extends AbstractMethodHandler implements MathInterface
 {
@@ -10,20 +10,23 @@ class Math extends AbstractMethodHandler implements MathInterface
     {
         return abs($number);
     }
-    public function max(array $args)
+    public function max()
     {
-        return array_reduce($args, 'max', 0);
+        $args = \func_get_args();
+        return array_reduce($args, 'max', \PHP_INT_MIN);
     }
-    public function min(array $args)
+    public function min()
     {
-        return array_reduce($args, 'min', 0);
+        $args = \func_get_args();
+        return array_reduce($args, 'min', \PHP_INT_MAX);
     }
     public function power($number, $power)
     {
         return pow($number, $power);
     }
-    public function sum(array $args)
+    public function sum()
     {
+        $args = \func_get_args();
         return array_sum($args);
     }
 }

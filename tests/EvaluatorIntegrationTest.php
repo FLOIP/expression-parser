@@ -10,6 +10,7 @@ use Floip\Evaluator\MemberEvaluator;
 use Floip\Evaluator\MethodEvaluator\DateTime;
 use Floip\Contract\ParsesFloip;
 use Carbon\Carbon;
+use Floip\Evaluator\MethodEvaluator\Math;
 
 class EvaluatorIntegrationTest extends TestCase
 {
@@ -121,5 +122,30 @@ class EvaluatorIntegrationTest extends TestCase
         $result = $this->evaluator->evaluate($expression, $context);
 
         $this->assertEquals($expected, $result);  
+    }
+
+    /**
+     * @dataProvider mathProvider
+     */
+    public function testEvaluatesMath($expression, $expected)
+    {
+        $context = [];
+
+        $this->methodEvaluator->addHandler(new Math);
+
+        $result = $this->evaluator->evaluate($expression, $context);
+
+        $this->assertEquals($expected, $result);
+    }
+
+    public function mathProvider()
+    {
+        return [
+            ['@(abs(-6))', '6'],
+            ['@(max(6, 19, 7))', '19'],
+            ['@(min(7, 6, 19))', '6'],
+            ['@(power(2,2))', '4'],
+            ['@(sum(2,3,4))', '9'],
+        ];
     }
 }

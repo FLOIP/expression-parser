@@ -15,18 +15,18 @@ interface Math extends EvaluatesMethods
     /**
      * Returns the maximum value of all arguments
      *
-     * @param int[]|float[] $args
+     * @param int|float ...$value
      * @return int|float
      */
-    public function max(array $args);
+    public function max();
 
     /**
      * Returns the minimum value of all arguments
      *
-     * @param int[]|float[] $args
+     * @param int|float ...$value
      * @return int|float
      */
-    public function min(array $args);
+    public function min();
 
     /**
      * Returns the result of a number raised to a power - equivalent to the ^ operator
@@ -40,8 +40,8 @@ interface Math extends EvaluatesMethods
     /**
      * Returns the sum of all arguments, equivalent to the + operator
      *
-     * @param int[]|float[] $args
+     * @param int|float ...$value
      * @return int|float
      */
-    public function sum(array $args);
+    public function sum();
 }
