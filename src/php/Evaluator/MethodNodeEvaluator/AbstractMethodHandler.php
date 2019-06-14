@@ -1,8 +1,8 @@
 <?php
 
-namespace Viamo\Floip\Evaluator\MethodEvaluator;
+namespace Viamo\Floip\Evaluator\MethodNodeEvaluator;
 
-use Viamo\Floip\Evaluator\MethodEvaluator\Contract\EvaluatesMethods;
+use Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract\EvaluatesMethods;
 
 abstract class AbstractMethodHandler implements EvaluatesMethods
 {

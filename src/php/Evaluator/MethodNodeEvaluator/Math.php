@@ -1,8 +1,8 @@
 <?php
 
-namespace Viamo\Floip\Evaluator\MethodEvaluator;
+namespace Viamo\Floip\Evaluator\MethodNodeEvaluator;
 
-use Viamo\Floip\Evaluator\MethodEvaluator\Contract\Math as MathInterface;
+use Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract\Math as MathInterface;
 
 class Math extends AbstractMethodHandler implements MathInterface
 {

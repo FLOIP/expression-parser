@@ -3,8 +3,8 @@
 namespace Viamo\Floip\Tests\Evaluator\MethodHandler;
 
 use PHPUnit\Framework\TestCase;
-use Viamo\Floip\Evaluator\MethodEvaluator\Excellent;
-use Viamo\Floip\Evaluator\MethodEvaluator\Contract\Excellent as ExcellentContract;
+use Viamo\Floip\Evaluator\MethodNodeEvaluator\Excellent;
+use Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract\Excellent as ExcellentContract;
 
 class ExcellentHandlerTest extends TestCase
 {

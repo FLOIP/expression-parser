@@ -5,16 +5,16 @@ namespace Viamo\Floip\Tests;
 use PHPUnit\Framework\TestCase;
 use Viamo\Floip\Parser;
 use Viamo\Floip\Evaluator;
-use Viamo\Floip\Evaluator\MethodEvaluator;
-use Viamo\Floip\Evaluator\MemberEvaluator;
+use Viamo\Floip\Evaluator\MethodNodeEvaluator;
+use Viamo\Floip\Evaluator\MemberNodeEvaluator;
 use Viamo\Floip\Contract\ParsesFloip;
 use Viamo\Floip\Contract\EvaluatesExpression;
-use Viamo\Floip\Evaluator\MethodEvaluator\Logical;
-use Viamo\Floip\Evaluator\LogicEvaluator;
-use Viamo\Floip\Evaluator\MethodEvaluator\DateTime;
-use Viamo\Floip\Evaluator\MethodEvaluator\Math;
+use Viamo\Floip\Evaluator\MethodNodeEvaluator\Logical;
+use Viamo\Floip\Evaluator\LogicNodeEvaluator;
+use Viamo\Floip\Evaluator\MethodNodeEvaluator\DateTime;
+use Viamo\Floip\Evaluator\MethodNodeEvaluator\Math;
 use Carbon\Carbon;
-use Viamo\Floip\Evaluator\MethodEvaluator\Text;
+use Viamo\Floip\Evaluator\MethodNodeEvaluator\Text;
 
 class EvaluatorIntegrationTest extends TestCase
 {
@@ -23,24 +23,24 @@ class EvaluatorIntegrationTest extends TestCase
     /** @var Parser */
     protected $parser;
     /** @var EvaluatesExpression */
-    protected $methodEvaluator;
+    protected $MethodNodeEvaluator;
     /** @var EvaluatesExpression */
-    protected $memberEvaluator;
+    protected $MemberNodeEvaluator;
     /** @var EvaluatesExpression */
-    protected $logicEvaluator;
+    protected $LogicNodeEvaluator;
 
     public function setUp()
     {
         $this->parser = new Parser;
-        $this->methodEvaluator = new MethodEvaluator;
-        $this->memberEvaluator = new MemberEvaluator;
-        $this->logicEvaluator = new LogicEvaluator;
+        $this->MethodNodeEvaluator = new MethodNodeEvaluator;
+        $this->MemberNodeEvaluator = new MemberNodeEvaluator;
+        $this->LogicNodeEvaluator = new LogicNodeEvaluator;
 
 
         $this->evaluator = new Evaluator($this->parser);
-        $this->evaluator->addNodeEvaluator($this->methodEvaluator, ParsesFloip::METHOD_TYPE);
-        $this->evaluator->addNodeEvaluator($this->memberEvaluator, ParsesFloip::MEMBER_TYPE);
-        $this->evaluator->addNodeEvaluator($this->logicEvaluator, ParsesFloip::LOGIC_TYPE);
+        $this->evaluator->addNodeEvaluator($this->MethodNodeEvaluator, ParsesFloip::METHOD_TYPE);
+        $this->evaluator->addNodeEvaluator($this->MemberNodeEvaluator, ParsesFloip::MEMBER_TYPE);
+        $this->evaluator->addNodeEvaluator($this->LogicNodeEvaluator, ParsesFloip::LOGIC_TYPE);
     }
 
     public function testEvaluatesMemberAccess()
@@ -65,7 +65,7 @@ class EvaluatorIntegrationTest extends TestCase
         $expression = 'Today is @(NOW())';
         $expected = "Today is $now";
         $context = [];
-        $this->methodEvaluator->addHandler(new DateTime);
+        $this->MethodNodeEvaluator->addHandler(new DateTime);
         
         $result = $this->evaluator->evaluate($expression, $context);
 
@@ -77,7 +77,7 @@ class EvaluatorIntegrationTest extends TestCase
         $expression = 'Today is @(DATE(2012,12,12))';
         $expected = "Today is " . Carbon::createFromDate(2012, 12, 12);
         $context = [];
-        $this->methodEvaluator->addHandler(new DateTime);
+        $this->MethodNodeEvaluator->addHandler(new DateTime);
         
         $result = $this->evaluator->evaluate($expression, $context);
 
@@ -90,7 +90,7 @@ class EvaluatorIntegrationTest extends TestCase
         $expression = 'Today is @(DATE(YEAR(NOW()), MONTH(NOW()), DAY(NOW())))';
         $expected = "Today is " . Carbon::createFromDate($now->year, $now->month, $now->day);
         $context = [];
-        $this->methodEvaluator->addHandler(new DateTime);
+        $this->MethodNodeEvaluator->addHandler(new DateTime);
 
         $result = $this->evaluator->evaluate($expression, $context);
 
@@ -105,7 +105,7 @@ class EvaluatorIntegrationTest extends TestCase
         $expected = "Today is $nowString, or just $nowString";
         $context = [];
 
-        $this->methodEvaluator->addHandler(new DateTime);
+        $this->MethodNodeEvaluator->addHandler(new DateTime);
 
         $result = $this->evaluator->evaluate($expression, $context);
 
@@ -126,7 +126,7 @@ class EvaluatorIntegrationTest extends TestCase
             ]
         ];
 
-        $this->methodEvaluator->addHandler(new DateTime);
+        $this->MethodNodeEvaluator->addHandler(new DateTime);
 
         $result = $this->evaluator->evaluate($expression, $context);
 
@@ -138,7 +138,7 @@ class EvaluatorIntegrationTest extends TestCase
      */
     public function testEvaluatesMath($expression, $expected)
     {
-        $this->methodEvaluator->addHandler(new Math);
+        $this->MethodNodeEvaluator->addHandler(new Math);
 
         $result = $this->evaluator->evaluate($expression, []);
 
@@ -150,7 +150,7 @@ class EvaluatorIntegrationTest extends TestCase
      */
     public function testEvaluatesLogic($expression, array $context, $expected)
     {
-        $this->methodEvaluator->addHandler(new Logical);
+        $this->MethodNodeEvaluator->addHandler(new Logical);
 
         $result = $this->evaluator->evaluate($expression, $context);
 
@@ -162,7 +162,7 @@ class EvaluatorIntegrationTest extends TestCase
      */
     public function testEvaluatesTextMethods($expression, array $context, $expected)
     {
-        $this->methodEvaluator->addHandler(new Text);
+        $this->MethodNodeEvaluator->addHandler(new Text);
 
         $result = $this->evaluator->evaluate($expression, $context);
 

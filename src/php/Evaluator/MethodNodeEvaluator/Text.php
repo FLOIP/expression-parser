@@ -1,8 +1,8 @@
 <?php
 
-namespace Viamo\Floip\Evaluator\MethodEvaluator;
+namespace Viamo\Floip\Evaluator\MethodNodeEvaluator;
 
-use Viamo\Floip\Evaluator\MethodEvaluator\Contract\Text as TextInterface;
+use Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract\Text as TextInterface;
 
 class Text extends AbstractMethodHandler implements TextInterface
 {

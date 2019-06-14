@@ -3,18 +3,18 @@
 namespace Viamo\Floip\Tests\Evaluator;
 
 use PHPUnit\Framework\TestCase;
-use Viamo\Floip\Evaluator\MemberEvaluator;
+use Viamo\Floip\Evaluator\MemberNodeEvaluator;
 use Viamo\Floip\Contract\ParsesFloip;
 use Viamo\Floip\Evaluator\Node;
 
-class MemberEvaluatorTest extends TestCase
+class MemberNodeEvaluatorTest extends TestCase
 {
-    /** @var MemberEvaluator */
+    /** @var MemberNodeEvaluator */
     private $evaluator;
 
     public function setUp()
     {
-        $this->evaluator = new MemberEvaluator;
+        $this->evaluator = new MemberNodeEvaluator;
     }
 
     /**

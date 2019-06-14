@@ -3,17 +3,17 @@
 namespace Viamo\Floip\Tests\Evaluator;
 
 use PHPUnit\Framework\TestCase;
-use Viamo\Floip\Evaluator\LogicEvaluator;
+use Viamo\Floip\Evaluator\LogicNodeEvaluator;
 use Viamo\Floip\Evaluator\Node;
 
-class LogicEvaluatorTest extends TestCase
+class LogicNodeEvaluatorTest extends TestCase
 {
-    /** @var LogicEvaluator */
+    /** @var LogicNodeEvaluator */
     private $evaluator;
 
     public function setUp()
     {
-        $this->evaluator = new LogicEvaluator;
+        $this->evaluator = new LogicNodeEvaluator;
     }
 
     /**

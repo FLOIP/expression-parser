@@ -2,7 +2,7 @@
 
 namespace Viamo\Floip\Evaluator;
 
-class LogicEvaluator extends AbstractNodeEvaluator 
+class LogicNodeEvaluator extends AbstractNodeEvaluator 
 {
     public function evaluate(Node $node, array $context)
     {

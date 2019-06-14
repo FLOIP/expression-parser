@@ -2,12 +2,12 @@
 
 namespace Viamo\Floip\Evaluator;
 
-use Viamo\Floip\Evaluator\MethodEvaluator\Contract\EvaluatesMethods;
+use Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract\EvaluatesMethods;
 
 /**
  * Evaluates METHOD nodes -- expressions that look like @(FUNC(arg...))
  */
-class MethodEvaluator extends AbstractNodeEvaluator
+class MethodNodeEvaluator extends AbstractNodeEvaluator
 {
     /** @var array */
     private $handlers = [];
@@ -19,7 +19,7 @@ class MethodEvaluator extends AbstractNodeEvaluator
      * it knows how to evaluate.
      *
      * @param EvaluatesMethods $handler
-     * @return MethodEvaluator
+     * @return MethodNodeEvaluator
      */
     public function addHandler(EvaluatesMethods $handler)
     {

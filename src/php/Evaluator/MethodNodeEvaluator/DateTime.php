@@ -1,8 +1,8 @@
 <?php
 
-namespace Viamo\Floip\Evaluator\MethodEvaluator;
+namespace Viamo\Floip\Evaluator\MethodNodeEvaluator;
 
-use Viamo\Floip\Evaluator\MethodEvaluator\Contract\DateTime as DateTimeInterface;
+use Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract\DateTime as DateTimeInterface;
 use Carbon\Carbon;
 
 class DateTime extends AbstractMethodHandler implements DateTimeInterface

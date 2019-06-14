@@ -1,6 +1,6 @@
 <?php
 
-namespace Viamo\Floip\Evaluator\MethodEvaluator\Contract;
+namespace Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract;
 
 interface EvaluatesMethods
 {

@@ -2,7 +2,7 @@
 
 namespace Viamo\Floip\Evaluator;
 
-class MemberEvaluator extends AbstractNodeEvaluator
+class MemberNodeEvaluator extends AbstractNodeEvaluator
 {
     /**
      * Evaluate the value of a member access node given a context.
