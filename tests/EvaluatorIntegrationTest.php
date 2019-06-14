@@ -101,5 +101,25 @@ class EvaluatorIntegrationTest extends TestCase
 
         $this->assertEquals($expected, $result);   
     }
-    
+
+    public function testEvaluatesMethodWithMemberArg()
+    {
+        $now = Carbon::now();
+        $nowString = Carbon::createFromDate($now->year, $now->month, $now->day);
+        $expression = 'Today is @(DATE(contact.year, contact.month, contact.day))';
+        $expected = "Today is $nowString";
+        $context = [
+            'contact' => [
+                'year' => $now->year,
+                'month' => $now->month,
+                'day' => $now->day
+            ]
+        ];
+
+        $this->methodEvaluator->addHandler(new DateTime);
+
+        $result = $this->evaluator->evaluate($expression, $context);
+
+        $this->assertEquals($expected, $result);  
+    }
 }

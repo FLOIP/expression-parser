@@ -4,8 +4,13 @@ namespace Floip\Evaluator;
 
 class Node implements \ArrayAccess
 {
+    /** @var array */
     private $data = [];
+
+    /** @var mixed */
     private $value = null;
+
+    /** @var bool */
     private $valueSet = false;
 
     public function __construct($data)
@@ -13,6 +18,12 @@ class Node implements \ArrayAccess
         $this->data = array_map([$this, 'transformData'], $data);
     }
 
+    /**
+     * Recurse into a tree and transform node structures into Node objects.
+     *
+     * @param mixed $data
+     * @return mixed
+     */
     public function transformData($data)
     {
         if (static::isNode($data)) {
@@ -24,6 +35,12 @@ class Node implements \ArrayAccess
         return $data;
     }
 
+    /**
+     * Set a value that represents the node.
+     *
+     * @param mixed $value
+     * @return Node
+     */
     public function setValue($value)
     {
         $this->value = $value;
@@ -31,11 +48,22 @@ class Node implements \ArrayAccess
         return $this;
     }
 
+    /**
+     * Get the value of the node.
+     *
+     * @return mixed
+     */
     public function getValue()
     {
         return $this->value;
     }
 
+    /**
+     * Get the difference between the node's end and starting offset in the
+     * expression from which it was parsed.
+     *
+     * @return int
+     */
     public function getLength()
     {
         $start = $this->data['location']['start']['offset'];
@@ -51,11 +79,21 @@ class Node implements \ArrayAccess
         throw new \Exception;
     }
 
+    /**
+     * Determine whether something looks like a node.
+     *
+     * @param mixed $candidate
+     * @return bool
+     */
     public static function isNode($candidate)
     {
         return \is_array($candidate) && \key_exists('type', $candidate);
     }
 
+
+    /*
+     * Implementation of ArrayAccess
+     */
     public function offsetExists($offset)
     {
         return isset($this->data[$offset]);

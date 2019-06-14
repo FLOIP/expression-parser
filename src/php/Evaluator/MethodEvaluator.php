@@ -2,24 +2,36 @@
 
 namespace Floip\Evaluator;
 
-use Floip\Evaluator\MethodEvaluator\DateTime;
-use Floip\Evaluator\MethodEvaluator\Excellent;
-use Floip\Evaluator\MethodEvaluator\Logical;
-use Floip\Evaluator\MethodEvaluator\Math;
-use Floip\Evaluator\MethodEvaluator\Text;
 use Floip\Evaluator\MethodEvaluator\Contract\EvaluatesMethods;
 
 class MethodEvaluator extends AbstractNodeEvaluator
 {
+    /** @var array */
     private $handlers = [];
 
+    /**
+     * Add a handler for specific method types.
+     * For example, method types dealing with dates might be contained
+     * in a separate DateTime handler that reports [year(), now()] as methods
+     * it knows how to evaluate.
+     *
+     * @param EvaluatesMethods $handler
+     * @return MethodEvaluator
+     */
     public function addHandler(EvaluatesMethods $handler)
     {
         foreach ($handler->handles() as $method) {
             $this->handlers[\strtolower($method)] = $handler;
         }
+        return $this;
     }
 
+    /**
+     * Get the handler associated with a particular method.
+     *
+     * @param string $method
+     * @return EvaluatesMethods
+     */
     public function getHandler($method)
     {
         if (isset($this->handlers[$method])) {
@@ -28,6 +40,14 @@ class MethodEvaluator extends AbstractNodeEvaluator
         throw new \Exception('No handler found for ' . $method);
     }
 
+    /**
+     * Evaluate the method call node with the given context.
+     *
+     * @param string $string
+     * @param Node $node
+     * @param array $context
+     * @return mixed
+     */
     public function evaluate($string, Node $node, array $context)
     {
         if (!isset($node['call'], $node['args']) || !is_array($node['args'])) {
@@ -35,6 +55,7 @@ class MethodEvaluator extends AbstractNodeEvaluator
         }
         $call = $node['call'];
         $args = $node['args'];
+        // transform any child nodes to their value
         $args = array_map(function ($arg) {
             if ($arg instanceof Node) {
                 return $arg->getValue();
