@@ -20,35 +20,34 @@ class MemberEvaluatorTest extends TestCase
     /**
      * @dataProvider keyAndValueProvider
      */
-    public function testEvaluatesKeyAndValue($string, array $node, array $context, $expected)
+    public function testEvaluatesKeyAndValue(array $node, array $context, $expected)
     {
-        $evaluated = $this->evaluator->evaluate($string, new Node($node), $context);
+        $evaluated = $this->evaluator->evaluate(new Node($node), $context);
         $this->assertEquals($expected, $evaluated);
     }
 
     /**
      * @dataProvider keyNoValueProvider
      */
-    public function testEvaluatesKeyNoValue($string, array $node, array $context, $expected)
+    public function testEvaluatesKeyNoValue(array $node, array $context, $expected)
     {
-        $evaluated = $this->evaluator->evaluate($string, new Node($node), $context);
+        $evaluated = $this->evaluator->evaluate(new Node($node), $context);
         $this->assertEquals($expected, $evaluated);
     }
 
     /**
      * @dataProvider keyDefaultValueProvider
      */
-    public function testEvaluatesKeyWithDefaultValue($string, array $node, array $context, $expected)
+    public function testEvaluatesKeyWithDefaultValue(array $node, array $context, $expected)
     {
-        $evaluated = $this->evaluator->evaluate($string, new Node($node), $context);
+        $evaluated = $this->evaluator->evaluate(new Node($node), $context);
         $this->assertEquals($expected, $evaluated);
     }
 
     public function keyAndValueProvider()
     {
         return [
-            'end of string' => [
-                'Hello @contact.name',
+            [
                 [
                     'type' => ParsesFloip::MEMBER_TYPE,
                     'key' => 'contact',
@@ -70,8 +69,7 @@ class MemberEvaluatorTest extends TestCase
                 'Kyle'
             ],
 
-            'begin of string' => [
-                '@contact.name how are you?',
+            [
                 [
                     'type' => ParsesFloip::MEMBER_TYPE,
                     'key' => 'contact',
@@ -93,8 +91,7 @@ class MemberEvaluatorTest extends TestCase
                 'Kyle'
             ],
 
-            'middle of string' => [
-                'Hey @contact.name what\'s up?',
+            [
                 [
                     'type' => ParsesFloip::MEMBER_TYPE,
                     'key' => 'contact',
@@ -116,8 +113,7 @@ class MemberEvaluatorTest extends TestCase
                 'Kyle'
             ],
 
-            'middle of string parens' => [
-                'Hey @(contact.name) what\'s up?',
+            [
                 [
                     'type' => ParsesFloip::MEMBER_TYPE,
                     'key' => 'contact',
@@ -145,8 +141,7 @@ class MemberEvaluatorTest extends TestCase
     public function keyNoValueProvider()
     {
         return [
-            'end of string' => [
-                'Hello @contact',
+            [
                 [
                     'type' => ParsesFloip::MEMBER_TYPE,
                     'key' => 'contact',
@@ -174,8 +169,7 @@ class MemberEvaluatorTest extends TestCase
     public function keyDefaultValueProvider()
     {
         return [
-            'end of string' => [
-                'Hello @contact',
+            [
                 [
                     'type' => ParsesFloip::MEMBER_TYPE,
                     'key' => 'contact',

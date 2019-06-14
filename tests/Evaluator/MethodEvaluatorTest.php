@@ -37,7 +37,6 @@ class MethodEvaluatorTest extends TestCase
         $handler->shouldReceive('foo')->once()->andReturn('foobar');
         $this->evaluator->addHandler($handler);
 
-        $string = 'foo @(FOO())';
         $node = [
             'type' => ParsesFloip::METHOD_TYPE,
             'call' => 'FOO',
@@ -53,7 +52,7 @@ class MethodEvaluatorTest extends TestCase
         ];
         $context = [];
 
-        $evaluated = $this->evaluator->evaluate($string, new Node($node), $context);
+        $evaluated = $this->evaluator->evaluate(new Node($node), $context);
 
         $this->assertEquals('foobar', $evaluated);
     }
@@ -67,7 +66,6 @@ class MethodEvaluatorTest extends TestCase
             ->andReturn('foobar');
         $this->evaluator->addHandler($handler);
 
-        $string = 'bar @(FOO("foo", "bar"))';
         $node = [
             'type' => ParsesFloip::METHOD_TYPE,
             'call' => 'FOO',
@@ -83,6 +81,6 @@ class MethodEvaluatorTest extends TestCase
         ];
         $context = [];
 
-        $this->evaluator->evaluate("bar @(foo('foo', 'bar'))", new Node($node), $context);
+        $this->evaluator->evaluate(new Node($node), $context);
     }
 }

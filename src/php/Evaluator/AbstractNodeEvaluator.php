@@ -6,5 +6,5 @@ use Floip\Contract\EvaluatesExpression;
 
 abstract class AbstractNodeEvaluator implements EvaluatesExpression
 {
-    abstract public function evaluate($string, Node $node, array $context);
+    abstract public function evaluate(Node $node, array $context);
 }

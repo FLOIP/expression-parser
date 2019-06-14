@@ -7,12 +7,11 @@ class MemberEvaluator extends AbstractNodeEvaluator
     /**
      * Evaluate the value of a member access node given a context.
      *
-     * @param string $string
      * @param Node $node
      * @param array $context
      * @return mixed
      */
-    public function evaluate($string, Node $node, array $context)
+    public function evaluate(Node $node, array $context)
     {
         if (!isset($node['key'], $context[$node['key']])) {
             throw new \Exception;

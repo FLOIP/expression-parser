@@ -42,7 +42,7 @@ class Evaluator
         // since some nodes will have others as arguments
         $it = $this->getIterator($nodes);
         foreach ($it as $node) {
-            $value = $this->evalNode($expression, $node, $context);
+            $value = $this->evalNode($node, $context);
             $node->setValue($value);
         }
 
@@ -90,10 +90,10 @@ class Evaluator
         throw new \Exception;
     }
 
-    private function evalNode($expression, Node $node, array $context)
+    private function evalNode(Node $node, array $context)
     {
         return $this->getNodeEvaluator($node['type'])
-            ->evaluate($expression, $node, $context);
+            ->evaluate($node, $context);
         throw new \Exception;
     }
 
