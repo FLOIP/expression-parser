@@ -175,7 +175,7 @@ Function_Args = arg:(arg:Function_Arg_Types Arg_Delimiter? {return arg /**<?php 
  * Functions can take any other kind of expression as an argument, or quoted text, or numbers.
  * This means that you can also nest functions deeply.
  */
-Function_Arg_Types = Function_Arg_Inner_Function / Math / Logic / Member_Access / Quote ch:$chars+ Quote {return ch /**<?php return $ch; ?>**/} / $('-'* numbers+)
+Function_Arg_Types = Function_Arg_Inner_Function / Math / Logic / Member_Access / Quote ch:$QuotedText+ Quote {return ch /**<?php return $ch; ?>**/} / $('-'* numbers+)
 Function_Arg_Inner_Function = arg:Function Arg_Delimiter? {return arg /**<?php return $arg;?> **/}
 
 /**
@@ -225,6 +225,7 @@ Escaped_Identifier = Identifier Identifier {
 }
 
 Quote = '"'
+QuotedText = [^"]
 OpenParen = '('
 CloseParen = ')'
 Identifier = '@' 

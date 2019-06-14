@@ -18,12 +18,14 @@ class Text extends AbstractMethodHandler implements TextInterface
     {
         return ord($string);
     }
-    public function concatenate(array $strings)
+    public function concatenate()
     {
-        return implode($strings);
+        return implode(\func_get_args());
     }
     public function fixed($number, $decimals = 0, $commas = false)
     {
+        // number_format on its own will round numbers
+        $number = \bcdiv($number, 1, $decimals);
         return number_format($number, $decimals, '.', '');
     }
     public function left($string, $chars)
@@ -40,7 +42,7 @@ class Text extends AbstractMethodHandler implements TextInterface
     }
     public function proper($string)
     {
-        return ucwords($string);
+        return ucwords(strtolower($string));
     }
     public function rept($string, $times)
     {
@@ -52,15 +54,21 @@ class Text extends AbstractMethodHandler implements TextInterface
     }
     public function substitute($string, $old, $new, $instances = null)
     {
-        return str_replace($string, $old, $new, $instances);
+        return str_replace($old, $new, $string, $instances);
     }
+    /**
+     * @todo php 7.2 could use mb_char
+     */
     public function unichar($unicode)
     {
-        // php 7.2 could use mb_char
+        // 
     }
+    /**
+     * @todo php 7.2 could use mb_ord
+     */
     public function unicode($string)
     {
-        // php 7.2 could use mb_ord
+        // 
     }
     public function upper($string)
     {

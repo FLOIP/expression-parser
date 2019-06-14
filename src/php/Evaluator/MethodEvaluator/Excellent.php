@@ -63,7 +63,20 @@ class Excellent extends AbstractMethodHandler implements ExcellentInterface
             $split = $this->splitByPunc($string);
         }
 
-        return array_slice($split, $start, $stop);
+        if ($stop > 0) {
+            $stop = count($split) - ($stop - 2);
+        }
+
+        if ($start < 0) {
+            $split = \array_reverse($split);
+            ++$start;
+            $stop = count($split) - $stop + 1;
+        } else {
+            --$start;
+        }
+
+
+        return implode(' ', array_slice($split, $start, $stop));
     }
 
     /**

@@ -14,6 +14,7 @@ use Floip\Evaluator\LogicEvaluator;
 use Floip\Evaluator\MethodEvaluator\DateTime;
 use Floip\Evaluator\MethodEvaluator\Math;
 use Carbon\Carbon;
+use Floip\Evaluator\MethodEvaluator\Text;
 
 class EvaluatorIntegrationTest extends TestCase
 {
@@ -155,6 +156,18 @@ class EvaluatorIntegrationTest extends TestCase
 
         $this->assertEquals($expected, $result);
     }
+    
+    /**
+     * @dataProvider textMethodsProvider
+     */
+    public function testEvaluatesTextMethods($expression, array $context, $expected)
+    {
+        $this->methodEvaluator->addHandler(new Text);
+
+        $result = $this->evaluator->evaluate($expression, $context);
+
+        $this->assertEquals($expected, $result);
+    }
 
     public function mathProvider()
     {
@@ -176,6 +189,49 @@ class EvaluatorIntegrationTest extends TestCase
                     'age' => '9',
                 ]], 'TRUE'
             ],
+        ];
+    }
+
+    public function textMethodsProvider()
+    {
+        return [
+            'char' => ['As easy as @CHAR(65), @CHAR(66), @CHAR(67)', [], 'As easy as A, B, C'],
+            'clean' => ['You entered @CLEAN(step.value)', [
+                'step' => [
+                    'value' => "\n\t\rABC"
+                ]
+            ], 'You entered ABC'],
+            'code' => ['The numeric code of A is @CODE("A")', [], 'The numeric code of A is 65'],
+            'concat' => ['Your name is @CONCATENATE(contact.first_name, " ", contact.last_name)',[
+                'contact' => [
+                    'first_name' => 'Big',
+                    'last_name' => 'Papa'
+                ]]
+                , 'Your name is Big Papa' 
+            ],
+            'fixed' => ['You have @FIXED(contact.balance, 2) in your account', [
+                'contact' => ['balance' => '4.209922']
+            ], 'You have 4.20 in your account'],
+            'left' => ['You entered PIN @LEFT(step.value, 4)', [
+                'step' => ['value' => '1234567']
+            ], 'You entered PIN 1234'],
+            'len' => ['You entered @LEN(step.value) characters', [
+                'step' => ['value' => '7654321']
+            ], 'You entered 7 characters'],
+            'lower' => ['Welcome @LOWER(contact)', ['contact' => ['__value__' => 'JOHN']], 'Welcome john'],
+            'proper' => ['Your name is @PROPER(contact)', [
+                'contact' => ['__value__' => 'jAcOb JoNeS']
+            ], 'Your name is Jacob Jones'],
+            'rept' => ['Stars! @(REPT("*", 10))', [], 'Stars! **********'],
+            'right' => ['Your input ended with ...@(RIGHT(step.value, 3))', [
+                'step' => ['value' => 'Hello World']
+            ], 'Your input ended with ...rld'],
+            'substitute' => ['@SUBSTITUTE(step.value, "can\'t", "can")', [
+                'step' => ['value' => 'I can\'t do it']
+            ], 'I can do it'],
+            'upper' => ['WELCOME @(UPPER(contact))!!', 
+                ['contact' => ['__value__' => 'home']],
+                'WELCOME HOME!!']
         ];
     }
 }

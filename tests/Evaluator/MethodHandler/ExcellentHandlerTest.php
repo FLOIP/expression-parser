@@ -40,6 +40,14 @@ class ExcellentHandlerTest extends TestCase
         $this->assertEquals($expected, $this->excellent->wordCount($input));
     }
 
+    /**
+     * @dataProvider wordSliceProvider
+     */
+    public function testWordSlice($string, $start, $stop, $bySpaces, $expected)
+    {
+        $this->assertEquals($expected, $this->excellent->wordSlice($string, $start, $stop, $bySpaces));
+    }
+
     public function wordCountProvider()
     {
         return [
@@ -66,6 +74,16 @@ class ExcellentHandlerTest extends TestCase
             ['hello cow-boy', 2, false, 'cow'],
             ['hello cow-boy', 2, true, 'cow-boy'],
             ['hello cow-boy', -1, false, 'boy'],
+        ];
+    }
+
+    public function wordSliceProvider()
+    {
+        return [
+            ['RapidPro expressions are fun', 2, 4, null, 'expressions are'],
+            ['RapidPro expressions are fun', 2, null, null, 'expressions are fun'],
+            ['RapidPro expressions are fun', 1, -2, null, 'RapidPro expressions'],
+            ['RapidPro expressions are fun', -1, 2, null, 'fun']
         ];
     }
 }

@@ -31,10 +31,10 @@ interface Text extends EvaluatesMethods
     /**
      * Joins text strings into one text string
      *
-     * @param string[] $strings
+     * @param string[] ...$args
      * @return string
      */
-    public function concatenate(array $strings);
+    public function concatenate();
     
     /**
      * Formats the given number in decimal format using a period and commas
