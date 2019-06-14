@@ -96,6 +96,46 @@ class Node implements \ArrayAccess
         return \is_array($candidate) && \key_exists('type', $candidate);
     }
 
+    public function getChildren()
+    {
+        return $this->getChildrenFromArray($this->data);
+    }
+
+    private function getChildrenFromArray(array $arr)
+    {
+        $children = [];
+        foreach ($arr as $item) {
+            if ($item instanceof self) {
+                $children[] = $item;
+                continue;
+            }
+            if (is_array($item)) {
+                $children = array_merge($children, $this->getChildrenFromArray($item));
+            }
+        }
+        return $children;
+    }
+
+    public function hasChildren()
+    {
+        return $this->hasChildrenArray($this->data);
+    }
+
+    private function hasChildrenArray(array $data)
+    {
+        foreach ($data as $item) {
+            if ($item instanceof self) {
+                return true;
+            }
+            if (is_array($item)) {
+                if ($this->hasChildrenArray($item)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
 
     /*
      * Implementation of ArrayAccess

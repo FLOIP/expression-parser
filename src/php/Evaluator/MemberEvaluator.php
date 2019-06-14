@@ -13,8 +13,14 @@ class MemberEvaluator extends AbstractNodeEvaluator
      */
     public function evaluate(Node $node, array $context)
     {
-        if (!isset($node['key'], $context[$node['key']])) {
-            throw new \Exception;
+        if (!isset($node['key'])) {
+            throw new \Exception('No key found in member access node');
+        }
+        if (!key_exists($node['key'], $context)) {
+            if (key_exists('value', $node)) {
+                return $node['key'] . '.' . $node['value'];
+            }
+            return $node['key'];
         }
         $el = $context[$node['key']];
         if (!isset($node['value'])) {

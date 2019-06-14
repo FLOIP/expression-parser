@@ -7,11 +7,13 @@ use Floip\Parser;
 use Floip\Evaluator;
 use Floip\Evaluator\MethodEvaluator;
 use Floip\Evaluator\MemberEvaluator;
-use Floip\Evaluator\MethodEvaluator\DateTime;
 use Floip\Contract\ParsesFloip;
-use Carbon\Carbon;
-use Floip\Evaluator\MethodEvaluator\Math;
+use Floip\Contract\EvaluatesExpression;
 use Floip\Evaluator\MethodEvaluator\Logical;
+use Floip\Evaluator\LogicEvaluator;
+use Floip\Evaluator\MethodEvaluator\DateTime;
+use Floip\Evaluator\MethodEvaluator\Math;
+use Carbon\Carbon;
 
 class EvaluatorIntegrationTest extends TestCase
 {
@@ -19,20 +21,25 @@ class EvaluatorIntegrationTest extends TestCase
     protected $evaluator;
     /** @var Parser */
     protected $parser;
-    /** @var MethodEvaluator */
+    /** @var EvaluatesExpression */
     protected $methodEvaluator;
-    /** @var MemberEvaluator */
+    /** @var EvaluatesExpression */
     protected $memberEvaluator;
+    /** @var EvaluatesExpression */
+    protected $logicEvaluator;
 
     public function setUp()
     {
         $this->parser = new Parser;
         $this->methodEvaluator = new MethodEvaluator;
         $this->memberEvaluator = new MemberEvaluator;
+        $this->logicEvaluator = new LogicEvaluator;
+
 
         $this->evaluator = new Evaluator($this->parser);
         $this->evaluator->addNodeEvaluator($this->methodEvaluator, ParsesFloip::METHOD_TYPE);
         $this->evaluator->addNodeEvaluator($this->memberEvaluator, ParsesFloip::MEMBER_TYPE);
+        $this->evaluator->addNodeEvaluator($this->logicEvaluator, ParsesFloip::LOGIC_TYPE);
     }
 
     public function testEvaluatesMemberAccess()
@@ -137,14 +144,17 @@ class EvaluatorIntegrationTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    // public function testEvaluatesLogic($expression, $expected)
-    // {
-    //     $this->methodEvaluator->addHandler(new Logical);
+    /**
+     * @dataProvider logicProvider
+     */
+    public function testEvaluatesLogic($expression, array $context, $expected)
+    {
+        $this->methodEvaluator->addHandler(new Logical);
 
-    //     $result = $this->evaluator->evaluate($expression, []);
+        $result = $this->evaluator->evaluate($expression, $context);
 
-    //     $this->assertEquals($expected, $result);
-    // }
+        $this->assertEquals($expected, $result);
+    }
 
     public function mathProvider()
     {
@@ -157,10 +167,15 @@ class EvaluatorIntegrationTest extends TestCase
         ];
     }
 
-    // public function logicProvider()
-    // {
-    //     return [
-    //         '@(and())'
-    //     ];
-    // }
+    public function logicProvider()
+    {
+        return [
+            ['@(and(contact.gender = "f", contact.age >= 10))',[
+                'contact' => [
+                    'gender' => 'f',
+                    'age' => '9',
+                ]], 'TRUE'
+            ],
+        ];
+    }
 }

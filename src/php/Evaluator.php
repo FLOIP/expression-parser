@@ -87,21 +87,20 @@ class Evaluator
         if (isset($this->evaluators[$type])) {
             return $this->evaluators[$type];
         }
-        throw new \Exception;
+        throw new \Exception("Unknown node type: $type");
     }
 
     private function evalNode(Node $node, array $context)
     {
         return $this->getNodeEvaluator($node['type'])
             ->evaluate($node, $context);
-        throw new \Exception;
     }
 
     private function getIterator(array $ast)
     {
         // we want to recurse over the tree depth-first, starting with the 
         // deepest nodes
-        $arrayIterator = new \RecursiveArrayIterator($ast);
+        $arrayIterator = new \Floip\Evaluator\RecursiveNodeIterator($ast);
         return new \RecursiveIteratorIterator($arrayIterator, \RecursiveIteratorIterator::CHILD_FIRST);
     }
 

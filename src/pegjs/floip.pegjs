@@ -194,23 +194,26 @@ Member_Access = lhs:$AtomicExpression+ rhs:('.' inner:$AtomicExpression+ {return
 /**
  * Math looks like @(1 + 2)
  */
-Math = lhs:(Function / Member_Access / $numbers+) ws* op:$math_chars ws+ rhs:(Function / Member_Access / $numbers+) ws* {
+Math = lhs:Math_Arg ws* op:$math_chars ws+ rhs:Math_Arg ws* {
   return new math(lhs, rhs, op, location())
   /** <?php
     return call_user_func_array($this->_math, [$lhs, $rhs, $op]);
   ?> **/
 }
 
+Math_Arg = Function / Member_Access / $numbers+
+
 /**
- * Logic looks like @(1 < 2)
+ * Logic looks like @(1 < 2) or @(contact.name = "Henry")
  */
-Logic = lhs:(Function / Member_Access / $numbers+) ws* op:$logic_chars ws+ rhs:(Function / Member_Access / $numbers+) ws* {
+Logic = lhs:Logic_Arg ws* op:$logic_chars ws+ rhs:Logic_Arg ws* {
   return new logic(lhs, rhs, op, location())
   /** <?php
     return call_user_func_array($this->_logic, [$lhs, $rhs, $op]);
   ?> **/
 }
 
+Logic_Arg = Math / Function / Member_Access / $numbers+ / Quote ch:$chars Quote { return ch /**<?php return $ch; ?>**/}
 /**
  * We can ignore the identifier by typing it twice, i.e. '@@' => '@'
  */
