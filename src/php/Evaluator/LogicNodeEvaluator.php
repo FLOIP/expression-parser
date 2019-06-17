@@ -2,12 +2,14 @@
 
 namespace Viamo\Floip\Evaluator;
 
+use Viamo\Floip\Evaluator\Exception\NodeEvaluatorException;
+
 class LogicNodeEvaluator extends AbstractNodeEvaluator 
 {
     public function evaluate(Node $node, array $context)
     {
         if (!isset($node['rhs'], $node['lhs'], $node['operator'])) {
-            throw new \Exception;
+            throw new NodeEvaluatorException('Logic node is the wrong shape, should have "rhs", "lhs", "operator"');
         }
         $lhs = $this->value($node['lhs']);
         $rhs = $this->value($node['rhs']);
@@ -25,7 +27,7 @@ class LogicNodeEvaluator extends AbstractNodeEvaluator
             case '=':
                 return $lhs == $rhs;
         }
-        throw new \Exception('invalid operator ' . $operator);
+        throw new NodeEvaluatorException('invalid operator ' . $operator);
     }
 
     private function value($thing)

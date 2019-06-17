@@ -6,6 +6,8 @@ use Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract\Math as MathInterface;
 
 class Math extends AbstractMethodHandler implements MathInterface
 {
+    // php 5.5 compat
+    const PHP_INT_MIN = -9223372036854775808;
     public function abs($number)
     {
         return abs($number);
@@ -13,7 +15,7 @@ class Math extends AbstractMethodHandler implements MathInterface
     public function max()
     {
         $args = \func_get_args();
-        return array_reduce($args, 'max', \PHP_INT_MIN);
+        return array_reduce($args, 'max', static::PHP_INT_MIN);
     }
     public function min()
     {

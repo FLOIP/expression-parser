@@ -3,6 +3,7 @@
 namespace Viamo\Floip\Evaluator\MethodNodeEvaluator;
 
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract\Excellent as ExcellentInterface;
+use Viamo\Floip\Evaluator\Exception\MethodNodeException;
 
 class Excellent extends AbstractMethodHandler implements ExcellentInterface
 {
@@ -90,7 +91,7 @@ class Excellent extends AbstractMethodHandler implements ExcellentInterface
         $punc = static::PUNCTUATION;
         $result = preg_split("/\\s*[{$punc}]\\s*|\\s/u", $string, -1, PREG_SPLIT_NO_EMPTY);
         if ($result === false) {
-            throw new \Exception;
+            throw new MethodNodeException('Error splitting string by punctuation');
         }
         return $result;
     }

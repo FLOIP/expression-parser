@@ -2,6 +2,8 @@
 
 namespace Viamo\Floip\Evaluator;
 
+use Viamo\Floip\Evaluator\Exception\NodeEvaluatorException;
+
 class MemberNodeEvaluator extends AbstractNodeEvaluator
 {
     /**
@@ -14,7 +16,7 @@ class MemberNodeEvaluator extends AbstractNodeEvaluator
     public function evaluate(Node $node, array $context)
     {
         if (!isset($node['key'])) {
-            throw new \Exception('No key found in member access node');
+            throw new NodeEvaluatorException('Member node is the wrong shape, should have "key"');
         }
         if (!key_exists($node['key'], $context)) {
             if (key_exists('value', $node)) {

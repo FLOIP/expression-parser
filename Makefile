@@ -1,5 +1,5 @@
 PEGJS_TAG="node:8-alpine"
-PHP_TAG="php:5.5-alpine"
+PHP_TAG="floip-php:5.5-alpine"
 COMPOSER_TAG="composer"
 DOCKER_RUN=docker run --rm -it -v `pwd`:/src -u `id -u` -w '/src'
 PEGJS=$(DOCKER_RUN) $(PEGJS_TAG) npx pegjs
@@ -11,7 +11,7 @@ PHPEGJS_OPTIONS={"phpegjs":{"parserNamespace": "Viamo", "parserClassName": "$(PA
 JS_OUT=dist/$(PARSER_NAME).js
 ENV=docker
 
-.PHONY: clean default parsers parse-php parse-js
+.PHONY: clean default parsers parse-php parse-js docker-php
 
 default: parsers
 
@@ -47,9 +47,14 @@ ifeq ($(ENV),docker)
 	$(DOCKER_RUN) $(COMPOSER_TAG) composer install --ignore-platform-reqs
 else
 	composer install
-endif	
+endif
 
-test: vendor
+docker-php:
+ifeq ($(ENV),docker)
+	docker build -t $(PHP_TAG) .docker/php
+endif
+
+test: vendor docker-php
 ifeq ($(ENV),docker)
 	$(DOCKER_RUN) $(PHP_TAG) ./vendor/bin/phpunit 
 else
@@ -59,3 +64,6 @@ endif
 clean:
 	rm -rf node_modules
 	rm -rf vendor
+ifeq ($(ENV),docker)	
+	docker rmi $(PHP_TAG)
+endif

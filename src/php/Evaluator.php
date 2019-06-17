@@ -6,6 +6,7 @@ use Viamo\Floip\Contract\ParsesFloip;
 use Viamo\Floip\Contract\EvaluatesExpression;
 use Viamo\Floip\Evaluator\Node;
 use Viamo\Floip\Evaluator\RecursiveNodeIterator;
+use Viamo\Floip\Evaluator\Exception\EvaluatorException;
 
 class Evaluator
 {
@@ -89,7 +90,7 @@ class Evaluator
         if (isset($this->evaluators[$type])) {
             return $this->evaluators[$type];
         }
-        throw new \Exception("Unknown node type: $type");
+        throw new EvaluatorException("Unknown node type: $type");
     }
 
     private function evalNode(Node $node, array $context)

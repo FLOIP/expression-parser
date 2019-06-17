@@ -3,6 +3,7 @@
 namespace Viamo\Floip\Evaluator;
 
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract\EvaluatesMethods;
+use Viamo\Floip\Evaluator\Exception\NodeEvaluatorException;
 
 /**
  * Evaluates METHOD nodes -- expressions that look like @(FUNC(arg...))
@@ -40,7 +41,7 @@ class MethodNodeEvaluator extends AbstractNodeEvaluator
         if (isset($this->handlers[$method])) {
             return $this->handlers[$method];
         }
-        throw new \Exception('No handler found for ' . $method);
+        throw new NodeEvaluatorException('No node method handler found for ' . $method);
     }
 
     /**
@@ -53,7 +54,7 @@ class MethodNodeEvaluator extends AbstractNodeEvaluator
     public function evaluate(Node $node, array $context)
     {
         if (!isset($node['call'], $node['args']) || !is_array($node['args'])) {
-            throw new \Exception;
+            throw new NodeEvaluatorException('Method node is the wrong shape, should have "call", "args"');
         }
         $call = $node['call'];
         $args = $node['args'];
