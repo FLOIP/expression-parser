@@ -1424,7 +1424,7 @@ class BaseExpressionParser {
         ];
       };
       
-        $this->_escape = function($location) {
+        $this->_escape = function() {
           return [
             'type' => 'ESCAPE',
             'location' => call_user_func($this->_location)

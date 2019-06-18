@@ -10,6 +10,7 @@ use Viamo\Floip\Contract\ParsesFloip;
 use Viamo\Floip\Evaluator\MathNodeEvaluator;
 use Viamo\Floip\Contract\EvaluatesExpression;
 use Viamo\Floip\Evaluator\LogicNodeEvaluator;
+use Viamo\Floip\Evaluator\EscapeNodeEvaluator;
 use Viamo\Floip\Evaluator\MemberNodeEvaluator;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\Math;
@@ -31,6 +32,8 @@ class EvaluatorIntegrationTest extends TestCase
     protected $LogicNodeEvaluator;
     /** @var MathNodeEvaluator */
     protected $mathNodeEvaluator;
+    /** @var EvaluatesExpression */
+    protected $escapeNodeEvaluator;
 
     public function setUp()
     {
@@ -39,13 +42,14 @@ class EvaluatorIntegrationTest extends TestCase
         $this->MemberNodeEvaluator = new MemberNodeEvaluator;
         $this->LogicNodeEvaluator = new LogicNodeEvaluator;
         $this->mathNodeEvaluator = new MathNodeEvaluator;
-
+        $this->escapeNodeEvaluator = new EscapeNodeEvaluator;
 
         $this->evaluator = new Evaluator($this->parser);
         $this->evaluator->addNodeEvaluator($this->MethodNodeEvaluator);
         $this->evaluator->addNodeEvaluator($this->MemberNodeEvaluator);
         $this->evaluator->addNodeEvaluator($this->LogicNodeEvaluator);
         $this->evaluator->addNodeEvaluator($this->mathNodeEvaluator);
+        $this->evaluator->addNodeEvaluator($this->escapeNodeEvaluator);
     }
 
     public function testEvaluatesMemberAccess()
@@ -183,6 +187,24 @@ class EvaluatorIntegrationTest extends TestCase
         $result = $this->evaluator->evaluate($expression, $context);
 
         $this->assertEquals($expected, $result);
+    }
+
+    /**
+     * @dataProvider escapedExpressionProvider
+     */
+    public function testEscapedExpressions($expression, array $context, $expected)
+    {
+        $result = $this->evaluator->evaluate($expression, $context);
+
+        $this->assertEquals($expected, $result);
+    }
+
+    public function escapedExpressionProvider()
+    {
+        return [
+            ['Follow us @@twitterHandle', [], 'Follow us @twitterHandle'],
+            ['Email us @@ contact@@example.com', [], 'Email us @ contact@example.com'],
+        ];
     }
 
     public function mathExpressionProvider()

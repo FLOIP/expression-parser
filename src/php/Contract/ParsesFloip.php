@@ -9,6 +9,7 @@ interface ParsesFloip
     const MATH_TYPE = 'MATH';
     const LOGIC_TYPE = 'LOGIC';
     const ESCAPE_TYPE = 'ESCAPE';
+    const IDENTIFIER = '@';
     
     /**
      * Parse the $input string to produce an abstract syntax tree representing
