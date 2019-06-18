@@ -71,12 +71,12 @@ class Evaluator
 
     /**
      * @param EvaluatesExpression $evaluator
-     * @param string $type The type of node that is handled
      * @see Floip\Contact\ParsesFloip for node types
      * @return Evaluator
      */
-    public function addNodeEvaluator(EvaluatesExpression $evaluator, $type)
+    public function addNodeEvaluator(EvaluatesExpression $evaluator)
     {
+        $type = $evaluator->handles();
         $this->evaluators[$type] = $evaluator;
         return $this;
     }

@@ -27,7 +27,8 @@ class EvaluatorTest extends TestCase
     {
         $type = 'foobar';
         $handler = Mockery::mock(EvaluatesExpression::class);
-        $this->evaluator->addNodeEvaluator($handler, $type);
+        $handler->shouldReceive('handles')->andReturn($type);
+        $this->evaluator->addNodeEvaluator($handler);
         $this->parser->shouldReceive('parse')
             ->andReturn([['type' => $type]]);
 
@@ -43,9 +44,10 @@ class EvaluatorTest extends TestCase
         $expected = '42';
 
         $handler = Mockery::mock(EvaluatesExpression::class);
+        $handler->shouldReceive('handles')->andReturn($type);
         $handler->shouldReceive('evaluate')->andReturn($expected);
 
-        $this->evaluator->addNodeEvaluator($handler, $type);
+        $this->evaluator->addNodeEvaluator($handler);
         $this->parser->shouldReceive('parse')
             ->andReturn([[
                 'type' => $type,

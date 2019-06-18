@@ -3,6 +3,7 @@
 namespace Viamo\Floip\Evaluator;
 
 use Viamo\Floip\Evaluator\Exception\NodeEvaluatorException;
+use Viamo\Floip\Contract\ParsesFloip;
 
 class MemberNodeEvaluator extends AbstractNodeEvaluator
 {
@@ -34,5 +35,10 @@ class MemberNodeEvaluator extends AbstractNodeEvaluator
             return \json_encode($el);
         }
         return $el[$node['value']];
+    }
+
+    public function handles()
+    {
+        return ParsesFloip::MEMBER_TYPE;
     }
 }

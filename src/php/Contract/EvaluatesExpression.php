@@ -14,4 +14,11 @@ interface EvaluatesExpression
      * @return mixed
      */
     public function evaluate(Node $node, array $context);
+
+    /**
+     * Reports what type of node this evaluator handles.
+     *
+     * @return string
+     */
+    public function handles();
 }

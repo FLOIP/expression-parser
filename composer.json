@@ -8,19 +8,23 @@
     ],
     "config": {
         "platform": {
-            "php": "5.5.9",
-            "ext-bcmath": "*"
+            "php": "5.5.9"
         }
     },
     "require": {
+        "php": ">=5.5.9",
+        "ext-bcmath": "*",
         "nesbot/carbon": "^1.38",
-        "mockery/mockery": "^0.9.11"
+        "mockery/mockery": "^0.9.11",
+        "illuminate/support": "^5.2"
     },
     "autoload": {
         "psr-4": {
             "Viamo\\Floip\\": "src/php/"
         },
-        "classmap": ["dist/"]
+        "classmap": [
+            "dist/"
+        ]
     },
     "autoload-dev": {
         "psr-4": {

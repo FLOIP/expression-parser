@@ -3,6 +3,7 @@
 namespace Viamo\Floip\Evaluator;
 
 use Viamo\Floip\Evaluator\Exception\NodeEvaluatorException;
+use Viamo\Floip\Contract\ParsesFloip;
 
 class LogicNodeEvaluator extends AbstractNodeEvaluator 
 {
@@ -44,5 +45,10 @@ class LogicNodeEvaluator extends AbstractNodeEvaluator
             }
         }
         return $thing;
+    }
+
+    public function handles()
+    {
+        return ParsesFloip::LOGIC_TYPE;
     }
 }

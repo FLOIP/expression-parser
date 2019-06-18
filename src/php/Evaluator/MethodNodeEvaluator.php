@@ -4,6 +4,7 @@ namespace Viamo\Floip\Evaluator;
 
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract\EvaluatesMethods;
 use Viamo\Floip\Evaluator\Exception\NodeEvaluatorException;
+use Viamo\Floip\Contract\ParsesFloip;
 
 /**
  * Evaluates METHOD nodes -- expressions that look like @(FUNC(arg...))
@@ -71,5 +72,10 @@ class MethodNodeEvaluator extends AbstractNodeEvaluator
 
         $handler = $this->getHandler($call);
         return call_user_func_array([$handler, $call], $args);
+    }
+
+    public function handles()
+    {
+        return ParsesFloip::METHOD_TYPE;
     }
 }
