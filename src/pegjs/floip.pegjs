@@ -214,7 +214,8 @@ Logic = lhs:Logic_Arg ws* op:$logic_chars ws+ rhs:Logic_Arg ws* {
   ?> **/
 }
 
-Logic_Arg = Math / Function / Member_Access / $numbers+ / Quote ch:$chars Quote { return ch /**<?php return $ch; ?>**/}
+Logic_Arg = Logic_Arg_Inner_Logic / Math / Function / Member_Access / $numbers+ / Quote ch:$chars Quote { return ch /**<?php return $ch; ?>**/}
+Logic_Arg_Inner_Logic = OpenParen child:Logic CloseParen { return $child; /**<?php return $child; ?>**/}
 /**
  * We can ignore the identifier by typing it twice, i.e. '@@' => '@'
  */
