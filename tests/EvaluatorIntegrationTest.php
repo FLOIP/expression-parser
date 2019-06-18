@@ -2,19 +2,20 @@
 
 namespace Viamo\Floip\Tests;
 
-use PHPUnit\Framework\TestCase;
+use Carbon\Carbon;
 use Viamo\Floip\Parser;
 use Viamo\Floip\Evaluator;
-use Viamo\Floip\Evaluator\MethodNodeEvaluator;
-use Viamo\Floip\Evaluator\MemberNodeEvaluator;
+use PHPUnit\Framework\TestCase;
 use Viamo\Floip\Contract\ParsesFloip;
+use Viamo\Floip\Evaluator\MathNodeEvaluator;
 use Viamo\Floip\Contract\EvaluatesExpression;
-use Viamo\Floip\Evaluator\MethodNodeEvaluator\Logical;
 use Viamo\Floip\Evaluator\LogicNodeEvaluator;
-use Viamo\Floip\Evaluator\MethodNodeEvaluator\DateTime;
+use Viamo\Floip\Evaluator\MemberNodeEvaluator;
+use Viamo\Floip\Evaluator\MethodNodeEvaluator;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\Math;
-use Carbon\Carbon;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\Text;
+use Viamo\Floip\Evaluator\MethodNodeEvaluator\Logical;
+use Viamo\Floip\Evaluator\MethodNodeEvaluator\DateTime;
 
 class EvaluatorIntegrationTest extends TestCase
 {
@@ -22,12 +23,14 @@ class EvaluatorIntegrationTest extends TestCase
     protected $evaluator;
     /** @var Parser */
     protected $parser;
-    /** @var EvaluatesExpression */
+    /** @var MethodNodeEvaluator */
     protected $MethodNodeEvaluator;
     /** @var EvaluatesExpression */
     protected $MemberNodeEvaluator;
     /** @var EvaluatesExpression */
     protected $LogicNodeEvaluator;
+    /** @var MathNodeEvaluator */
+    protected $mathNodeEvaluator;
 
     public function setUp()
     {
@@ -35,12 +38,14 @@ class EvaluatorIntegrationTest extends TestCase
         $this->MethodNodeEvaluator = new MethodNodeEvaluator;
         $this->MemberNodeEvaluator = new MemberNodeEvaluator;
         $this->LogicNodeEvaluator = new LogicNodeEvaluator;
+        $this->mathNodeEvaluator = new MathNodeEvaluator;
 
 
         $this->evaluator = new Evaluator($this->parser);
-        $this->evaluator->addNodeEvaluator($this->MethodNodeEvaluator, ParsesFloip::METHOD_TYPE);
-        $this->evaluator->addNodeEvaluator($this->MemberNodeEvaluator, ParsesFloip::MEMBER_TYPE);
-        $this->evaluator->addNodeEvaluator($this->LogicNodeEvaluator, ParsesFloip::LOGIC_TYPE);
+        $this->evaluator->addNodeEvaluator($this->MethodNodeEvaluator);
+        $this->evaluator->addNodeEvaluator($this->MemberNodeEvaluator);
+        $this->evaluator->addNodeEvaluator($this->LogicNodeEvaluator);
+        $this->evaluator->addNodeEvaluator($this->mathNodeEvaluator);
     }
 
     public function testEvaluatesMemberAccess()
@@ -134,9 +139,9 @@ class EvaluatorIntegrationTest extends TestCase
     }
 
     /**
-     * @dataProvider mathProvider
+     * @dataProvider mathFnProvider
      */
-    public function testEvaluatesMath($expression, $expected)
+    public function testEvaluatesMathFunctions($expression, $expected)
     {
         $this->MethodNodeEvaluator->addHandler(new Math);
 
@@ -169,7 +174,38 @@ class EvaluatorIntegrationTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function mathProvider()
+    /**
+     * @dataProvider mathExpressionProvider
+     */
+    public function testEvaluatesMathExpressions($expression, array $context, $expected)
+    {
+        $this->MethodNodeEvaluator->addHandler(new Math);
+        $result = $this->evaluator->evaluate($expression, $context);
+
+        $this->assertEquals($expected, $result);
+    }
+
+    public function mathExpressionProvider()
+    {
+        return [
+            'simple case' => [
+                '2 + 2 is @(2 + 2)', [], '2 + 2 is 4'
+            ],
+            'nested math' => [
+                '@((2 + 4) / 2) is 3', [], '3 is 3'
+            ],
+            'variable operand' => [
+                '@(contact.age + 1) is your age next year', [
+                    'contact' => ['age' => '27']
+                ], '28 is your age next year',
+            ],
+            'method operand' => [
+                '@(SUM(2,2) + 4) is 8', [], '8 is 8'
+            ]
+        ];
+    }
+
+    public function mathFnProvider()
     {
         return [
             ['@(abs(-6))', '6'],

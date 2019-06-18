@@ -201,7 +201,8 @@ Math = lhs:Math_Arg ws* op:$math_chars ws+ rhs:Math_Arg ws* {
   ?> **/
 }
 
-Math_Arg = Function / Member_Access / $numbers+
+Math_Arg = Math_Arg_Inner_Math / Function / Member_Access / $numbers+
+Math_Arg_Inner_Math = OpenParen child:Math CloseParen { return child; /**<?php return $child; ?>**/}
 
 /**
  * Logic looks like @(1 < 2) or @(contact.name = "Henry")
