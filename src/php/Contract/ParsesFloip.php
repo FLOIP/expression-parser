@@ -9,6 +9,7 @@ interface ParsesFloip
     const MATH_TYPE = 'MATH';
     const LOGIC_TYPE = 'LOGIC';
     const ESCAPE_TYPE = 'ESCAPE';
+    const CONCATENATION_TYPE = 'CONCATENATE';
     const IDENTIFIER = '@';
     
     /**

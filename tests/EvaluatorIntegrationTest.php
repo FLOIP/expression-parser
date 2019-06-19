@@ -6,7 +6,6 @@ use Carbon\Carbon;
 use Viamo\Floip\Parser;
 use Viamo\Floip\Evaluator;
 use PHPUnit\Framework\TestCase;
-use Viamo\Floip\Contract\ParsesFloip;
 use Viamo\Floip\Evaluator\MathNodeEvaluator;
 use Viamo\Floip\Contract\EvaluatesExpression;
 use Viamo\Floip\Evaluator\LogicNodeEvaluator;
@@ -15,6 +14,7 @@ use Viamo\Floip\Evaluator\MemberNodeEvaluator;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\Math;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\Text;
+use Viamo\Floip\Evaluator\ConcatenationNodeEvaluator;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\Logical;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\DateTime;
 
@@ -34,6 +34,8 @@ class EvaluatorIntegrationTest extends TestCase
     protected $mathNodeEvaluator;
     /** @var EvaluatesExpression */
     protected $escapeNodeEvaluator;
+    /** @var EvaluatesExpression */
+    protected $concatenationNodeEvaluator;
 
     public function setUp()
     {
@@ -43,6 +45,7 @@ class EvaluatorIntegrationTest extends TestCase
         $this->LogicNodeEvaluator = new LogicNodeEvaluator;
         $this->mathNodeEvaluator = new MathNodeEvaluator;
         $this->escapeNodeEvaluator = new EscapeNodeEvaluator;
+        $this->concatenationNodeEvaluator = new ConcatenationNodeEvaluator;
 
         $this->evaluator = new Evaluator($this->parser);
         $this->evaluator->addNodeEvaluator($this->MethodNodeEvaluator);
@@ -50,6 +53,7 @@ class EvaluatorIntegrationTest extends TestCase
         $this->evaluator->addNodeEvaluator($this->LogicNodeEvaluator);
         $this->evaluator->addNodeEvaluator($this->mathNodeEvaluator);
         $this->evaluator->addNodeEvaluator($this->escapeNodeEvaluator);
+        $this->evaluator->addNodeEvaluator($this->concatenationNodeEvaluator);
     }
 
     public function testEvaluatesMemberAccess()
@@ -197,6 +201,28 @@ class EvaluatorIntegrationTest extends TestCase
         $result = $this->evaluator->evaluate($expression, $context);
 
         $this->assertEquals($expected, $result);
+    }
+
+    /**
+     * @dataProvider concatenationExpressionProvider
+     */
+    public function testConcatenationExpressions($expression, array $context, $expected)
+    {
+        $result = $this->evaluator->evaluate($expression, $context);
+
+        $this->assertEquals($expected, $result);
+    }
+
+    public function concatenationExpressionProvider()
+    {
+        return [
+            'simple case' => ['@("Hello " & "World")', [], 'Hello World'],
+            'multiple' => ['@("One" & " " & "Two")', [], 'One Two'],
+            'with member access' => ['@(context.firstname & " " & context.lastname)', [
+                'context' => ['firstname' => 'John', 'lastname' => 'Smith']
+            ], 'John Smith'],
+            'with math' => ['@("Two plus" & " " & "two: " & 2 + 2)', [], 'Two plus two: 4']
+        ];
     }
 
     public function escapedExpressionProvider()

@@ -95,6 +95,27 @@
     };
   ?> **/
 
+  var concatenate = function(lhs, rhs, location) {
+    return {
+      type: 'CONCATENATE',
+      lhs: lhs,
+      rhs: rhs,
+      location: location
+    }
+  }
+
+/** <?php
+  $this->_concatenate = function($lhs, $rhs) {
+    return [
+      'type' => 'CONCATENATE',
+      'rhs' => $rhs,
+      'lhs' => $lhs,
+      'location' => call_user_func($this->_location)
+    ];
+  };
+  ?> **/
+
+
   /** <?php
     // we can build the location information the same way as
     // it is available in js via location()
@@ -153,7 +174,7 @@ Expression = ws* Text* id:(Identifier {return location() /**<?php return call_us
  * The order they are expressed here is the order in which the parser tries
  * to match them.
  */
-Expression_Types = Math / Logic / Function / Member_Access
+Expression_Types = Escaped_Identifier / Math / Logic / Concatenation / Function / Member_Access
 
 /**
  * Function looks like @(SOME_METHOD(argument, argument...))
@@ -175,7 +196,7 @@ Function_Args = arg:(arg:Function_Arg_Types Arg_Delimiter? {return arg /**<?php 
  * Functions can take any other kind of expression as an argument, or quoted text, or numbers.
  * This means that you can also nest functions deeply.
  */
-Function_Arg_Types = Function_Arg_Inner_Function / Math / Logic / Member_Access / Quote ch:$QuotedText+ Quote {return ch /**<?php return $ch; ?>**/} / $('-'* numbers+)
+Function_Arg_Types = Function_Arg_Inner_Function / Math / Logic / Member_Access / QuotedText / $('-'* numbers+)
 Function_Arg_Inner_Function = arg:Function Arg_Delimiter? {return arg /**<?php return $arg;?> **/}
 
 /**
@@ -214,8 +235,18 @@ Logic = lhs:Logic_Arg ws* op:$logic_chars ws+ rhs:Logic_Arg ws* {
   ?> **/
 }
 
-Logic_Arg = Logic_Arg_Inner_Logic / Math / Function / Member_Access / $numbers+ / Quote ch:$chars Quote { return ch /**<?php return $ch; ?>**/}
+Logic_Arg = Logic_Arg_Inner_Logic / Math / Function / Member_Access / $numbers+ / QuotedText
 Logic_Arg_Inner_Logic = OpenParen child:Logic CloseParen { return $child; /**<?php return $child; ?>**/}
+
+/**
+ * Concatenation looks like @("Some" & " " & "String") or @(contact.firstname & " " & contact.lastname)
+ */
+Concatenation = lhs:Concatenation_Arg ws* Concat_Operator ws* rhs:(Concatenation / Concatenation_Arg) ws* {
+  return new concatenate(lhs, rhs, location())
+  /**<?php return call_user_func_array($this->_concatenate, [$lhs, $rhs]); ?>**/
+}
+
+Concatenation_Arg = Escaped_Identifier / Math / Logic / Function / Member_Access / QuotedText
 /**
  * We can ignore the identifier by typing it twice, i.e. '@@' => '@'
  */
@@ -227,10 +258,11 @@ Escaped_Identifier = Identifier Identifier {
 }
 
 Quote = '"'
-QuotedText = [^"]
+QuotedText = Quote ch:$[^"]+ Quote {return ch; /**<?php return $ch; ?>**/}
 OpenParen = '('
 CloseParen = ')'
-Identifier = '@' 
+Identifier = '@'
+Concat_Operator = '&'
 Arg_Delimiter = (',' ws*)
 AtomicExpression = valid_variable_characters
 Text = [^@]
