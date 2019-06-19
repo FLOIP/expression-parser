@@ -20,6 +20,9 @@ use Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract\Text as TextInterface;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract\Logical as LogicalInterface;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract\DateTime as DateTimeInterface;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract\Excellent as ExcellentInterface;
+use Viamo\Floip\Evaluator\EscapeNodeEvaluator;
+use Viamo\Floip\Evaluator\ConcatenationNodeEvaluator;
+use Viamo\Floip\Evaluator\MathNodeEvaluator;
 
 class ExpressionEvaluatorServiceProvider extends ServiceProvider
 {
@@ -90,6 +93,9 @@ class ExpressionEvaluatorServiceProvider extends ServiceProvider
         return [
             new LogicNodeEvaluator,
             new MemberNodeEvaluator,
+            new EscapeNodeEvaluator,
+            new ConcatenationNodeEvaluator,
+            new MathNodeEvaluator,
             $this->app->make(MethodNodeEvaluator::class)
         ];
     }
