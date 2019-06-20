@@ -215,7 +215,7 @@ Member_Access = lhs:$AtomicExpression+ rhs:('.' inner:$AtomicExpression+ {return
 /**
  * Math looks like @(1 + 2)
  */
-Math = lhs:Math_Arg ws* op:$math_chars ws+ rhs:Math_Arg ws* {
+Math = lhs:Math_Arg ws* op:$math_chars ws+ rhs:(Math / Math_Arg) ws* {
   return new math(lhs, rhs, op, location())
   /** <?php
     return call_user_func_array($this->_math, [$lhs, $rhs, $op]);
@@ -228,7 +228,7 @@ Math_Arg_Inner_Math = OpenParen child:Math CloseParen { return child; /**<?php r
 /**
  * Logic looks like @(1 < 2) or @(contact.name = "Henry")
  */
-Logic = lhs:Logic_Arg ws* op:$logic_chars ws+ rhs:Logic_Arg ws* {
+Logic = lhs:Logic_Arg ws* op:$logic_chars ws+ rhs:(Logic / Logic_Arg) ws* {
   return new logic(lhs, rhs, op, location())
   /** <?php
     return call_user_func_array($this->_logic, [$lhs, $rhs, $op]);

@@ -1,16 +1,13 @@
 {
   "name": "floip-parser",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "",
-  "main": "/app.js",
-  "scripts": {
-    "start": "node ./src/app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
+  "scripts": {},
+  "author": "Kyle Seifert",
+  "license": "",
+  "devDependencies": {
     "pegjs": "^0.10.0",
     "phpegjs": "^1.0.0-beta7"
-  }
+  },
+  "private": true
 }

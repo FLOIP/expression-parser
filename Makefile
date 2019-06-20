@@ -64,6 +64,6 @@ endif
 clean:
 	rm -rf node_modules
 	rm -rf vendor
-ifeq ($(ENV),docker)	
-	docker rmi $(PHP_TAG)
+ifeq ($(ENV),docker)
+	docker rmi $(PHP_TAG) 2>/dev/null || true
 endif

@@ -249,6 +249,15 @@ class EvaluatorIntegrationTest extends TestCase
             ],
             'method operand' => [
                 '@(SUM(2,2) + 4) is 8', [], '8 is 8'
+            ],
+            'bedmas 1' => [
+                '@(2 + 4 * 2) is 10', [], '10 is 10'
+            ],
+            'bedmas 2' => [
+                '@((2 + 4) * 2) is 12', [], '12 is 12'
+            ],
+            'bedmas 3' => [
+                '@(1 + (2 - 3) * 4 / 5 ^ 6)', [], '0.999744'
             ]
         ];
     }

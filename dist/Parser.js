@@ -847,7 +847,10 @@ function peg$parse(input, options) {
             s4 = peg$FAILED;
           }
           if (s4 !== peg$FAILED) {
-            s5 = peg$parseMath_Arg();
+            s5 = peg$parseMath();
+            if (s5 === peg$FAILED) {
+              s5 = peg$parseMath_Arg();
+            }
             if (s5 !== peg$FAILED) {
               s6 = [];
               s7 = peg$parsews();
@@ -980,7 +983,10 @@ function peg$parse(input, options) {
             s4 = peg$FAILED;
           }
           if (s4 !== peg$FAILED) {
-            s5 = peg$parseLogic_Arg();
+            s5 = peg$parseLogic();
+            if (s5 === peg$FAILED) {
+              s5 = peg$parseLogic_Arg();
+            }
             if (s5 !== peg$FAILED) {
               s6 = [];
               s7 = peg$parsews();

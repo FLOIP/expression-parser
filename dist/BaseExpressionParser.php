@@ -766,7 +766,10 @@ class BaseExpressionParser {
               $s4 = $this->peg_FAILED;
             }
             if ($s4 !== $this->peg_FAILED) {
-              $s5 = $this->peg_parseMath_Arg();
+              $s5 = $this->peg_parseMath();
+              if ($s5 === $this->peg_FAILED) {
+                $s5 = $this->peg_parseMath_Arg();
+              }
               if ($s5 !== $this->peg_FAILED) {
                 $s6 = array();
                 $s7 = $this->peg_parsews();
@@ -896,7 +899,10 @@ class BaseExpressionParser {
               $s4 = $this->peg_FAILED;
             }
             if ($s4 !== $this->peg_FAILED) {
-              $s5 = $this->peg_parseLogic_Arg();
+              $s5 = $this->peg_parseLogic();
+              if ($s5 === $this->peg_FAILED) {
+                $s5 = $this->peg_parseLogic_Arg();
+              }
               if ($s5 !== $this->peg_FAILED) {
                 $s6 = array();
                 $s7 = $this->peg_parsews();
