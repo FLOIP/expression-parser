@@ -144,20 +144,15 @@
 
 /**
  * We look for any number of expressions or escaped identifiers in the string.
- * Just consume all other text and return nothing.
+ * Just consume all other text or whitespace.
  */
-Start = expr:(Escaped_Identifier / ex:Expression / $Text+ {} )* {
-    return expr
-    /** <?php
-      return $expr;
-    ?> **/
-}
+Start = (Escaped_Identifier / Expression / $Text+ {} / ws+ {})*
 
 /**
  * An expression can look like -- @(FUNC_CALL(args/expression)) / @(member.access) / @(member) / @member.access / @member
  * Top-level expressions always start with an identifier -- inner ones do not.
  */
-Expression = ws* Text* id:(Identifier {return location() /**<?php return call_user_func($this->_location); ?>**/}) OpenParen? ex:Expression_Types cp:(CloseParen? {return location() /**<?php return call_user_func($this->_location); ?>**/}) ws* {
+Expression = Text* id:(Identifier {return location() /**<?php return call_user_func($this->_location); ?>**/}) OpenParen? ex:Expression_Types cp:(CloseParen? {return location() /**<?php return call_user_func($this->_location); ?>**/}) ws* {
   // we want the location to begin with the identifier for a given expression
   // we want the location to end with the closing paren (or where it would be if absent)
   ex.location.start = id.start;
