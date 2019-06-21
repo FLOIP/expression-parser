@@ -299,8 +299,27 @@ class BaseExpressionParser {
     private function peg_parseStart() {
 
       $s0 = array();
-      $s1 = $this->peg_parseEscaped_Identifier();
+      $s1 = $this->peg_parseExpression();
       if ($s1 === $this->peg_FAILED) {
+        $s1 = $this->peg_currPos;
+        $s2 = array();
+        $s3 = $this->peg_parseText();
+        if ($s3 !== $this->peg_FAILED) {
+          while ($s3 !== $this->peg_FAILED) {
+            $s2[] = $s3;
+            $s3 = $this->peg_parseText();
+          }
+        } else {
+          $s2 = $this->peg_FAILED;
+        }
+        if ($s2 !== $this->peg_FAILED) {
+          $s1 = $this->input_substr($s1, $this->peg_currPos - $s1);
+        } else {
+          $s1 = $s2;
+        }
+      }
+      while ($s1 !== $this->peg_FAILED) {
+        $s0[] = $s1;
         $s1 = $this->peg_parseExpression();
         if ($s1 === $this->peg_FAILED) {
           $s1 = $this->peg_currPos;
@@ -321,40 +340,18 @@ class BaseExpressionParser {
           }
         }
       }
-      while ($s1 !== $this->peg_FAILED) {
-        $s0[] = $s1;
-        $s1 = $this->peg_parseEscaped_Identifier();
-        if ($s1 === $this->peg_FAILED) {
-          $s1 = $this->peg_parseExpression();
-          if ($s1 === $this->peg_FAILED) {
-            $s1 = $this->peg_currPos;
-            $s2 = array();
-            $s3 = $this->peg_parseText();
-            if ($s3 !== $this->peg_FAILED) {
-              while ($s3 !== $this->peg_FAILED) {
-                $s2[] = $s3;
-                $s3 = $this->peg_parseText();
-              }
-            } else {
-              $s2 = $this->peg_FAILED;
-            }
-            if ($s2 !== $this->peg_FAILED) {
-              $s1 = $this->input_substr($s1, $this->peg_currPos - $s1);
-            } else {
-              $s1 = $s2;
-            }
-          }
-        }
-      }
 
       return $s0;
     }
 
     private function peg_parseExpression() {
 
-      $s0 = $this->peg_parseClosed_Expression();
+      $s0 = $this->peg_parseEscaped_Identifier();
       if ($s0 === $this->peg_FAILED) {
-        $s0 = $this->peg_parseOpen_Expression();
+        $s0 = $this->peg_parseClosed_Expression();
+        if ($s0 === $this->peg_FAILED) {
+          $s0 = $this->peg_parseOpen_Expression();
+        }
       }
 
       return $s0;

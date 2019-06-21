@@ -146,13 +146,13 @@
  * We look for any number of expressions or escaped identifiers in the string.
  * Just consume all other text or whitespace.
  */
-Start = (Escaped_Identifier / Expression / $Text+)*
+Start = (Expression / $Text+)*
 
 /**
  * An expression can look like -- @(FUNC_CALL(args/expression)) / @(member.access) / @(member) / @member.access / @member
  * Top-level expressions always start with an identifier -- inner ones do not.
  */
-Expression = Closed_Expression / Open_Expression
+Expression = Escaped_Identifier / Closed_Expression / Open_Expression
 
 Open_Expression = id:Expression_Identifier ex:Member_Access {
   // we want the location to begin with the identifier for a given expression
