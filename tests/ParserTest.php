@@ -42,7 +42,7 @@ class ParserTest extends TestCase
     }
 
     /**
-     * @dataProvider simpleMemberAccessProviderTwo
+     * @dataProvider simpleMemberAccessProvider
      */
     public function testParserParsesMemberAccessStruct($string, array $expected)
     {
@@ -64,12 +64,11 @@ class ParserTest extends TestCase
     /**
      * @dataProvider simpleFunctionProvider
      */
-    public function testParserParsesFunctionStruct($string, $call, $args)
+    public function testParserParsesFunctionStruct($string, array $expected)
     {
         $ast = $this->parser->parse($string);
-        $node = $ast[0];
-        $expected = ['type' => 'METHOD', 'call' => $call, 'args' => $args];
-        $this->assertArraySubset($expected, $node);
+
+        $this->assertArraySubset($expected, $ast);
     }
 
     /**
@@ -84,10 +83,10 @@ class ParserTest extends TestCase
     /**
      * @dataProvider nestedFunctionProvider
      */
-    public function testFunctionsCanHaveExpressionsAsArguments($string, $expectedExpressionArgs)
+    public function testFunctionsCanHaveExpressionsAsArguments($string, $methodIdx, $expectedExpressionArgs)
     {
         $ast = $this->parser->parse($string);
-        $node = $ast[0];
+        $node = $ast[$methodIdx];
         $args = $node['args'];
         $this->assertEquals($expectedExpressionArgs, count($args));
     }
@@ -95,13 +94,11 @@ class ParserTest extends TestCase
     /**
      * @dataProvider simpleMathProvider
      */
-    public function testParserParsesSimpleMathExpression($string, $lhs, $rhs, $operator, array $location)
+    public function testParserParsesSimpleMathExpression($string, array $expected)
     {
         $ast = $this->parser->parse($string);
-        $this->assertNotEmpty($ast);
-        $node = $ast[0];
-        $expected = ['type' => 'MATH', 'lhs' => $lhs, 'rhs' => $rhs, 'operator' => $operator, 'location' => $location];
-        $this->assertArraySubset($expected, $node);
+
+        $this->assertArraySubset($expected, $ast);
     }
 
     /**
@@ -118,13 +115,11 @@ class ParserTest extends TestCase
     /**
      * @dataProvider simpleLogicProvider
      */
-    public function testParserParsesSimpleLogicExpression($string, $lhs, $rhs, $operator, array $location)
+    public function testParserParsesSimpleLogicExpression($string, array $expected)
     {
         $ast = $this->parser->parse($string);
-        $this->assertNotEmpty($ast);
-        $node = $ast[0];
-        $expected = ['type' => 'LOGIC', 'lhs' => $lhs, 'rhs' => $rhs, 'operator' => $operator, 'location' => $location];
-        $this->assertArraySubset($expected, $node);
+
+        $this->assertArraySubset($expected, $ast);
     }
 
     /**
@@ -138,6 +133,24 @@ class ParserTest extends TestCase
         $this->assertArraySubset($expected, $node);        
     }
 
+    private function methodNode($call, array $args)
+    {
+        $type = 'METHOD';
+        return compact('type', 'call', 'args');
+    }
+
+    private function mathNode($lhs, $rhs, $operator)
+    {
+        $type = 'MATH';
+        return compact('MATH', 'lhs', 'rhs', 'operator');
+    }
+
+    private function logicNode($lhs, $rhs, $operator)
+    {
+        $type = 'LOGIC';
+        return compact('MATH', 'lhs', 'rhs', 'operator');
+    }
+
     public function plainStringProvider()
     {
         return [
@@ -149,7 +162,7 @@ class ParserTest extends TestCase
         ];
     }
 
-    public function simpleMemberAccessProviderTwo()
+    public function simpleMemberAccessProvider()
     {
         return [
             ['Hello @contact.name', [
@@ -167,19 +180,29 @@ class ParserTest extends TestCase
                     'key' => 'contact',
                     'value' => null,
                 ]
-            ]]
-        ];
-    }
-
-    public function simpleMemberAccessProvider()
-    {
-        // last element is location start/end: offset / line / column
-        return [
-            ['Hello @contact.name', 'contact', 'name', $this->buildLocation([6, 1, 7], [19, 1, 20])],
-            ['Hello @contact', 'contact', null, $this->buildLocation([6, 1, 7], [14, 1, 15])],
-            ['@person.lastname you are special', 'person', 'lastname', $this->buildLocation([0, 1, 1], [16, 1, 17])],
-            ['Hello @(contact.name)', 'contact', 'name', $this->buildLocation([6, 1, 7], [21, 1, 22])],
-            ['Hello @(contact)', 'contact', null, $this->buildLocation([6, 1, 7], [16, 1, 17])],
+            ]],
+            ['@person.lastname you are special', [
+                [
+                    'type' => 'MEMBER',
+                    'key' => 'person',
+                    'value' => 'lastname',
+                ],
+                ' you are special'
+            ]],
+            ['Hello @(contact.lastname)', [
+                'Hello ', [
+                    'type' => 'MEMBER',
+                    'key' => 'contact',
+                    'value' => 'lastname'
+                ]
+            ]],
+            ['Hello @(contact)', [
+                'Hello ', [
+                    'type' => 'MEMBER',
+                    'key' => 'contact',
+                    'value' => null,
+                ]
+            ]],
         ];
     }
 
@@ -195,41 +218,62 @@ class ParserTest extends TestCase
     public function simpleFunctionProvider()
     {
         return [
-            ['The date is @(NOW())', 'NOW', [], $this->buildLocation([12, 1, 13], [20, 1, 21])],
-            ['@(DATE(2012, 12, 25)) was a holiday.', 'DATE', [2012, 12, 25], $this->buildLocation([0, 1, 1], [21, 1, 22])],
-            ['This @(upper("hello")) is a function.', 'upper', ["hello"], $this->buildLocation([5, 1, 6], [22, 1, 23])],
+            ['The date is @(NOW())', [
+                'The date is ',
+                $this->methodNode('NOW', [])
+            ]],
+            ['@(DATE(2012, 12, 25)) was a holiday.', [
+                $this->methodNode('DATE', ['2012', '12', '25']),
+                ' was a holiday.',
+            ]],
+            ['This @(upper("hello")) is a function.', [
+                'This ',
+                $this->methodNode('upper', ['hello']),
+                ' is a function.'
+            ]]
         ];
     }
 
     public function multipleExpressionProvider()
     {
-        // last element is number of expected expressions (AST nodes)
+        // last element is number of expected AST nodes
         return [
-            ['Hello @contact.name today is @(NOW())', 2],
-            ['We can be reached at @organization.phone except on @(DATE(2012, 12, 24)) or @(DATE(2012, 12, 25))', 3]
+            ['Hello @contact.name today is @(NOW())', 4],
+            ['We can be reached at @organization.phone except on @(DATE(2012, 12, 24)) or @(DATE(2012, 12, 25))', 6]
         ];
     }
 
     public function nestedFunctionProvider()
     {
-        // 2nd param is expected the number of expressions as arguments
+        // 2nd param is the index of the method in the ast
+        // 3rd param is expected the number of expressions as arguments
         return [
-            ['Your name is @(UPPER(contact.name))', 1],
-            ['Your full name is @(UPPER(contact.firstname, contact.lastname))', 2],
-            ['The sum is @(SUM(contact.age, MIN(12, contact.age))', 2],
-            ['The sum is @(SUM(2 + 2, contact.age, 42 / 6, 8 * 2))', 4]
+            ['Your name is @(UPPER(contact.name))', 1, 1],
+            ['Your full name is @(UPPER(contact.firstname, contact.lastname))', 1, 2],
+            ['The sum is @(SUM(contact.age, MIN(12, contact.age))', 1, 2],
+            ['The sum is @(SUM(2 + 2, contact.age, 42 / 6, 8 * 2))', 1, 4]
         ];
     }
 
     public function simpleMathProvider()
     {
-        // after string, params are lhs, rhs, operator
-        // last param is location: offset / line / column
         return [
-            ['Some math is @(1 + 2)', 1, 2, '+', $this->buildLocation([13, 1, 14], [21, 1, 22])],
-            ['@(4 - 3) no spaces', 4, 3, '-', $this->buildLocation([0, 1, 1], [8, 1, 9])],
-            ['@(6 / 2) is three', 6, 2, '/', $this->buildLocation([0, 1, 1], [8, 1, 9])],
-            ['@(7 * 77) is hard', 7, 77, '*', $this->buildLocation([0, 1, 1], [9, 1, 10])],
+            ['Some math is @(1 + 2)', [
+                'Some math is ',
+                $this->mathNode(1, 2, '+')
+            ]],
+            ['@(4 - 3) no spaces', [
+                $this->mathNode(4, 3, '-'),
+                ' no spaces'
+            ]],
+            ['@(6 / 2) is three', [
+                $this->mathNode(6, 2, '/'),
+                ' is three',
+            ]],
+            ['@(7 * 77) is hard', [
+                $this->mathNode(7, 77, '*'),
+                ' is hard'
+            ]],
         ];
     }
 
@@ -245,14 +289,24 @@ class ParserTest extends TestCase
 
     public function simpleLogicProvider()
     {
-        // after string, params are lhs, rhs, operator
-        // last param is location: offset / line / column
         return [
-            ['Some logic is @(1 < 2)', 1, 2, '<', $this->buildLocation([14, 1, 15], [22, 1, 23])],
-            ['@(0 = 0) no spaces', 0, 0, '=', $this->buildLocation([0, 1, 1], [8, 1, 9])],
-            ['@(6 >= 2) is true', 6, 2, '>=', $this->buildLocation([0, 1, 1], [9, 1, 10])],
-            ['@(7 <= 77) is false', 7, 77, '<=', $this->buildLocation([0, 1, 1], [10, 1, 11])],
-        ];        
+            ['Some logic is @(1 < 2)', [
+                'Some logic is ',
+                $this->logicNode(1, 2, '<')
+            ]],
+            ['@(0 = 0) no spaces', [
+                $this->logicNode(0, 0, '='),
+                ' no spaces'
+            ]],
+            ['@(6 >= 2) is true', [
+                $this->logicNode(6, 2, '>='),
+                ' is true'
+            ]],
+            ['@(7 <= 77) is false', [
+                $this->logicNode(7, 77, '<='),
+                ' is false'
+            ]],
+        ];
     }
 
     public function logicWithExpressionOperandsProvider()
