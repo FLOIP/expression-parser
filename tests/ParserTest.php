@@ -250,7 +250,7 @@ class ParserTest extends TestCase
         return [
             ['Your name is @(UPPER(contact.name))', 1, 1],
             ['Your full name is @(UPPER(contact.firstname, contact.lastname))', 1, 2],
-            ['The sum is @(SUM(contact.age, MIN(12, contact.age))', 1, 2],
+            ['The sum is @(SUM(contact.age, MIN(12, contact.age)))', 1, 2],
             ['The sum is @(SUM(2 + 2, contact.age, 42 / 6, 8 * 2))', 1, 4]
         ];
     }

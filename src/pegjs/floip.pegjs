@@ -152,17 +152,31 @@ Start = (Escaped_Identifier / Expression / $Text+)*
  * An expression can look like -- @(FUNC_CALL(args/expression)) / @(member.access) / @(member) / @member.access / @member
  * Top-level expressions always start with an identifier -- inner ones do not.
  */
-Expression = id:(Identifier {return location() /**<?php return call_user_func($this->_location); ?>**/}) OpenParen? ex:Expression_Types cp:(CloseParen? {return location() /**<?php return call_user_func($this->_location); ?>**/}) {
+Expression = Closed_Expression / Open_Expression
+
+Open_Expression = id:Expression_Identifier ex:Member_Access {
   // we want the location to begin with the identifier for a given expression
-  // we want the location to end with the closing paren (or where it would be if absent)
   ex.location.start = id.start;
+  return ex;
+  /** <?php 
+    $ex['location']['start'] = $id['start'];
+    return $ex; 
+  ?> **/
+}
+
+Closed_Expression = id:Expression_Identifier OpenParen ex:Expression_Types cp:(CloseParen {return location() /**<?php return call_user_func($this->_location); ?> **/}) {
+  // we want the location to begin with the identifier for a given expression
+  ex.location.start = id.start;
+  // we want the location to end with the closing paren (or where it would be if absent)
   ex.location.end = cp.end;
-  return ex
+  return ex;
   /** <?php
     $ex['location'] = ['start' => $id['start'], 'end' => $cp['end']];
     return $ex;
   ?> **/
 }
+
+Expression_Identifier = Identifier {return location() /**<?php return call_user_func($this->_location); ?>**/}
 
 /**
  * There are different types of expressions with different syntax.
