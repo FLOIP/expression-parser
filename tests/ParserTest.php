@@ -26,11 +26,10 @@ class ParserTest extends TestCase
     /**
      * @dataProvider plainStringProvider
      */
-    public function testParserParsesPlainStringsIntoEmptyAST($string)
+    public function testParserParsesPlainStringsIntoAST($string)
     {
         $result = $this->parser->parse($string);
-        $expected = [0 => null];
-        $this->assertEquals($expected, $result);
+        $this->assertEquals(1, count($result));
     }
 
     /**
@@ -43,15 +42,14 @@ class ParserTest extends TestCase
     }
 
     /**
-     * @dataProvider simpleMemberAccessProvider
+     * @dataProvider simpleMemberAccessProviderTwo
      */
-    public function testParserParsesMemberAccessStruct($string, $key, $value, array $location)
+    public function testParserParsesMemberAccessStruct($string, array $expected)
     {
         $ast = $this->parser->parse($string);
-        $node = $ast[0];
-        $expected = ['type' => 'MEMBER', 'key' => $key, 'value' => $value, 'location' => $location];
+        $this->assertTrue(true);
 
-        $this->assertArraySubset($expected, $node);
+        $this->assertArraySubset($expected, $ast);
     }
 
     /**
@@ -148,6 +146,28 @@ class ParserTest extends TestCase
             ['Hey (This is in parens).'],
             ['Greater > Than'],
             ['This contact.name looks like an expression']
+        ];
+    }
+
+    public function simpleMemberAccessProviderTwo()
+    {
+        return [
+            ['Hello @contact.name', [
+                'Hello ',
+                [
+                    'type' => 'MEMBER',
+                    'key' => 'contact',
+                    'value' => 'name'
+                ]
+            ]],
+            ['Hello @contact', [
+                'Hello ',
+                [
+                    'type' => 'MEMBER',
+                    'key' => 'contact',
+                    'value' => null,
+                ]
+            ]]
         ];
     }
 

@@ -20,6 +20,14 @@ class Evaluator
         $this->parser = $parser;
     }
 
+    private function mapNodes($item)
+    {
+        if (Node::isNode($item)) {
+            return new Node($item);
+        }
+        return $item;
+    }
+
     /**
      * Evaluate a FLOIP expression
      *
@@ -31,43 +39,20 @@ class Evaluator
     {
         $ast = $this->parser->parse($expression);
 
-        $nodes = [];
-        // transform the AST array into objects
-        foreach ($ast as $item) {
-            if (Node::isNode($item)) {
-                $nodes[] = new Node($item);
-            }
-        }
+        $nodes = array_map([$this, 'mapNodes'], $ast);
 
         // we want to evaluate the nodes from the deepest child first
         // since some nodes will have others as arguments
         $it = $this->getIterator($nodes);
         foreach ($it as $node) {
-            $value = $this->evalNode($node, $context);
-            $node->setValue($value);
-        }
-
-        $offset = 0;
-
-        foreach ($nodes as $node) {
-            // every time we modify the expression, we change the length
-            // we should keep track of this offset, since the locations
-            // in the expression that we will be modifying will change
-            // based on other expressions we evaluate first
-            $oldLength = strlen($expression);
-            $expression = $this->insert($node, $expression, $node->getValue(), $offset);
-            $newLength = strlen($expression);
-            if ($oldLength < $newLength) {
-                $offset -= $newLength - $oldLength;
-            }
-            if ($oldLength > $newLength) {
-                $offset += $newLength - $oldLength;
+            if ($node instanceof Node) {
+                $value = $this->evalNode($node, $context);
+                $node->setValue($value);
             }
         }
 
-        return $expression;
+        return implode('', $nodes);
     }
-
 
     /**
      * @param EvaluatesExpression $evaluator
@@ -105,13 +90,5 @@ class Evaluator
         // deepest nodes
         $arrayIterator = new RecursiveNodeIterator($ast);
         return new \RecursiveIteratorIterator($arrayIterator, \RecursiveIteratorIterator::CHILD_FIRST);
-    }
-
-    private function insert(Node $node, $string, $insert, $offset)
-    {
-        $location = $node['location'];
-        $begin = \substr($string, 0, $location['start']['offset'] + $offset);
-        $end = substr($string, $location['end']['offset'] + $offset);
-        return $begin . $insert . $end;
     }
 }

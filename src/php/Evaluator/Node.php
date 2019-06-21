@@ -80,7 +80,7 @@ class Node implements \ArrayAccess
     public function __toString()
     {
         if ($this->valueSet) {
-            return $this->value;
+            return (string)$this->value;
         }
         throw new \Exception;
     }
