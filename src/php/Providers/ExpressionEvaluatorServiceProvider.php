@@ -45,7 +45,7 @@ class ExpressionEvaluatorServiceProvider extends ServiceProvider
     {
         $this->app->singleton(Evaluator::class, function (Container $app) {
             $eval = new Evaluator($app->make(ParsesFloip::class));
-            foreach ($this->getNodeHandlers() as $nodeHandler) {
+            foreach ($this->getNodeEvaluators() as $nodeHandler) {
                 $eval->addNodeEvaluator($nodeHandler);
             }
 
@@ -88,7 +88,7 @@ class ExpressionEvaluatorServiceProvider extends ServiceProvider
         ]);
     }
 
-    protected function getNodeHandlers()
+    protected function getNodeEvaluators()
     {
         return [
             new LogicNodeEvaluator,

@@ -29,10 +29,15 @@ class Evaluator
     }
 
     /**
-     * Evaluate a FLOIP expression
+     * Evaluate a FLOIP expression.
+     * Each expression object in the AST produced by the parser
+     * will be transformed into a Node and evaluated with an assigned
+     * NodeEvaluator. These NodeEvaluators are added to this Evaluator object
+     * via addNodeEvaluator.
      *
      * @param string $expression Expression to evaluate
      * @param array $context The expression context
+     * @see Evaluator::addNodeEvaluator
      * @return string
      */
     public function evaluate($expression, array $context)
