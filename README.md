@@ -15,6 +15,38 @@ to skip using docker -- e.g. `make ENV=`
 
 Tests via phpunit are included in `/tests` and can be run with `make test`
 
+# Including in a Viamo project
+## PHP
+Add the repository to your `composer.json` like so:
+
+```json
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "git@bitbucket.org:voto/floip-expression-evaluator.git"
+        }
+    ],
+```
+
+And then add this package as a new dependency:
+`composer require viamo/floip-eval "^1.0"`
+
+or add directly to your `composer.json` and `composer update`:
+```json
+    "require": {
+        "viamo/floip-eval": "^1.0"
+    }
+```
+
+## NPM
+Add the repository to your `package.json` like so:
+```json
+  "dependencies": {
+    "floip-eval": "bitbucket:voto/floip-expression-evaluator#v1.0.1"
+  }
+```
+And then `npm install`
+
 # How to add a new Expression type
 To show how the different parts of this project work together, let's go through 
 an example of adding a new expression type to parse and evaluate.
