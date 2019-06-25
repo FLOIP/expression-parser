@@ -15,6 +15,11 @@ to skip using docker -- e.g. `make ENV=`
 
 Tests via phpunit are included in `/tests` and can be run with `make test`
 
+# Releasing
+1. Always rebuild the parsers and run the evaluator tests
+2. Tag the release with the new semantic version (e.g. `git tag v1.0.3`)
+3. Push the tag (e.g. `git push --tags`)
+
 # Including in a Viamo project
 ## PHP
 Add the repository to your `composer.json` like so:
