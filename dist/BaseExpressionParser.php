@@ -264,6 +264,8 @@ class BaseExpressionParser {
     private $peg_c34;
     private $peg_c35;
     private $peg_c36;
+    private $peg_c37;
+    private $peg_c38;
 
     private function peg_f0($id, $ex) { 
         $ex['location']['start'] = $id['start'];
@@ -541,11 +543,11 @@ class BaseExpressionParser {
 
     private function peg_parseFunction_Arg_Types() {
 
-      $s0 = $this->peg_parseFunction_Arg_Inner_Function();
+      $s0 = $this->peg_parseLogic();
       if ($s0 === $this->peg_FAILED) {
         $s0 = $this->peg_parseMath();
         if ($s0 === $this->peg_FAILED) {
-          $s0 = $this->peg_parseLogic();
+          $s0 = $this->peg_parseFunction_Arg_Inner_Function();
           if ($s0 === $this->peg_FAILED) {
             $s0 = $this->peg_parseMember_Access();
             if ($s0 === $this->peg_FAILED) {
@@ -1361,6 +1363,17 @@ class BaseExpressionParser {
                 $this->peg_fail($this->peg_c32);
             }
           }
+          if ($s0 === $this->peg_FAILED) {
+            if ($this->input_substr($this->peg_currPos, 2) === $this->peg_c33) {
+              $s0 = $this->peg_c33;
+              $this->peg_currPos += 2;
+            } else {
+              $s0 = $this->peg_FAILED;
+              if ($this->peg_silentFails === 0) {
+                  $this->peg_fail($this->peg_c34);
+              }
+            }
+          }
         }
       }
 
@@ -1369,13 +1382,13 @@ class BaseExpressionParser {
 
     private function peg_parsemath_chars() {
 
-      if (peg_regex_test($this->peg_c33, $this->input_substr($this->peg_currPos, 1))) {
+      if (peg_regex_test($this->peg_c35, $this->input_substr($this->peg_currPos, 1))) {
         $s0 = $this->input_substr($this->peg_currPos, 1);
         $this->peg_currPos++;
       } else {
         $s0 = $this->peg_FAILED;
         if ($this->peg_silentFails === 0) {
-            $this->peg_fail($this->peg_c34);
+            $this->peg_fail($this->peg_c36);
         }
       }
 
@@ -1384,13 +1397,13 @@ class BaseExpressionParser {
 
     private function peg_parsenumbers() {
 
-      if (peg_regex_test($this->peg_c35, $this->input_substr($this->peg_currPos, 1))) {
+      if (peg_regex_test($this->peg_c37, $this->input_substr($this->peg_currPos, 1))) {
         $s0 = $this->input_substr($this->peg_currPos, 1);
         $this->peg_currPos++;
       } else {
         $s0 = $this->peg_FAILED;
         if ($this->peg_silentFails === 0) {
-            $this->peg_fail($this->peg_c36);
+            $this->peg_fail($this->peg_c38);
         }
       }
 
@@ -1447,10 +1460,12 @@ class BaseExpressionParser {
     $this->peg_c30 = array( "type" => "literal", "value" => ">=", "description" => "\">=\"" );
     $this->peg_c31 = "/^[=<>]/";
     $this->peg_c32 = array( "type" => "class", "value" => "[=<>]", "description" => "[=<>]" );
-    $this->peg_c33 = "/^[-+*\\^\\/]/";
-    $this->peg_c34 = array( "type" => "class", "value" => "[-+*^/]", "description" => "[-+*^/]" );
-    $this->peg_c35 = "/^[0-9.]/";
-    $this->peg_c36 = array( "type" => "class", "value" => "[0-9.]", "description" => "[0-9.]" );
+    $this->peg_c33 = "!=";
+    $this->peg_c34 = array( "type" => "literal", "value" => "!=", "description" => "\"!=\"" );
+    $this->peg_c35 = "/^[-+*\\^\\/]/";
+    $this->peg_c36 = array( "type" => "class", "value" => "[-+*^/]", "description" => "[-+*^/]" );
+    $this->peg_c37 = "/^[0-9.]/";
+    $this->peg_c38 = array( "type" => "class", "value" => "[0-9.]", "description" => "[0-9.]" );
 
     $peg_startRuleFunctions = array( 'Start' => array($this, "peg_parseStart") );
     $peg_startRuleFunction  = array($this, "peg_parseStart");

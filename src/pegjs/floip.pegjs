@@ -205,7 +205,7 @@ Function_Args = arg:(arg:Function_Arg_Types Arg_Delimiter? {return arg /**<?php 
  * Functions can take any other kind of expression as an argument, or quoted text, or numbers.
  * This means that you can also nest functions deeply.
  */
-Function_Arg_Types = Function_Arg_Inner_Function / Math / Logic / Member_Access / QuotedText / $('-'* numbers+)
+Function_Arg_Types = Logic / Math / Function_Arg_Inner_Function / Member_Access / QuotedText / $('-'* numbers+)
 Function_Arg_Inner_Function = arg:Function Arg_Delimiter? {return arg /**<?php return $arg;?> **/}
 
 /**
@@ -237,7 +237,7 @@ Math_Arg_Inner_Math = OpenParen child:Math CloseParen { return child; /**<?php r
 /**
  * Logic looks like @(1 < 2) or @(contact.name = "Henry")
  */
-Logic = lhs:Logic_Arg ws* op:$logic_chars ws+ rhs:(Logic / Logic_Arg) ws* {
+Logic = lhs:Logic_Arg ws* op:$logic_chars ws* rhs:(Logic / Logic_Arg) ws* {
   return new logic(lhs, rhs, op, location())
   /** <?php
     return call_user_func_array($this->_logic, [$lhs, $rhs, $op]);
@@ -281,6 +281,6 @@ ws "whitespace"
 valid_variable_characters = [a-zA-Z_]
 valid_expression_characters = valid_variable_characters
 
-logic_chars = '<=' / '>=' / [=<>]
+logic_chars = '<=' / '>=' / [=<>] / '!='
 math_chars = [-+*\^/]
 numbers = [0-9.]
