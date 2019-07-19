@@ -960,13 +960,9 @@ function peg$parse(input, options) {
         if (s3 !== peg$FAILED) {
           s4 = [];
           s5 = peg$parsews();
-          if (s5 !== peg$FAILED) {
-            while (s5 !== peg$FAILED) {
-              s4.push(s5);
-              s5 = peg$parsews();
-            }
-          } else {
-            s4 = peg$FAILED;
+          while (s5 !== peg$FAILED) {
+            s4.push(s5);
+            s5 = peg$parsews();
           }
           if (s4 !== peg$FAILED) {
             s5 = peg$parseLogic();

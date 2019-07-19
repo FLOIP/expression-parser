@@ -7,7 +7,7 @@ PARSER_NAME=Parser
 PARSER_SOURCE=src/pegjs/floip.pegjs
 PARSER_CLASS=BaseExpressionParser
 PHP_OUT=dist/$(PARSER_CLASS).php
-PHPEGJS_OPTIONS={"phpegjs":{"parserNamespace": "Viamo", "parserClassName": "$(PARSER_CLASS)"}}
+PHPEGJS_OPTIONS={"cache" : "true", "phpegjs":{"parserNamespace": "Viamo", "parserClassName": "$(PARSER_CLASS)"}}
 JS_OUT=dist/$(PARSER_NAME).js
 ENV=docker
 

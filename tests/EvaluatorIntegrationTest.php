@@ -213,6 +213,18 @@ class EvaluatorIntegrationTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
+    /**
+     * @dataProvider flowProvider
+     */
+    public function testFlowExpressions($expression, array $context, $expected)
+    {
+        $this->MethodNodeEvaluator->addHandler(new Logical);
+        $this->MethodNodeEvaluator->addHandler(new Text);
+        $result = $this->evaluator->evaluate($expression, $context);
+
+        $this->assertEquals($expected, $result);
+    }
+
     public function concatenationExpressionProvider()
     {
         return [
@@ -325,6 +337,23 @@ class EvaluatorIntegrationTest extends TestCase
             'upper' => ['WELCOME @(UPPER(contact))!!', 
                 ['contact' => ['__value__' => 'home']],
                 'WELCOME HOME!!']
+        ];
+    }
+
+    public function flowProvider() {
+        return [
+            [
+                '@(OR(AND(channel.mode = "ivr", block.value = "7"), AND(channel.mode != "ivr", OR(AND(flow.language = "5", LOWER(block.value)="yup"), AND(flow.language = "5", LOWER(block.value)="1"), AND(flow.language = "5", LOWER(block.value)="yes"), AND(flow.language = "6", LOWER(block.value)="aane"), AND(flow.language = "6", LOWER(block.value)="1"), AND(flow.language = "6", LOWER(block.value)="a")))))',
+                [
+                    'flow' => [
+                        'language' => '5'
+                    ],
+                    'block' => [
+                        'value' => 'YUP'
+                    ],
+                ],
+                'TRUE'
+            ],
         ];
     }
 }
