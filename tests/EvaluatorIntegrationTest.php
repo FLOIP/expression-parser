@@ -342,7 +342,7 @@ class EvaluatorIntegrationTest extends TestCase
 
     public function flowProvider() {
         return [
-            [
+            'double quoted' => [
                 '@(OR(AND(channel.mode = "ivr", block.value = "7"), AND(channel.mode != "ivr", OR(AND(flow.language = "5", LOWER(block.value)="yup"), AND(flow.language = "5", LOWER(block.value)="1"), AND(flow.language = "5", LOWER(block.value)="yes"), AND(flow.language = "6", LOWER(block.value)="aane"), AND(flow.language = "6", LOWER(block.value)="1"), AND(flow.language = "6", LOWER(block.value)="a")))))',
                 [
                     'flow' => [
@@ -354,6 +354,18 @@ class EvaluatorIntegrationTest extends TestCase
                 ],
                 'TRUE'
             ],
+            'single quoted' => [
+                "@(OR(AND(channel.mode = 'ivr', block.value = '7'), AND(channel.mode != 'ivr', OR(AND(flow.language = '5', LOWER(block.value)='yup'), AND(flow.language = '5', LOWER(block.value)='1'), AND(flow.language = '5', LOWER(block.value)='yes'), AND(flow.language = '6', LOWER(block.value)='aane'), AND(flow.language = '6', LOWER(block.value)='1'), AND(flow.language = '6', LOWER(block.value)='a')))))",
+                [
+                    'flow' => [
+                        'language' => '5'
+                    ],
+                    'block' => [
+                        'value' => 'YUP'
+                    ],
+                ],
+                'TRUE'
+            ]
         ];
     }
 }

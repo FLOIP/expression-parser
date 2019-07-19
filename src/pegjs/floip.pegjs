@@ -267,7 +267,9 @@ Escaped_Identifier = Identifier Identifier {
 }
 
 Quote = '"'
-QuotedText = Quote ch:$[^"]+ Quote {return ch; /**<?php return $ch; ?>**/}
+QuotedText = SingleQuotedText / DoubleQuotedText
+SingleQuotedText = "'" ch:$[^']+ "'" {return ch; /**<?php return $ch; ?>**/}
+DoubleQuotedText = '"' ch:$[^"]+ '"' {return ch; /**<?php return $ch; ?>**/}
 OpenParen = '('
 CloseParen = ')'
 Identifier = '@'
