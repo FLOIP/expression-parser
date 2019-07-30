@@ -1,7 +1,7 @@
 PEGJS_TAG="node:8-alpine"
 PHP_TAG="floip-php:5.5-alpine"
 COMPOSER_TAG="composer"
-DOCKER_RUN=docker run --rm -it -v `pwd`:/src -u `id -u` -w '/src'
+DOCKER_RUN=docker run $(DOCKER_OPTS) -v `pwd`:/src -u `id -u` -w '/src'
 PEGJS=$(DOCKER_RUN) $(PEGJS_TAG) npx pegjs
 PARSER_NAME=Parser
 PARSER_SOURCE=src/pegjs/floip.pegjs
@@ -10,6 +10,7 @@ PHP_OUT=dist/$(PARSER_CLASS).php
 PHPEGJS_OPTIONS={"cache" : "true", "phpegjs":{"parserNamespace": "Viamo", "parserClassName": "$(PARSER_CLASS)"}}
 JS_OUT=dist/$(PARSER_NAME).js
 ENV=docker
+DOCKER_OPTS=--rm -it
 
 .PHONY: clean default parsers parse-php parse-js docker-php
 
