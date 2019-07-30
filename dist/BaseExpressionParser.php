@@ -784,11 +784,51 @@ class BaseExpressionParser {
         if ($s3 !== $this->peg_FAILED) {
           $s4 = $this->peg_currPos;
           $s5 = array();
-          $s6 = $this->peg_parsevalid_variable_characters();
+          $s6 = array();
+          $s7 = $this->peg_parsevalid_variable_characters();
+          if ($s7 !== $this->peg_FAILED) {
+            while ($s7 !== $this->peg_FAILED) {
+              $s6[] = $s7;
+              $s7 = $this->peg_parsevalid_variable_characters();
+            }
+          } else {
+            $s6 = $this->peg_FAILED;
+          }
+          if ($s6 === $this->peg_FAILED) {
+            if ($this->input_substr($this->peg_currPos, 1) === $this->peg_c2) {
+              $s6 = $this->peg_c2;
+              $this->peg_currPos++;
+            } else {
+              $s6 = $this->peg_FAILED;
+              if ($this->peg_silentFails === 0) {
+                  $this->peg_fail($this->peg_c3);
+              }
+            }
+          }
           if ($s6 !== $this->peg_FAILED) {
             while ($s6 !== $this->peg_FAILED) {
               $s5[] = $s6;
-              $s6 = $this->peg_parsevalid_variable_characters();
+              $s6 = array();
+              $s7 = $this->peg_parsevalid_variable_characters();
+              if ($s7 !== $this->peg_FAILED) {
+                while ($s7 !== $this->peg_FAILED) {
+                  $s6[] = $s7;
+                  $s7 = $this->peg_parsevalid_variable_characters();
+                }
+              } else {
+                $s6 = $this->peg_FAILED;
+              }
+              if ($s6 === $this->peg_FAILED) {
+                if ($this->input_substr($this->peg_currPos, 1) === $this->peg_c2) {
+                  $s6 = $this->peg_c2;
+                  $this->peg_currPos++;
+                } else {
+                  $s6 = $this->peg_FAILED;
+                  if ($this->peg_silentFails === 0) {
+                      $this->peg_fail($this->peg_c3);
+                  }
+                }
+              }
             }
           } else {
             $s5 = $this->peg_FAILED;

@@ -214,7 +214,7 @@ Function_Arg_Inner_Function = arg:Function Arg_Delimiter? {return arg /**<?php r
  * member access, as long as 'google' does not exist in the context then our
  * evaluator should just print the literal 'google.com'
  */
-Member_Access = lhs:$AtomicExpression+ rhs:('.' inner:$AtomicExpression+ {return inner /**<?php return $inner;?> **/})? {
+Member_Access = lhs:$AtomicExpression+ rhs:('.' inner:($(AtomicExpression+ / '.')+) {return inner /**<?php return $inner;?> **/})? {
   return new member(lhs, rhs, location())
   /** <?php
     return call_user_func_array($this->_member, [$lhs, $rhs]);

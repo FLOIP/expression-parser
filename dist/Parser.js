@@ -729,7 +729,7 @@ function peg$parse(input, options) {
   }
 
   function peg$parseMember_Access() {
-    var s0, s1, s2, s3, s4, s5, s6;
+    var s0, s1, s2, s3, s4, s5, s6, s7;
 
     s0 = peg$currPos;
     s1 = peg$currPos;
@@ -760,11 +760,47 @@ function peg$parse(input, options) {
       if (s3 !== peg$FAILED) {
         s4 = peg$currPos;
         s5 = [];
-        s6 = peg$parsevalid_variable_characters();
+        s6 = [];
+        s7 = peg$parsevalid_variable_characters();
+        if (s7 !== peg$FAILED) {
+          while (s7 !== peg$FAILED) {
+            s6.push(s7);
+            s7 = peg$parsevalid_variable_characters();
+          }
+        } else {
+          s6 = peg$FAILED;
+        }
+        if (s6 === peg$FAILED) {
+          if (input.charCodeAt(peg$currPos) === 46) {
+            s6 = peg$c8;
+            peg$currPos++;
+          } else {
+            s6 = peg$FAILED;
+            if (peg$silentFails === 0) { peg$fail(peg$c9); }
+          }
+        }
         if (s6 !== peg$FAILED) {
           while (s6 !== peg$FAILED) {
             s5.push(s6);
-            s6 = peg$parsevalid_variable_characters();
+            s6 = [];
+            s7 = peg$parsevalid_variable_characters();
+            if (s7 !== peg$FAILED) {
+              while (s7 !== peg$FAILED) {
+                s6.push(s7);
+                s7 = peg$parsevalid_variable_characters();
+              }
+            } else {
+              s6 = peg$FAILED;
+            }
+            if (s6 === peg$FAILED) {
+              if (input.charCodeAt(peg$currPos) === 46) {
+                s6 = peg$c8;
+                peg$currPos++;
+              } else {
+                s6 = peg$FAILED;
+                if (peg$silentFails === 0) { peg$fail(peg$c9); }
+              }
+            }
           }
         } else {
           s5 = peg$FAILED;
