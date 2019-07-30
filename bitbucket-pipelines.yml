@@ -12,9 +12,5 @@ pipelines:
           - docker
         caches:
           - docker
-          - composer-depends
         script:
           - make test DOCKER_OPTS="--rm"
-definitions:
-  caches:
-    composer-depends: vendor
