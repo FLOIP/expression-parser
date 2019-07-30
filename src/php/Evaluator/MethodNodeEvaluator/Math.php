@@ -14,12 +14,12 @@ class Math extends AbstractMethodHandler implements MathInterface
     }
     public function max()
     {
-        $args = \func_get_args();
+        $args = array_filter(\func_get_args(), 'is_numeric');
         return array_reduce($args, 'max', static::PHP_INT_MIN);
     }
     public function min()
     {
-        $args = \func_get_args();
+        $args = array_filter(\func_get_args(), 'is_numeric');
         return array_reduce($args, 'min', \PHP_INT_MAX);
     }
     public function power($number, $power)

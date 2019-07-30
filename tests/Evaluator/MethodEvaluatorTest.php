@@ -62,7 +62,7 @@ class MethodNodeEvaluatorTest extends TestCase
         $handler = $this->handler;
         $handler->shouldReceive('foo')
             ->once()
-            ->withArgs(['foo', 'bar'])
+            ->withArgs(['foo', 'bar', []])
             ->andReturn('foobar');
         $this->evaluator->addHandler($handler);
 
@@ -80,6 +80,33 @@ class MethodNodeEvaluatorTest extends TestCase
             ]
         ];
         $context = [];
+
+        $this->evaluator->evaluate(new Node($node), $context);
+    }
+
+    public function testHandlerIsPassedContext()
+    {
+        $context = ['baz', 42];
+        $handler = $this->handler;
+        $handler->shouldReceive('foo')
+            ->once()
+            ->withArgs(['foo', 'bar', $context])
+            ->andReturn('foobar');
+        $this->evaluator->addHandler($handler);
+
+        $node = [
+            'type' => ParsesFloip::METHOD_TYPE,
+            'call' => 'FOO',
+            'args' => ["foo", "bar"],
+            'location' => [
+                'start' => [
+                    'offset' => 4
+                ],
+                'end' => [
+                    'offset' => 9
+                ]
+            ]
+        ];
 
         $this->evaluator->evaluate(new Node($node), $context);
     }

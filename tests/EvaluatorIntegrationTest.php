@@ -294,6 +294,7 @@ class EvaluatorIntegrationTest extends TestCase
                     'age' => '9',
                 ]], 'TRUE'
             ],
+            ['@(and(1 = 1, 3 = 3))', [], 'TRUE']
         ];
     }
 
