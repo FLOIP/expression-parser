@@ -14,7 +14,7 @@ class Logical extends AbstractMethodHandler implements LogicalInterface
 {
     public function _and()
     {
-        foreach (\func_get_args() as $arg) {
+        foreach (array_filter(\func_get_args(), 'is_scalar') as $arg) {
             if ($arg == false) {
                 return false;
             }
@@ -23,7 +23,7 @@ class Logical extends AbstractMethodHandler implements LogicalInterface
     }
     public function _if()
     {
-        $args = \func_get_args();
+        $args = array_filter(\func_get_args(), 'is_scalar');
         if (count($args) != 3) {
             throw new MethodNodeException('Too many args for if: ', \func_num_args());
         }
@@ -31,7 +31,7 @@ class Logical extends AbstractMethodHandler implements LogicalInterface
     }
     public function _or()
     {
-        foreach (\func_get_args() as $arg) {
+        foreach (array_filter(\func_get_args(), 'is_scalar') as $arg) {
             if ($arg == true) {
                 return true;
             }

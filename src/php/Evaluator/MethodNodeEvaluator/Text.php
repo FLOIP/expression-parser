@@ -20,7 +20,7 @@ class Text extends AbstractMethodHandler implements TextInterface
     }
     public function concatenate()
     {
-        return implode(\func_get_args());
+        return implode(array_filter(\func_get_args(), 'is_scalar'));
     }
     public function fixed($number, $decimals = 0, $commas = false)
     {
