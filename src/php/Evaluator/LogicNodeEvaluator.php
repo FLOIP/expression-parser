@@ -28,6 +28,7 @@ class LogicNodeEvaluator extends AbstractNodeEvaluator
             case '=':
                 return $lhs == $rhs;
             case '!=':
+            case '<>':
                 return $lhs !== $rhs;
         }
         throw new NodeEvaluatorException('invalid operator ' . $operator);
