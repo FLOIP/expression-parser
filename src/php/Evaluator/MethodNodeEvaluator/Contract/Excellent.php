@@ -81,4 +81,28 @@ interface Excellent extends EvaluatesMethods
      * @return string
      */
     public function wordSlice($string, $start, $stop = null, $bySpaces = null);
+
+    /**
+     * Return trues if a value is a number, false otherwise.
+     *
+     * @param mixed $value
+     * @return bool
+     */
+    public function isNumber($value);
+
+    /**
+     * Return trues if a value is a string, false otherwise.
+     *
+     * @param mixed $value
+     * @return bool
+     */
+    public function isString($value);
+
+    /**
+     * Return trues if a value is a bool, false otherwise.
+     *
+     * @param mixed $value
+     * @return bool
+     */
+    public function isBool($value);
 }
