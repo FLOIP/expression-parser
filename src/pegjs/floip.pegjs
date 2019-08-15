@@ -190,7 +190,7 @@ Expression_Types = Escaped_Identifier / Math / Logic / Concatenation / Function 
  * Functions always wrap their arguments in parens.
  */
 Function = call:$valid_expression_characters+ OpenParen args:( Function_Args* ) CloseParen {
-  return new method(call, args, location())
+  return  method(call, args, location())
   /** <?php
     return call_user_func_array($this->_method, [$call, $args]);
   ?> **/
@@ -215,7 +215,7 @@ Function_Arg_Inner_Function = arg:Function Arg_Delimiter? {return arg /**<?php r
  * evaluator should just print the literal 'google.com'
  */
 Member_Access = lhs:$AtomicExpression+ rhs:('.' inner:$AtomicExpression+ {return inner /**<?php return $inner;?> **/})? {
-  return new member(lhs, rhs, location())
+  return  member(lhs, rhs, location())
   /** <?php
     return call_user_func_array($this->_member, [$lhs, $rhs]);
   ?> **/
@@ -225,7 +225,7 @@ Member_Access = lhs:$AtomicExpression+ rhs:('.' inner:$AtomicExpression+ {return
  * Math looks like @(1 + 2)
  */
 Math = lhs:Math_Arg ws* op:$math_chars ws+ rhs:(Math / Math_Arg) ws* {
-  return new math(lhs, rhs, op, location())
+  return  math(lhs, rhs, op, location())
   /** <?php
     return call_user_func_array($this->_math, [$lhs, $rhs, $op]);
   ?> **/
@@ -238,7 +238,7 @@ Math_Arg_Inner_Math = OpenParen child:Math CloseParen { return child; /**<?php r
  * Logic looks like @(1 < 2) or @(contact.name = "Henry")
  */
 Logic = lhs:Logic_Arg ws* op:$logic_chars ws* rhs:(Logic / Logic_Arg) ws* {
-  return new logic(lhs, rhs, op, location())
+  return  logic(lhs, rhs, op, location())
   /** <?php
     return call_user_func_array($this->_logic, [$lhs, $rhs, $op]);
   ?> **/
@@ -251,7 +251,7 @@ Logic_Arg_Inner_Logic = OpenParen child:Logic CloseParen { return child; /**<?ph
  * Concatenation looks like @("Some" & " " & "String") or @(contact.firstname & " " & contact.lastname)
  */
 Concatenation = lhs:Concatenation_Arg ws* Concat_Operator ws* rhs:(Concatenation / Concatenation_Arg) ws* {
-  return new concatenate(lhs, rhs, location())
+  return  concatenate(lhs, rhs, location())
   /**<?php return call_user_func_array($this->_concatenate, [$lhs, $rhs]); ?>**/
 }
 
@@ -260,7 +260,7 @@ Concatenation_Arg = Escaped_Identifier / Math / Logic / Function / Member_Access
  * We can ignore the identifier by typing it twice, i.e. '@@' => '@'
  */
 Escaped_Identifier = Identifier Identifier {
-  return new escape(location())
+  return  escape(location())
   /** <?php
     return call_user_func_array($this->_escape, []);
   ?> **/

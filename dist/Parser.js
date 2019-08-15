@@ -164,7 +164,7 @@ function peg$parse(input, options) {
       },
       peg$c3 = function() {return location() /**<?php return call_user_func($this->_location); ?>**/},
       peg$c4 = function(call, args) {
-        return new method(call, args, location())
+        return  method(call, args, location())
         /** <?php
           return call_user_func_array($this->_method, [$call, $args]);
         ?> **/
@@ -176,30 +176,30 @@ function peg$parse(input, options) {
       peg$c9 = peg$literalExpectation(".", false),
       peg$c10 = function(lhs, inner) {return inner /**<?php return $inner;?> **/},
       peg$c11 = function(lhs, rhs) {
-        return new member(lhs, rhs, location())
+        return  member(lhs, rhs, location())
         /** <?php
           return call_user_func_array($this->_member, [$lhs, $rhs]);
         ?> **/
       },
       peg$c12 = function(lhs, op, rhs) {
-        return new math(lhs, rhs, op, location())
+        return  math(lhs, rhs, op, location())
         /** <?php
           return call_user_func_array($this->_math, [$lhs, $rhs, $op]);
         ?> **/
       },
       peg$c13 = function(child) { return child; /**<?php return $child; ?>**/},
       peg$c14 = function(lhs, op, rhs) {
-        return new logic(lhs, rhs, op, location())
+        return  logic(lhs, rhs, op, location())
         /** <?php
           return call_user_func_array($this->_logic, [$lhs, $rhs, $op]);
         ?> **/
       },
       peg$c15 = function(lhs, rhs) {
-        return new concatenate(lhs, rhs, location())
+        return  concatenate(lhs, rhs, location())
         /**<?php return call_user_func_array($this->_concatenate, [$lhs, $rhs]); ?>**/
       },
       peg$c16 = function() {
-        return new escape(location())
+        return  escape(location())
         /** <?php
           return call_user_func_array($this->_escape, []);
         ?> **/
