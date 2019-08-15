@@ -1,3 +1,6 @@
 src/**
 tests/**/*.php
 composer**
+.docker
+.vscode
+phpunit.xml

@@ -8,11 +8,13 @@ PARSER_SOURCE=src/pegjs/floip.pegjs
 PARSER_CLASS=BaseExpressionParser
 PHP_OUT=dist/$(PARSER_CLASS).php
 PHPEGJS_OPTIONS={"cache" : "true", "phpegjs":{"parserNamespace": "Viamo", "parserClassName": "$(PARSER_CLASS)"}}
+TSPEGJS_OPTIONS={"cache" : "true", "tspegjs":{}}
 JS_OUT=dist/$(PARSER_NAME).js
+TS_OUT=dist/$(PARSER_NAME).ts
 ENV=docker
 DOCKER_OPTS=--rm -it
 
-.PHONY: clean default parsers parse-php parse-js docker-php
+.PHONY: clean default parsers parse-php parse-js parse-ts docker-php
 
 default: parsers
 
@@ -37,11 +39,20 @@ else
 	npx pegjs -o $(JS_OUT) $(PARSER_SOURCE)
 endif
 
+$(TS_OUT): node_modules $(PARSER_SOURCE)
+ifeq ($(ENV),docker)
+	$(PEGJS) --plugin ts-pegjs -o $(TS_OUT) --extra-options '$(TSPEGJS_OPTIONS)' $(PARSER_SOURCE)
+else
+	npx pegjs --plugin ts-pegjs -o $(TS_OUT) --extra-options '$(TSPEGJS_OPTIONS)' $(PARSER_SOURCE)
+endif
+
 parse-php: $(PHP_OUT)
 
 parse-js: $(JS_OUT)
 
-parsers: parse-php parse-js
+parse-ts: $(TS_OUT)
+
+parsers: parse-php parse-js parse-ts
 
 vendor: composer.json
 ifeq ($(ENV),docker)
