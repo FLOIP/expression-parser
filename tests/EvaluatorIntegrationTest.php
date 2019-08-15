@@ -17,6 +17,8 @@ use Viamo\Floip\Evaluator\MethodNodeEvaluator\Text;
 use Viamo\Floip\Evaluator\ConcatenationNodeEvaluator;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\Logical;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\DateTime;
+use Viamo\Floip\Evaluator\MethodNodeEvaluator\Excellent;
+
 
 class EvaluatorIntegrationTest extends TestCase
 {
@@ -225,6 +227,19 @@ class EvaluatorIntegrationTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
+    /**
+     * @dataProvider  isXXXProvider
+     */
+    public function testIsXXXFunctions($expression, array $context, $expected)
+    {
+        $this->MethodNodeEvaluator->addHandler(new Excellent);
+        $this->MethodNodeEvaluator->addHandler(new Text);
+        $this->MethodNodeEvaluator->addHandler(new Logical);
+        $result = $this->evaluator->evaluate($expression, $context);
+
+        $this->assertEquals($expected, $result);
+    }
+
     public function concatenationExpressionProvider()
     {
         return [
@@ -365,6 +380,62 @@ class EvaluatorIntegrationTest extends TestCase
                         'value' => 'YUP'
                     ],
                 ],
+                'TRUE'
+            ]
+        ];
+    }
+
+    public function isXXXProvider() {
+        return [
+            'is number true' => [
+                '@(isnumber(val.num))',
+                ['val' => ['num' => '3']],
+                'TRUE'
+            ],
+            'is number true' => [
+                '@(isnumber("5"))',
+                [],
+                'TRUE'
+            ],
+            'is number false' => [
+                '@(isnumber(val.str))',
+                ['val' => ['str' => 'nope']],
+                'FALSE'
+            ],
+            'is string true' => [
+                '@(isstring("yep"))',
+                [],
+                'TRUE'
+            ],
+            'is string false' => [
+                '@(isstring(val.num))',
+                ['val' => ['num' => '3']],
+                'FALSE'
+            ],
+            'is bool true' => [
+                '@(isbool(val.boo))',
+                ['val' => ['boo' => true]],
+                'TRUE'
+            ],
+            'is bool false' => [
+                '@(isbool(val.boo))',
+                ['val' => ['boo' => 'nope']],
+                'FALSE'
+            ],
+            'is bool true string' => [
+                '@(isbool("TRUE"))',
+                [],
+                'TRUE'
+            ],
+            'is bool false string' => [
+                '@(isbool("FALSE"))',
+                [],
+                'TRUE'
+            ]
+            ,
+            'isxxx all together now' => [
+                '@(AND(isbool("TRUE"), isstring("foo"), isnumber("5")))',
+                [],
                 'TRUE'
             ]
         ];

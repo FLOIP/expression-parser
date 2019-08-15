@@ -4,6 +4,7 @@ namespace Viamo\Floip\Evaluator\MethodNodeEvaluator;
 
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract\Excellent as ExcellentInterface;
 use Viamo\Floip\Evaluator\Exception\MethodNodeException;
+use Viamo\Floip\Evaluator\Node;
 
 class Excellent extends AbstractMethodHandler implements ExcellentInterface
 {
@@ -99,5 +100,32 @@ class Excellent extends AbstractMethodHandler implements ExcellentInterface
     private function stripPunc($string)
     {
         return \str_replace(str_split(static::PUNCTUATION), '', $string);
+    }
+
+    public function isNumber($value)
+    {
+        if ($value instanceof Node) {
+            $value = $value->getValue();
+        }
+        return is_numeric($value);
+    }
+
+    public function isString($value)
+    {
+        if ($value instanceof Node) {
+            $value = $value->getValue();
+        }
+        return is_string($value) && !(is_numeric($value) || $this->isBool($value));
+    }
+
+    public function isBool($value)
+    {
+        if ($value instanceof Node) {
+            $value = $value->getValue();
+        }
+        else if (!is_string($value)) {
+            return false;
+        }
+        return $value === 'TRUE' || $value === 'FALSE';
     }
 }
