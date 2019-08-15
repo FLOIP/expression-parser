@@ -4,7 +4,7 @@
  * starts parsing, and is available to predicates.
  */
 {
-  var member = function(key, value, location) {
+  const member = function(key, value, location) {
     return {
       type: 'MEMBER',
       key: key,
@@ -22,7 +22,7 @@
     ];
   };
   ?> **/
-  var method = function(call, args, location) {
+  const method = function(call, args, location) {
     return {
       type: 'METHOD',
       call: call,
@@ -40,7 +40,7 @@
     ];
   };
   ?> **/
-  var math = function(lhs, rhs, operator, location) {
+  const math = function(lhs, rhs, operator, location) {
     return {
       type: 'MATH',
       lhs: lhs,
@@ -60,7 +60,7 @@
     ];
   };
   ?> **/
-  var logic = function(lhs, rhs, operator, location) {
+  const logic = function(lhs, rhs, operator, location) {
     return {
       type: 'LOGIC',
       lhs: lhs,
@@ -80,7 +80,7 @@
     ];
   };
   ?> **/
-  var escape = function(location) {
+  const escape = function(location) {
     return {
       type: 'ESCAPE',
       location: location
@@ -95,7 +95,7 @@
     };
   ?> **/
 
-  var concatenate = function(lhs, rhs, location) {
+  const concatenate = function(lhs, rhs, location) {
     return {
       type: 'CONCATENATE',
       lhs: lhs,
@@ -245,7 +245,7 @@ Logic = lhs:Logic_Arg ws* op:$logic_chars ws* rhs:(Logic / Logic_Arg) ws* {
 }
 
 Logic_Arg = Logic_Arg_Inner_Logic / Math / Function / Member_Access / $numbers+ / QuotedText
-Logic_Arg_Inner_Logic = OpenParen child:Logic CloseParen { return $child; /**<?php return $child; ?>**/}
+Logic_Arg_Inner_Logic = OpenParen child:Logic CloseParen { return child; /**<?php return $child; ?>**/}
 
 /**
  * Concatenation looks like @("Some" & " " & "String") or @(contact.firstname & " " & contact.lastname)
