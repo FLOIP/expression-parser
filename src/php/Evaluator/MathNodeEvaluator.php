@@ -2,9 +2,12 @@
 
 namespace Viamo\Floip\Evaluator;
 
+use Carbon\Carbon;
+use Carbon\CarbonInterval;
 use Viamo\Floip\Evaluator\Node;
-use Viamo\Floip\Evaluator\Exception\NodeEvaluatorException;
 use Viamo\Floip\Contract\ParsesFloip;
+use Viamo\Floip\Evaluator\AbstractNodeEvaluator;
+use Viamo\Floip\Evaluator\Exception\NodeEvaluatorException;
 
 class MathNodeEvaluator extends AbstractNodeEvaluator
 {
@@ -17,7 +20,11 @@ class MathNodeEvaluator extends AbstractNodeEvaluator
         $rhs = $this->value($node['rhs']);
         $operator = $node['operator'];
 
-        switch($operator) {
+        if ($this->isDateValue($rhs) || $this->isDateValue($lhs)) {
+            return $this->evaluateDates($lhs, $rhs, $operator);
+        }
+
+        switch ($operator) {
             case '+':
                 return $lhs + $rhs;
             case '-':
@@ -32,12 +39,32 @@ class MathNodeEvaluator extends AbstractNodeEvaluator
         throw new NodeEvaluatorException('invalid operator ' . $operator);
     }
 
+    private function evaluateDates(Carbon $lhs, CarbonInterval $rhs, $operator) {
+        if (!($lhs instanceof Carbon)) {
+            throw new NodeEvaluatorException('When performing date math, left hand side must be a date');
+        }
+        if (!($rhs instanceof CarbonInterval)) {
+            throw new NodeEvaluatorException('When performing date math, right hand side must be a time interval');
+        }
+        switch ($operator) {
+            case '+':
+                return $lhs->add($rhs);
+            case '-':
+                return $lhs->sub($rhs);
+        }
+        throw new NodeEvaluatorException('invalid operator for date math: ' . $operator);
+    }
+
+    private function isDateValue($thing) {
+        return $thing instanceof Carbon || $thing instanceof CarbonInterval;
+    }
+
     private function value($thing)
     {
         if ($thing instanceof Node) {
             $thing = $thing->getValue();
         }
-        if (!\is_numeric($thing)) {
+        if (!\is_numeric($thing) && !($this->isDateValue($thing))) {
             throw new NodeEvaluatorException("Can only perform math on numbers, got: '$thing'");
         }
         return $thing;

@@ -4,12 +4,13 @@ namespace Viamo\Floip\Evaluator\MethodNodeEvaluator;
 
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract\DateTime as DateTimeInterface;
 use Carbon\Carbon;
+use Carbon\CarbonInterval;
 
 class DateTime extends AbstractMethodHandler implements DateTimeInterface
 {
     public function date($year, $month, $day)
     {
-        return Carbon::createFromDate($year, $month, $day);
+        return Carbon::createFromDate($year, $month, $day)->startOfDay();
     }
     public function dateValue($string)
     {
@@ -45,11 +46,11 @@ class DateTime extends AbstractMethodHandler implements DateTimeInterface
     }
     public function time($hours, $minutes, $seconds)
     {
-        return Carbon::createFromTime($hours, $minutes, $seconds);
+        return new CarbonInterval(0, 0, 0, 0, $hours, $minutes, $seconds);
     }
     public function timeValue($string)
     {
-        return Carbon::parse($string);
+        return CarbonInterval::createFromDateString($string);
     }
     public function today()
     {

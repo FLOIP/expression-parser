@@ -19,7 +19,6 @@ use Viamo\Floip\Evaluator\MethodNodeEvaluator\Logical;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\DateTime;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\Excellent;
 
-
 class EvaluatorIntegrationTest extends TestCase
 {
     /** @var Evaluator */
@@ -90,7 +89,7 @@ class EvaluatorIntegrationTest extends TestCase
     public function testEvaluatesMethodWithArgs()
     {
         $expression = 'Today is @(DATE(2012,12,12))';
-        $expected = "Today is " . Carbon::createFromDate(2012, 12, 12);
+        $expected = "Today is " . Carbon::createFromDate(2012, 12, 12)->startOfDay();
         $context = [];
         $this->MethodNodeEvaluator->addHandler(new DateTime);
         
@@ -103,7 +102,7 @@ class EvaluatorIntegrationTest extends TestCase
     {
         $now = Carbon::now();
         $expression = 'Today is @(DATE(YEAR(NOW()), MONTH(NOW()), DAY(NOW())))';
-        $expected = "Today is " . Carbon::createFromDate($now->year, $now->month, $now->day);
+        $expected = "Today is " . Carbon::createFromDate($now->year, $now->month, $now->day)->startOfDay();
         $context = [];
         $this->MethodNodeEvaluator->addHandler(new DateTime);
 
@@ -115,22 +114,22 @@ class EvaluatorIntegrationTest extends TestCase
     public function testEvaluatesMultipleMethods()
     {
         $now = Carbon::now();
-        $nowString = Carbon::createFromDate($now->year, $now->month, $now->day);
+        $nowString = Carbon::createFromDate($now->year, $now->month, $now->day)->startOfDay();
         $expression = 'Today is @(DATE(YEAR(NOW()), MONTH(NOW()), DAY(NOW()))), or just @(NOW())';
-        $expected = "Today is $nowString, or just $nowString";
+        $expected = "Today is $nowString, or just $now";
         $context = [];
 
         $this->MethodNodeEvaluator->addHandler(new DateTime);
 
         $result = $this->evaluator->evaluate($expression, $context);
 
-        $this->assertEquals($expected, $result);   
+        $this->assertEquals($expected, $result);
     }
 
     public function testEvaluatesMethodWithMemberArg()
     {
         $now = Carbon::now();
-        $nowString = Carbon::createFromDate($now->year, $now->month, $now->day);
+        $nowString = Carbon::createFromDate($now->year, $now->month, $now->day)->startOfDay();
         $expression = 'Today is @(DATE(contact.year, contact.month, contact.day))';
         $expected = "Today is $nowString";
         $context = [

@@ -3,6 +3,7 @@
 namespace Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract;
 
 use Carbon\Carbon;
+use Carbon\CarbonInterval;
 
 interface DateTime extends EvaluatesMethods
 {
@@ -86,7 +87,7 @@ interface DateTime extends EvaluatesMethods
      * @param int $hours
      * @param int $minutes
      * @param int $seconds
-     * @return Carbon
+     * @return CarbonInterval
      */
     public function time($hours, $minutes, $seconds);
 
@@ -94,7 +95,7 @@ interface DateTime extends EvaluatesMethods
      * Converts time stored in text to an actual time
      *
      * @param string $string
-     * @return Carbon
+     * @return CarbonInterval
      */
     public function timeValue($string);
 
