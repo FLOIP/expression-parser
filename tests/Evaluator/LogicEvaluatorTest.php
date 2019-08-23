@@ -28,6 +28,8 @@ class LogicNodeEvaluatorTest extends TestCase
 
     public function logicProvider()
     {
+        $tn = new Node([]);
+        $tn->setValue(3);
         return [
             [
                 [
@@ -109,6 +111,15 @@ class LogicNodeEvaluatorTest extends TestCase
                     'operator' => '<>'
                 ],
                 false
+            ],
+            [
+                [
+                    'type' => 'LOGIC',
+                    'lhs' => $tn,
+                    'rhs' => 3,
+                    'operator' => '=',
+                ],
+                true
             ]
         ];
     }

@@ -5,7 +5,7 @@ namespace Viamo\Floip\Evaluator;
 use Viamo\Floip\Evaluator\Exception\NodeEvaluatorException;
 use Viamo\Floip\Contract\ParsesFloip;
 
-class LogicNodeEvaluator extends AbstractNodeEvaluator 
+class LogicNodeEvaluator extends AbstractNodeEvaluator
 {
     public function evaluate(Node $node, array $context)
     {
@@ -16,7 +16,7 @@ class LogicNodeEvaluator extends AbstractNodeEvaluator
         $rhs = $this->value($node['rhs']);
         $operator = $node['operator'];
 
-        switch($operator) {
+        switch ($operator) {
             case '<':
                 return $lhs < $rhs;
             case '<=':

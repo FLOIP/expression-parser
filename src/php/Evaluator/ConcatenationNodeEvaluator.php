@@ -12,7 +12,7 @@ class ConcatenationNodeEvaluator extends AbstractNodeEvaluator
     public function evaluate(Node $node, array $context)
     {
         if (!isset($node['rhs'], $node['lhs'])) {
-            throw new NodeEvaluatorException('Concatenation node is the wrong shape, should have "rhs", "lhs", "operator"');
+            throw new NodeEvaluatorException('Concatenation node is the wrong shape, should have "rhs", "lhs"');
         }
         $lhs = $this->value($node['lhs']);
         $rhs = $this->value($node['rhs']);
