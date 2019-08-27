@@ -54,7 +54,16 @@ class Logical extends AbstractMethodHandler implements LogicalInterface
                 }
             }
         }
-        return $thing;
+        switch ($thing) {
+            case 'TRUE':
+            case 'true':
+                return true;
+            case 'FALSE':
+            case 'false':
+                return false;
+            default:
+                return $thing;
+        }
     }
 
     public function __call($name, array $args)

@@ -306,7 +306,7 @@ class EvaluatorIntegrationTest extends TestCase
                 'contact' => [
                     'gender' => 'f',
                     'age' => '9',
-                ]], 'TRUE'
+                ]], 'FALSE'
             ],
             ['@(and(1 = 1, 3 = 3))', [], 'TRUE']
         ];
