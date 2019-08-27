@@ -18,6 +18,7 @@ use Viamo\Floip\Evaluator\ConcatenationNodeEvaluator;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\Logical;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\DateTime;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\Excellent;
+use Viamo\Floip\Evaluator\NullNodeEvaluator;
 
 
 class EvaluatorIntegrationTest extends TestCase
@@ -38,6 +39,8 @@ class EvaluatorIntegrationTest extends TestCase
     protected $escapeNodeEvaluator;
     /** @var EvaluatesExpression */
     protected $concatenationNodeEvaluator;
+    /** @var EvaluatesExpressions */
+    protected $nullNodeHandler;
 
     public function setUp()
     {
@@ -48,6 +51,7 @@ class EvaluatorIntegrationTest extends TestCase
         $this->mathNodeEvaluator = new MathNodeEvaluator;
         $this->escapeNodeEvaluator = new EscapeNodeEvaluator;
         $this->concatenationNodeEvaluator = new ConcatenationNodeEvaluator;
+        $this->nullNodeHandler = new NullNodeEvaluator;
 
         $this->evaluator = new Evaluator($this->parser);
         $this->evaluator->addNodeEvaluator($this->MethodNodeEvaluator);
@@ -56,6 +60,7 @@ class EvaluatorIntegrationTest extends TestCase
         $this->evaluator->addNodeEvaluator($this->mathNodeEvaluator);
         $this->evaluator->addNodeEvaluator($this->escapeNodeEvaluator);
         $this->evaluator->addNodeEvaluator($this->concatenationNodeEvaluator);
+        $this->evaluator->addNodeEvaluator($this->nullNodeHandler);
     }
 
     public function testEvaluatesMemberAccess()
@@ -238,6 +243,37 @@ class EvaluatorIntegrationTest extends TestCase
         $result = $this->evaluator->evaluate($expression, $context);
 
         $this->assertEquals($expected, $result);
+    }
+
+    /**
+     * @dataProvider nullExpressionProvider
+     */
+    public function testNullExpression($expression, array $context, $expected)
+    {
+        $result = $this->evaluator->evaluate($expression, $context);
+
+        $this->assertEquals($expected, $result);
+    }
+
+    public function nullExpressionProvider()
+    {
+        return [
+            [
+                '@(contact.name = NULL)',
+                ['contact' => ['name' => null]],
+                'TRUE'
+            ],
+            [
+                '@(contact.name = NULL)',
+                ['contact' => ['name' => 'Kyle']],
+                'FALSE'
+            ],
+            [
+                '@(NULL)',
+                [],
+                'NULL'
+            ]
+        ];
     }
 
     public function concatenationExpressionProvider()

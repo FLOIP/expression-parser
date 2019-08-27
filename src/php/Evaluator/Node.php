@@ -80,6 +80,9 @@ class Node implements \ArrayAccess
     public function __toString()
     {
         if ($this->valueSet) {
+            if ($this->value === null) {
+                return 'NULL';
+            }
             return (string)$this->value;
         }
         throw new \Exception;

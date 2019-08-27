@@ -23,6 +23,7 @@ use Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract\Excellent as ExcellentInt
 use Viamo\Floip\Evaluator\EscapeNodeEvaluator;
 use Viamo\Floip\Evaluator\ConcatenationNodeEvaluator;
 use Viamo\Floip\Evaluator\MathNodeEvaluator;
+use Viamo\Floip\Evaluator\NullNodeEvaluator;
 
 class ExpressionEvaluatorServiceProvider extends ServiceProvider
 {
@@ -96,6 +97,7 @@ class ExpressionEvaluatorServiceProvider extends ServiceProvider
             new EscapeNodeEvaluator,
             new ConcatenationNodeEvaluator,
             new MathNodeEvaluator,
+            new NullNodeEvaluator,
             $this->app->make(MethodNodeEvaluator::class)
         ];
     }
