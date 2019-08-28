@@ -115,6 +115,22 @@
   };
   ?> **/
 
+  const nullNode = function(location) {
+    return {
+      type: 'NULL',
+      location: location
+    }
+  }
+
+  /** <?php
+    $this->_null = function() {
+      return [
+        'type' => 'NULL',
+        'location' => call_user_func($this->_location)
+      ];
+    };
+  ?> **/
+
 
   /** <?php
     // we can build the location information the same way as
@@ -183,7 +199,7 @@ Expression_Identifier = Identifier {return location() /**<?php return call_user_
  * The order they are expressed here is the order in which the parser tries
  * to match them.
  */
-Expression_Types = Escaped_Identifier / Math / Logic / Concatenation / Function / Member_Access
+Expression_Types = Escaped_Identifier / Math / Logic / Concatenation / Function / Null / Member_Access
 
 /**
  * Function looks like @(SOME_METHOD(argument, argument...))
@@ -205,7 +221,7 @@ Function_Args = arg:(arg:Function_Arg_Types Arg_Delimiter? {return arg /**<?php 
  * Functions can take any other kind of expression as an argument, or quoted text, or numbers.
  * This means that you can also nest functions deeply.
  */
-Function_Arg_Types = Logic / Math / Function_Arg_Inner_Function / Member_Access / QuotedText / $('-'* numbers+)
+Function_Arg_Types = Logic / Math / Function_Arg_Inner_Function / Null / Member_Access / QuotedText / $('-'* numbers+)
 Function_Arg_Inner_Function = arg:Function Arg_Delimiter? {return arg /**<?php return $arg;?> **/}
 
 /**
@@ -244,7 +260,7 @@ Logic = lhs:Logic_Arg ws* op:$logic_chars ws* rhs:(Logic / Logic_Arg) ws* {
   ?> **/
 }
 
-Logic_Arg = Logic_Arg_Inner_Logic / Math / Function / Member_Access / $numbers+ / QuotedText
+Logic_Arg = Logic_Arg_Inner_Logic / Math / Function / Null / Member_Access / $numbers+ / QuotedText
 Logic_Arg_Inner_Logic = OpenParen child:Logic CloseParen { return child; /**<?php return $child; ?>**/}
 
 /**
@@ -263,6 +279,13 @@ Escaped_Identifier = Identifier Identifier {
   return  escape(location())
   /** <?php
     return call_user_func_array($this->_escape, []);
+  ?> **/
+}
+
+Null = ('null' / 'NULL') {
+  return nullNode(location())
+  /** <?php
+    return call_user_func_array($this->_null, []);
   ?> **/
 }
 
