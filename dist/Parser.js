@@ -2046,4 +2046,4 @@ function peg$parse(input, options) {
     }
 }
 exports.parse = peg$parse;
-//# sourceMappingURL=index.js.map
+//# sourceMappingURL=Parser.js.map

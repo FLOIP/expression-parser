@@ -10,7 +10,7 @@ PHP_OUT=dist/$(PARSER_CLASS).php
 PHPEGJS_OPTIONS={"cache" : "true", "phpegjs":{"parserNamespace": "Viamo", "parserClassName": "$(PARSER_CLASS)"}}
 TSPEGJS_OPTIONS={"cache" : "true", "tspegjs":{}}
 JS_OUT=dist/$(PARSER_NAME).js
-TS_OUT=src/ts/index.ts
+TS_OUT=src/ts/$(PARSER_NAME).ts
 ENV=docker
 DOCKER_OPTS=--rm -it
 
