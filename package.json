@@ -2,13 +2,21 @@
   "name": "floip-parser",
   "version": "1.4.0",
   "description": "",
-  "scripts": {},
+  "main": "./dist/Parser.js",
+  "types": "./dist/Parser.d.ts",
+  "scripts": {
+    "build": "tsc --declaration",
+    "test": "jest",
+    "watch": "tsc --watch"
+  },
   "author": "Kyle Seifert",
   "license": "",
   "devDependencies": {
     "pegjs": "^0.10.0",
     "phpegjs": "^1.0.0-beta7",
-    "ts-pegjs": "^0.2.6"
-  },
-  "private": true
+    "ts-pegjs": "^0.2.6",
+    "@types/node": "^12.7.4",
+    "tsc": "^1.20150623.0",
+    "typescript": "^3.6.2"
+  }
 }

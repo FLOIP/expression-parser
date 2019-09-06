@@ -10,7 +10,7 @@ PHP_OUT=dist/$(PARSER_CLASS).php
 PHPEGJS_OPTIONS={"cache" : "true", "phpegjs":{"parserNamespace": "Viamo", "parserClassName": "$(PARSER_CLASS)"}}
 TSPEGJS_OPTIONS={"cache" : "true", "tspegjs":{}}
 JS_OUT=dist/$(PARSER_NAME).js
-TS_OUT=dist/$(PARSER_NAME).ts
+TS_OUT=src/ts/$(PARSER_NAME).ts
 ENV=docker
 DOCKER_OPTS=--rm -it
 
@@ -32,18 +32,20 @@ else
 	npx pegjs --plugin phpegjs -o $(PHP_OUT) --extra-options '$(PHPEGJS_OPTIONS)' $(PARSER_SOURCE)
 endif
 
-$(JS_OUT): node_modules $(PARSER_SOURCE)
-ifeq ($(ENV),docker)
-	$(PEGJS) -o $(JS_OUT) $(PARSER_SOURCE)
-else
-	npx pegjs -o $(JS_OUT) $(PARSER_SOURCE)
-endif
+# $(JS_OUT): node_modules $(PARSER_SOURCE)
+# ifeq ($(ENV),docker)
+# 	$(PEGJS) -o $(JS_OUT) $(PARSER_SOURCE)
+# else
+# 	npx pegjs -o $(JS_OUT) $(PARSER_SOURCE)
+# endif
 
 $(TS_OUT): node_modules $(PARSER_SOURCE)
 ifeq ($(ENV),docker)
 	$(PEGJS) --plugin ts-pegjs -o $(TS_OUT) --extra-options '$(TSPEGJS_OPTIONS)' $(PARSER_SOURCE)
+	$(DOCKER_RUN) $(PEGJS_TAG) npm run build
 else
 	npx pegjs --plugin ts-pegjs -o $(TS_OUT) --extra-options '$(TSPEGJS_OPTIONS)' $(PARSER_SOURCE)
+	npm run build
 endif
 
 parse-php: $(PHP_OUT)
@@ -52,7 +54,7 @@ parse-js: $(JS_OUT)
 
 parse-ts: $(TS_OUT)
 
-parsers: parse-php parse-js parse-ts
+parsers: parse-php parse-ts
 
 vendor: composer.json
 ifeq ($(ENV),docker)
