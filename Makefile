@@ -1,6 +1,6 @@
 PEGJS_TAG="node:8-alpine"
 PHP_TAG="floip-php:5.5-alpine"
-COMPOSER_TAG="composer"
+COMPOSER_TAG="floip-php:5.5-alpine"
 DOCKER_RUN=docker run $(DOCKER_OPTS) -v `pwd`:/src -u `id -u` -w '/src'
 PEGJS=$(DOCKER_RUN) $(PEGJS_TAG) npx pegjs
 PARSER_NAME=Parser
