@@ -68,7 +68,7 @@ ifeq ($(ENV),docker)
 	docker build -t $(PHP_TAG) .docker/php
 endif
 
-test: vendor docker-php
+test: docker-php vendor
 ifeq ($(ENV),docker)
 	$(DOCKER_RUN) $(PHP_TAG) ./vendor/bin/phpunit 
 else
