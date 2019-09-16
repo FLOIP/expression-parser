@@ -18,6 +18,22 @@ class MemberNodeEvaluatorTest extends TestCase
     }
 
     /**
+     * @dataProvider absentKeyProvider
+     */
+    public function testEvaluatesAbsentKey(array $node, array $context, $expected) {
+        $evaluated = $this->evaluator->evaluate(new Node($node), $context);
+        $this->assertEquals($expected, $evaluated);
+    }
+
+    /**
+     * @dataProvider arrayReturnProvider
+     */
+    public function testArrayReturn(array $node, array $context, $expected) {
+        $evaluated = $this->evaluator->evaluate(new Node($node), $context);
+        $this->assertEquals($expected, $evaluated);
+    }
+
+    /**
      * @dataProvider keyAndValueProvider
      */
     public function testEvaluatesKeyAndValue(array $node, array $context, $expected)
@@ -42,6 +58,58 @@ class MemberNodeEvaluatorTest extends TestCase
     {
         $evaluated = $this->evaluator->evaluate(new Node($node), $context);
         $this->assertEquals($expected, $evaluated);
+    }
+
+    public function absentKeyProvider() {
+        return [
+            [
+                [
+                    'type' => ParsesFloip::MEMBER_TYPE,
+                    'key' => 'contact',
+                    'value' => 'name',
+                    'location' => [
+                        'start' => [
+                            'offset' => 6,
+                        ],
+                        'end' => [
+                            'offset' => 19
+                        ]
+                    ]
+                ],
+                [
+                    // empty context
+                ],
+                'contact.name'
+            ],
+        ];
+    }
+
+    public function arrayReturnProvider() {
+        return [
+            [
+                [
+                    'type' => ParsesFloip::MEMBER_TYPE,
+                    'key' => 'flow',
+                    'value' => 'multipleChoice.value',
+                    'location' => [
+                        'start' => [
+                            'offset' => 6,
+                        ],
+                        'end' => [
+                            'offset' => 19
+                        ]
+                    ]
+                ],
+                [
+                    'flow' => [
+                        'multipleChoice' => [
+                            'value' => ['one', 'two', 'three']
+                        ]
+                    ]
+                ],
+                'contact.name'
+            ],
+        ];
     }
 
     public function keyAndValueProvider()

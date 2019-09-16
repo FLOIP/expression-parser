@@ -20,7 +20,7 @@ class MemberNodeEvaluator extends AbstractNodeEvaluator
             throw new NodeEvaluatorException('Member node is the wrong shape, should have "key"');
         }
         if (!key_exists($node['key'], $context)) {
-            if (key_exists('value', $node)) {
+            if ($node->offsetExists('value')) {
                 return $node['key'] . '.' . $node['value'];
             }
             return $node['key'];
