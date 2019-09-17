@@ -60,7 +60,17 @@ class MemberNodeEvaluatorTest extends TestCase
         $this->assertEquals($expected, $evaluated);
     }
 
-    public function absentKeyProvider() {
+    /**
+     * @dataProvider nestedContextProvider
+     */
+    public function testNestedContext(array $node, array $context, $expected)
+    {
+        $evaluated = $this->evaluator->evaluate(new Node($node), $context);
+        $this->assertEquals($expected, $evaluated);
+    }    
+
+    public function absentKeyProvider()
+    {
         return [
             [
                 [
@@ -84,7 +94,8 @@ class MemberNodeEvaluatorTest extends TestCase
         ];
     }
 
-    public function arrayReturnProvider() {
+    public function arrayReturnProvider()
+    {
         return [
             [
                 [
@@ -107,7 +118,7 @@ class MemberNodeEvaluatorTest extends TestCase
                         ]
                     ]
                 ],
-                'contact.name'
+                ['one', 'two', 'three']
             ],
         ];
     }
@@ -261,5 +272,117 @@ class MemberNodeEvaluatorTest extends TestCase
                 'Some Guy'
             ],
         ];        
+    }
+
+    public function nestedContextProvider()
+    {
+        return [
+            'nested '=> [
+                [
+                    'type' => ParsesFloip::MEMBER_TYPE,
+                    'key' => 'contact',
+                    'value' => 'lang.default',
+                    'location' => [
+                        'start' => [
+                            'offset' => 6,
+                        ],
+                        'end' => [
+                            'offset' => 27
+                        ]
+                    ]
+                ],
+                [
+                    'contact' => [
+                        'name' => 'Kyle',
+                        'lang' => [
+                            'default' => 'en',
+                            'available' => [
+                                'fr',
+                            ],
+                        ],
+                    ]
+                ],
+                'en'
+            ],
+            'deep nested' => [
+                [
+                    'type' => ParsesFloip::MEMBER_TYPE,
+                    'key' => 'contact',
+                    'value' => 'address.business.city',
+                    'location' => [
+                        'start' => [
+                            'offset' => 6,
+                        ],
+                        'end' => [
+                            'offset' => 27
+                        ]
+                    ]
+                ],
+                [
+                    'contact' => [
+                        'name' => 'Kyle',
+                        'address' => [
+                            'business' => [
+                                'city' => 'Winnipeg'
+                            ]
+                        ]
+                    ]
+                ],
+                'Winnipeg'
+            ],
+            'nested key not found no __value__' => [
+                [
+                    'type' => ParsesFloip::MEMBER_TYPE,
+                    'key' => 'contact',
+                    'value' => 'address.business.city',
+                    'location' => [
+                        'start' => [
+                            'offset' => 6,
+                        ],
+                        'end' => [
+                            'offset' => 27
+                        ]
+                    ]
+                ],
+                [
+                    'contact' => [
+                        'name' => 'Kyle',
+                        'address' => [
+                            'business' => [
+                                'foo' => 'bar'
+                            ]
+                        ]
+                    ]
+                ],
+                \json_encode((object)['foo' => 'bar'])
+            ],
+            'nested key not found with __value__' => [
+                [
+                    'type' => ParsesFloip::MEMBER_TYPE,
+                    'key' => 'contact',
+                    'value' => 'address.business.city',
+                    'location' => [
+                        'start' => [
+                            'offset' => 6,
+                        ],
+                        'end' => [
+                            'offset' => 27
+                        ]
+                    ]
+                ],
+                [
+                    'contact' => [
+                        'name' => 'Kyle',
+                        'address' => [
+                            'business' => [
+                                'foo' => 'bar',
+                                '__value__' => '42'
+                            ]
+                        ]
+                    ]
+                ],
+                '42'
+            ],
+        ];
     }
 }

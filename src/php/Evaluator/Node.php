@@ -83,6 +83,9 @@ class Node implements \ArrayAccess
             if ($this->value === null) {
                 return 'NULL';
             }
+            if (is_array($this->value)) {
+                return \implode(', ', $this->value);
+            }
             return (string)$this->value;
         }
         throw new \Exception;
