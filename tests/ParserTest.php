@@ -130,7 +130,7 @@ class ParserTest extends TestCase
         $ast = $this->parser->parse($string);
         $node = $ast[0];
         $expected = compact('lhs', 'rhs');
-        $this->assertArraySubset($expected, $node);        
+        $this->assertArraySubset($expected, $node);
     }
 
     private function methodNode($call, array $args)
@@ -169,8 +169,7 @@ class ParserTest extends TestCase
                 'Hello ',
                 [
                     'type' => 'MEMBER',
-                    'key' => 'contact',
-                    'value' => 'name'
+                    'key' => 'contact.name'
                 ]
             ]],
             ['Hello @contact', [
@@ -178,29 +177,25 @@ class ParserTest extends TestCase
                 [
                     'type' => 'MEMBER',
                     'key' => 'contact',
-                    'value' => null,
                 ]
             ]],
             ['@person.lastname you are special', [
                 [
                     'type' => 'MEMBER',
-                    'key' => 'person',
-                    'value' => 'lastname',
+                    'key' => 'person.lastname',
                 ],
                 ' you are special'
             ]],
             ['Hello @(contact.lastname)', [
                 'Hello ', [
                     'type' => 'MEMBER',
-                    'key' => 'contact',
-                    'value' => 'lastname'
+                    'key' => 'contact.lastname'
                 ]
             ]],
             ['Hello @(contact)', [
                 'Hello ', [
                     'type' => 'MEMBER',
                     'key' => 'contact',
-                    'value' => null,
                 ]
             ]],
         ];

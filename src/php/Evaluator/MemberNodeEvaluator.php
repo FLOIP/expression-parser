@@ -20,28 +20,30 @@ class MemberNodeEvaluator extends AbstractNodeEvaluator
             throw new NodeEvaluatorException('Member node is the wrong shape, should have "key"');
         }
 
-        // the requested object does not exist in the context, so just
-        // return the key/value that was requested as they were entered in
-        // the expression (e.g. return 'contact.name')
-        if (!key_exists($node['key'], $context)) {
-            if ($node->offsetExists('value')) {
-                return $node['key'] . '.' . $node['value'];
+        $key = $node['key'];
+
+        $keys = explode('.', $key);
+        $currentContext = $context;
+
+        // traverse the context tree until we run out of keys
+        foreach ($keys as $currentKey) {
+            if (key_exists($currentKey, $currentContext)) {
+                $currentContext = $currentContext[$currentKey];
+            } else {
+                // if our current key doesn't exist, we return the compound key
+                return $key;
             }
-            return $node['key'];
         }
 
-        $el = $context[$node['key']];
-
-        if (!isset($node['value'])) {
-            // return the __value__ element of the context, or else the whole
-            // context serialized
-            if (\key_exists('__value__', $el)) {
-                return $el['__value__'];
+        // at this point, we have a value associated with our key
+		// if it is a nested context, return its default value or JSON
+        if (is_array($currentContext) && $this->isAssociative($currentContext)) {
+            if (\key_exists('__value__', $currentContext)) {
+                return $currentContext['__value__'];
             }
-            return \json_encode($el, \JSON_FORCE_OBJECT);
+            return \json_encode($currentContext, \JSON_FORCE_OBJECT);
         }
-
-        return $this->get($el, $node['value']);
+        return $currentContext;
     }
 
     public function handles()
@@ -49,20 +51,12 @@ class MemberNodeEvaluator extends AbstractNodeEvaluator
         return ParsesFloip::MEMBER_TYPE;
     }
 
-    private function get(array $arr, $key)
-    {
-        $keys = explode('.', $key);
-        $currentContext = $arr;
-        foreach ($keys as $key) {
-            if (key_exists($key, $currentContext)) {
-                $currentContext = $currentContext[$key];
-            } else {
-                if (\key_exists('__value__', $currentContext)) {
-                    return $currentContext['__value__'];
-                }
-                return \json_encode($currentContext, \JSON_FORCE_OBJECT);
+    private function isAssociative(array $arr) {
+        foreach ($arr as $key => $value) {
+            if (is_string($key)) {
+                return true;
             }
         }
-        return $currentContext;
+        return false;
     }
 }
