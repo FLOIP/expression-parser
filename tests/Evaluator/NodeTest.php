@@ -27,4 +27,24 @@ class NodeTest extends TestCase
         $this->assertEquals('foobar', $node['args'][0]['args'][0]);
         $this->assertEquals('bar', $node['args'][1]);
     }
+
+    /**
+     * @dataProvider nodeValuesProvider
+     */
+    public function testNodeValuesToString($value, $expected)
+    {
+        $node = new Node([]);
+        $node->setValue($value);
+        $this->assertEquals($expected, (string)$node);
+    }
+
+    public function nodeValuesProvider()
+    {
+        return [
+            ['one', 'one'],
+            [1, '1'],
+            [1.456, '1.456'],
+            [[1, 2, 3], '1, 2, 3']
+        ];
+    }
 }

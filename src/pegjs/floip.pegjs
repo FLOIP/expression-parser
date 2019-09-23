@@ -4,20 +4,18 @@
  * starts parsing, and is available to predicates.
  */
 {
-  const member = function(key, value, location) {
+  const member = function(key, location) {
     return {
       type: 'MEMBER',
       key: key,
-      value: value,
       location: location,
     }
   }
   /** <?php
-  $this->_member = function($key, $value) {
+  $this->_member = function($key) {
     return [
       'type' => 'MEMBER',
       'key' => $key,
-      'value' => $value,
       'location' => call_user_func($this->_location)
     ];
   };
@@ -230,10 +228,10 @@ Function_Arg_Inner_Function = arg:Function Arg_Delimiter? {return arg /**<?php r
  * member access, as long as 'google' does not exist in the context then our
  * evaluator should just print the literal 'google.com'
  */
-Member_Access = lhs:$AtomicExpression+ rhs:('.' inner:$AtomicExpression+ {return inner /**<?php return $inner;?> **/})? {
-  return  member(lhs, rhs, location())
+Member_Access = key:$(AtomicExpression / '.' AtomicExpression)+ {
+  return  member(key, location())
   /** <?php
-    return call_user_func_array($this->_member, [$lhs, $rhs]);
+    return call_user_func_array($this->_member, [$key]);
   ?> **/
 }
 
