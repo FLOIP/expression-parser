@@ -1,6 +1,6 @@
 {
   "name": "floip-parser",
-  "version": "1.5.1",
+  "version": "1.6.0",
   "description": "",
   "main": "./dist/Parser.js",
   "types": "./dist/Parser.d.ts",
