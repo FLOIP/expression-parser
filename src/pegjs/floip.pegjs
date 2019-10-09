@@ -228,7 +228,7 @@ Function_Arg_Inner_Function = arg:Function Arg_Delimiter? {return arg /**<?php r
  * member access, as long as 'google' does not exist in the context then our
  * evaluator should just print the literal 'google.com'
  */
-Member_Access = key:$(AtomicExpression / '.' AtomicExpression)+ {
+Member_Access = key:$((MemberVariable)+ (('.' [a-zA-Z_0-9]+)+)?) {
   return  member(key, location())
   /** <?php
     return call_user_func_array($this->_member, [$key]);
@@ -296,9 +296,9 @@ CloseParen = ')'
 Identifier = '@'
 Concat_Operator = '&'
 Arg_Delimiter = (',' ws*)
-AtomicExpression = valid_variable_characters
+MemberVariable = valid_variable_characters
 Text = [^@]
-chars = [a-zA-Z0-9 ]
+chars = [a-zA-Z_0-9]
 ws "whitespace"
   = [ \t\n\r]
 valid_variable_characters = [a-zA-Z_]

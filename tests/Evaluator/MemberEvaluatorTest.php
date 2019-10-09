@@ -69,6 +69,14 @@ class MemberNodeEvaluatorTest extends TestCase
         $this->assertEquals($expected, $evaluated);
     }
 
+    /**
+     * @dataProvider numericKeyProvider
+     */
+    public function testNumericKeys(Node $node, array $context, $expected) {
+        $evaluated = $this->evaluator->evaluate($node, $context);
+        $this->assertEquals($expected, $evaluated);
+    }
+
     private function makeNode($key, $location = []) {
         return new Node([
             'type' => ParsesFloip::MEMBER_TYPE,
@@ -261,6 +269,35 @@ class MemberNodeEvaluatorTest extends TestCase
                     ]
                 ],
                 'contact.address.business.city'
+            ],
+        ];
+    }
+
+    public function numericKeyProvider() {
+        return [
+            [
+                $this->makeNode('flow.1570165060485_42.value'),
+                [
+                    'flow' => [
+                        '1570165060485_42' => [
+                            'value' => 'Some Value',
+                            '__value__' => 'Some Default'
+                        ]
+                    ]
+                ],
+                'Some Value'
+            ],
+            [
+                $this->makeNode('flow.1570165060485_42'),
+                [
+                    'flow' => [
+                        '1570165060485_42' => [
+                            'value' => 'Some Value',
+                            '__value__' => 'Some Default'
+                        ]
+                    ]
+                ],
+                'Some Default'
             ],
         ];
     }
