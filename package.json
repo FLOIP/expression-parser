@@ -1,5 +1,5 @@
 {
-  "name": "floip-parser",
+  "name": "@floip/expression-parser",
   "version": "1.6.1",
   "description": "",
   "main": "./dist/Parser.js",
@@ -10,7 +10,7 @@
     "watch": "tsc --watch"
   },
   "author": "Kyle Seifert",
-  "license": "",
+  "license": "MIT",
   "devDependencies": {
     "pegjs": "^0.10.0",
     "phpegjs": "^1.0.0-beta7",
