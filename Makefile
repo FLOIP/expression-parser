@@ -1,7 +1,9 @@
 PEGJS_TAG="node:8-alpine"
-PHP_TAG="floip-php:5.5-alpine"
+PHP_55="floip-php:5.5-alpine"
+PHP_56="floip-php:5.6-alpine"
+PHP_72="floip-php:7.2-alpine"
 COMPOSER_TAG="floip-php:5.5-alpine"
-DOCKER_RUN=docker run $(DOCKER_OPTS) -v `pwd`:/src -u `id -u` -w '/src'
+DOCKER_RUN=docker run $(DOCKER_OPTS) -v `pwd`:/src -u `id -u` -w '/src' -e COMPOSER_HOME=.composer
 PEGJS=$(DOCKER_RUN) $(PEGJS_TAG) npx pegjs
 PARSER_NAME=Parser
 PARSER_SOURCE=src/pegjs/floip.pegjs
@@ -14,7 +16,7 @@ TS_OUT=src/ts/$(PARSER_NAME).ts
 ENV=docker
 DOCKER_OPTS=--rm -it
 
-.PHONY: clean default parsers parse-php parse-js parse-ts docker-php
+.PHONY: clean default parsers parse-php parse-js parse-ts docker-php testall prepare-for-test
 
 default: parsers
 
@@ -31,13 +33,6 @@ ifeq ($(ENV),docker)
 else
 	npx pegjs --plugin phpegjs -o $(PHP_OUT) --extra-options '$(PHPEGJS_OPTIONS)' $(PARSER_SOURCE)
 endif
-
-# $(JS_OUT): node_modules $(PARSER_SOURCE)
-# ifeq ($(ENV),docker)
-# 	$(PEGJS) -o $(JS_OUT) $(PARSER_SOURCE)
-# else
-# 	npx pegjs -o $(JS_OUT) $(PARSER_SOURCE)
-# endif
 
 $(TS_OUT): node_modules $(PARSER_SOURCE)
 ifeq ($(ENV),docker)
@@ -65,12 +60,32 @@ endif
 
 docker-php:
 ifeq ($(ENV),docker)
-	docker build -t $(PHP_TAG) .docker/php
+	docker build -t $(PHP_55) .docker/php/5.5
+	docker build -t $(PHP_72) .docker/php/7.2
 endif
 
-test: docker-php vendor
+prepare-for-test: docker-php
+	# since we are testing against different environments we must be fresh
+	rm -f composer.lock
+	rm -rf vendor
+
+test55: prepare-for-test
+	docker build -t $(PHP_55) .docker/php/5.5
+	cp composer.json composer.json.bak
+	$(DOCKER_RUN) $(PHP_55) php -d memory_limit=-1 /usr/bin/composer require --dev "orchestra/testbench:~3.1.0"
+	$(DOCKER_RUN) $(PHP_55) ./vendor/bin/phpunit
+	mv composer.json.bak composer.json
+
+test72: prepare-for-test
+	docker build -t $(PHP_72) .docker/php/7.2
+	cp composer.json composer.json.bak
+	$(DOCKER_RUN) $(PHP_72) php -d memory_limit=-1 /usr/bin/composer require --dev "orchestra/testbench:~3.8.0"
+	$(DOCKER_RUN) $(PHP_72) ./vendor/bin/phpunit
+	mv composer.json.bak composer.json
+
+test:
 ifeq ($(ENV),docker)
-	$(DOCKER_RUN) $(PHP_TAG) ./vendor/bin/phpunit 
+	make test55 && make test72
 else
 	./vendor/bin/phpunit
 endif
@@ -78,6 +93,9 @@ endif
 clean:
 	rm -rf node_modules
 	rm -rf vendor
+	rm -rf .composer
 ifeq ($(ENV),docker)
-	docker rmi $(PHP_TAG) 2>/dev/null || true
+	docker rmi $(PHP_55) 2>/dev/null || true
+	docker rmi $(PHP_56) 2>/dev/null || true
+	docker rmi $(PHP_72) 2>/dev/null || true
 endif

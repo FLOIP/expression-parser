@@ -82,6 +82,9 @@ class MethodNodeEvaluatorTest extends TestCase
         $context = [];
 
         $this->evaluator->evaluate(new Node($node), $context);
+
+        // a failing test throws an exception
+        $this->assertTrue(true);
     }
 
     public function testHandlerIsPassedContext()
@@ -109,5 +112,8 @@ class MethodNodeEvaluatorTest extends TestCase
         ];
 
         $this->evaluator->evaluate(new Node($node), $context);
+
+        // a failing test throws an exception
+        $this->assertTrue(true);
     }
 }

@@ -6,16 +6,11 @@
             "email": "kyle.seifert@viamo.io"
         }
     ],
-    "config": {
-        "platform": {
-            "php": "5.5.9"
-        }
-    },
     "require": {
-        "php": ">=5.5.9",
+        "php": "~5.5|~7.2",
         "ext-bcmath": "*",
-        "nesbot/carbon": "^1.38",
-        "illuminate/support": "~5.1.0"
+        "nesbot/carbon": "^1.38|^2.0",
+        "illuminate/support": "~5.1"
     },
     "autoload": {
         "psr-4": {
@@ -31,9 +26,8 @@
         }
     },
     "require-dev": {
-        "php": "5.5.9",
-        "phpunit/phpunit": "^4.8",
-        "orchestra/testbench": "~3.1.0",
-        "mockery/mockery": "^0.9.11"
+        "phpunit/phpunit": "^4.8|~7.0",
+        "orchestra/testbench": "~3.1.0|~3.8.0",
+        "mockery/mockery": "^0.9.11|~1.0"
     }
 }
