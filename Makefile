@@ -13,29 +13,30 @@ PHPEGJS_OPTIONS={"cache" : "true", "phpegjs":{"parserNamespace": "Viamo", "parse
 TSPEGJS_OPTIONS={"cache" : "true", "tspegjs":{}}
 JS_OUT=dist/$(PARSER_NAME).js
 TS_OUT=src/ts/$(PARSER_NAME).ts
-ENV=docker
+USE_DOCKER=true
+ENV=local
 DOCKER_OPTS=--rm -it
 
-.PHONY: clean default parsers parse-php parse-js parse-ts docker-php testall prepare-for-test
+.PHONY: clean default parsers parse-php parse-js parse-ts docker-php testall prepare-for-test docker-php-55 docker-php-72
 
 default: parsers
 
 node_modules: package.json
-ifeq ($(ENV),docker)
+ifeq ($(USE_DOCKER),true)
 	docker run --rm -it -v `pwd`:`pwd` -w `pwd` -u `id -u` $(PEGJS_TAG) npm install
 else
 	npm install
 endif
 
 $(PHP_OUT): node_modules $(PARSER_SOURCE)
-ifeq ($(ENV),docker)
+ifeq ($(USE_DOCKER),true)
 	$(PEGJS) --plugin phpegjs -o $(PHP_OUT) --extra-options '$(PHPEGJS_OPTIONS)' $(PARSER_SOURCE)
 else
 	npx pegjs --plugin phpegjs -o $(PHP_OUT) --extra-options '$(PHPEGJS_OPTIONS)' $(PARSER_SOURCE)
 endif
 
 $(TS_OUT): node_modules $(PARSER_SOURCE)
-ifeq ($(ENV),docker)
+ifeq ($(USE_DOCKER),true)
 	$(PEGJS) --plugin ts-pegjs -o $(TS_OUT) --extra-options '$(TSPEGJS_OPTIONS)' $(PARSER_SOURCE)
 	$(DOCKER_RUN) $(PEGJS_TAG) npm run build
 else
@@ -52,39 +53,49 @@ parse-ts: $(TS_OUT)
 parsers: parse-php parse-ts
 
 vendor: composer.json
-ifeq ($(ENV),docker)
+ifeq ($(USE_DOCKER),true)
 	$(DOCKER_RUN) $(COMPOSER_TAG) composer install --ignore-platform-reqs
 else
 	composer install
 endif
 
-docker-php:
-ifeq ($(ENV),docker)
+docker-php-55:
 	docker build -t $(PHP_55) .docker/php/5.5
+
+docker-php-72:
 	docker build -t $(PHP_72) .docker/php/7.2
-endif
 
 prepare-for-test: docker-php
 	# since we are testing against different environments we must be fresh
-	rm -f composer.lock
+	touch composer.lock
 	rm -rf vendor
 
-test55: prepare-for-test
-	docker build -t $(PHP_55) .docker/php/5.5
-	cp composer.json composer.json.bak
-	$(DOCKER_RUN) $(PHP_55) php -d memory_limit=-1 /usr/bin/composer require --dev "orchestra/testbench:~3.1.0"
-	$(DOCKER_RUN) $(PHP_55) ./vendor/bin/phpunit
-	mv composer.json.bak composer.json
+.ci/5.5/composer.lock: composer.json
+	make prepare-for-test
+	cp composer.json .ci/5.5/composer.json
+	$(DOCKER_RUN) -e COMPOSER=.ci/5.5/composer.json $(PHP_55) php -d memory_limit=-1 /usr/bin/composer require --dev "orchestra/testbench:~3.1.0" --no-suggest
 
-test72: prepare-for-test
-	docker build -t $(PHP_72) .docker/php/7.2
-	cp composer.json composer.json.bak
-	$(DOCKER_RUN) $(PHP_72) php -d memory_limit=-1 /usr/bin/composer require --dev "orchestra/testbench:~3.8.0"
+.ci/7.2/composer.lock: composer.json
+	make prepare-for-test
+	cp composer.json .ci/7.2/composer.json
+	$(DOCKER_RUN) -e COMPOSER=.ci/7.2/composer.json $(PHP_72) php -d memory_limit=-1 /usr/bin/composer require --dev "orchestra/testbench:~3.8.0" --no-suggest
+
+test55: prepare-for-test docker-php-55
+ifeq ($(ENV),local)
+	make .ci/5.5/composer.lock
+endif
+	$(DOCKER_RUN) -e COMPOSER=.ci/5.5/composer.json $(PHP_55) composer install --no-suggest
+	$(DOCKER_RUN) $(PHP_55) ./vendor/bin/phpunit
+
+test72: prepare-for-test docker-php-72
+ifeq ($(ENV),local)
+	make .ci/7.2/composer.lock
+endif
+	$(DOCKER_RUN) -e COMPOSER=.ci/7.2/composer.json $(PHP_72) composer install --no-suggest
 	$(DOCKER_RUN) $(PHP_72) ./vendor/bin/phpunit
-	mv composer.json.bak composer.json
 
 test:
-ifeq ($(ENV),docker)
+ifeq ($(USE_DOCKER),true)
 	make test55 && make test72
 else
 	./vendor/bin/phpunit
@@ -94,7 +105,7 @@ clean:
 	rm -rf node_modules
 	rm -rf vendor
 	rm -rf .composer
-ifeq ($(ENV),docker)
+ifeq ($(USE_DOCKER),true)
 	docker rmi $(PHP_55) 2>/dev/null || true
 	docker rmi $(PHP_56) 2>/dev/null || true
 	docker rmi $(PHP_72) 2>/dev/null || true

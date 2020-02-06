@@ -13,4 +13,4 @@ pipelines:
         caches:
           - docker
         script:
-          - make test DOCKER_OPTS="--rm"
+          - make test DOCKER_OPTS="--rm" ENV=ci

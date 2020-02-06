@@ -1,0 +1,33 @@
+{
+    "name": "viamo/floip-eval",
+    "authors": [
+        {
+            "name": "Kyle Seifert",
+            "email": "kyle.seifert@viamo.io"
+        }
+    ],
+    "require": {
+        "php": "~5.5|~7.2",
+        "ext-bcmath": "*",
+        "nesbot/carbon": "^1.38|^2.0",
+        "illuminate/support": "~5.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Viamo\\Floip\\": "src/php/"
+        },
+        "classmap": [
+            "dist/"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Viamo\\Floip\\Tests\\": "tests/"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^4.8|~7.0",
+        "orchestra/testbench": "~3.8.0",
+        "mockery/mockery": "^0.9.11|~1.0"
+    }
+}
