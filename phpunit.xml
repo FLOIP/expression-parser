@@ -19,6 +19,9 @@
         <log type="testdox-html" target="./tests/logs/testdox-html"/>
     </logging> -->
     <filter>
+        <whitelist>
+            <directory suffix=".php">src/php</directory>
+        </whitelist>
         <blacklist>
             <directory suffix=".php">./vendor</directory>
         </blacklist>

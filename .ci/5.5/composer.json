@@ -7,7 +7,7 @@
         }
     ],
     "require": {
-        "php": "~5.5|~7.2",
+        "php": "~5.5|~7.1",
         "ext-bcmath": "*",
         "nesbot/carbon": "^1.38|^2.0",
         "illuminate/support": "~5.1"
