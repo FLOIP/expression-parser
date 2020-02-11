@@ -1,7 +1,9 @@
 PEGJS_TAG="node:8-alpine"
-PHP_TAG="floip-php:5.5-alpine"
+PHP_55="floip-php:5.5-alpine"
+PHP_56="floip-php:5.6-alpine"
+PHP_71="floip-php:7.1-alpine"
 COMPOSER_TAG="floip-php:5.5-alpine"
-DOCKER_RUN=docker run $(DOCKER_OPTS) -v `pwd`:/src -u `id -u` -w '/src'
+DOCKER_RUN=docker run $(DOCKER_OPTS) -v `pwd`:/src -u `id -u` -w '/src' -e COMPOSER_HOME=.composer
 PEGJS=$(DOCKER_RUN) $(PEGJS_TAG) npx pegjs
 PARSER_NAME=Parser
 PARSER_SOURCE=src/pegjs/floip.pegjs
@@ -11,36 +13,30 @@ PHPEGJS_OPTIONS={"cache" : "true", "phpegjs":{"parserNamespace": "Viamo", "parse
 TSPEGJS_OPTIONS={"cache" : "true", "tspegjs":{}}
 JS_OUT=dist/$(PARSER_NAME).js
 TS_OUT=src/ts/$(PARSER_NAME).ts
-ENV=docker
+USE_DOCKER=true
+ENV=local
 DOCKER_OPTS=--rm -it
 
-.PHONY: clean default parsers parse-php parse-js parse-ts docker-php
+.PHONY: clean default parsers parse-php parse-js parse-ts docker-php testall prepare-for-test docker-php-55 docker-php-71
 
 default: parsers
 
 node_modules: package.json
-ifeq ($(ENV),docker)
+ifeq ($(USE_DOCKER),true)
 	docker run --rm -it -v `pwd`:`pwd` -w `pwd` -u `id -u` $(PEGJS_TAG) npm install
 else
 	npm install
 endif
 
 $(PHP_OUT): node_modules $(PARSER_SOURCE)
-ifeq ($(ENV),docker)
+ifeq ($(USE_DOCKER),true)
 	$(PEGJS) --plugin phpegjs -o $(PHP_OUT) --extra-options '$(PHPEGJS_OPTIONS)' $(PARSER_SOURCE)
 else
 	npx pegjs --plugin phpegjs -o $(PHP_OUT) --extra-options '$(PHPEGJS_OPTIONS)' $(PARSER_SOURCE)
 endif
 
-# $(JS_OUT): node_modules $(PARSER_SOURCE)
-# ifeq ($(ENV),docker)
-# 	$(PEGJS) -o $(JS_OUT) $(PARSER_SOURCE)
-# else
-# 	npx pegjs -o $(JS_OUT) $(PARSER_SOURCE)
-# endif
-
 $(TS_OUT): node_modules $(PARSER_SOURCE)
-ifeq ($(ENV),docker)
+ifeq ($(USE_DOCKER),true)
 	$(PEGJS) --plugin ts-pegjs -o $(TS_OUT) --extra-options '$(TSPEGJS_OPTIONS)' $(PARSER_SOURCE)
 	$(DOCKER_RUN) $(PEGJS_TAG) npm run build
 else
@@ -57,20 +53,50 @@ parse-ts: $(TS_OUT)
 parsers: parse-php parse-ts
 
 vendor: composer.json
-ifeq ($(ENV),docker)
+ifeq ($(USE_DOCKER),true)
 	$(DOCKER_RUN) $(COMPOSER_TAG) composer install --ignore-platform-reqs
 else
 	composer install
 endif
 
-docker-php:
-ifeq ($(ENV),docker)
-	docker build -t $(PHP_TAG) .docker/php
-endif
+docker-php-55:
+	docker build -t $(PHP_55) .docker/php/5.5
 
-test: docker-php vendor
-ifeq ($(ENV),docker)
-	$(DOCKER_RUN) $(PHP_TAG) ./vendor/bin/phpunit 
+docker-php-71:
+	docker build -t $(PHP_71) .docker/php/7.1
+
+prepare-for-test: docker-php
+	# since we are testing against different environments we must be fresh
+	touch composer.lock
+	rm -rf vendor
+
+.ci/5.5/composer.lock: composer.json
+	make prepare-for-test
+	cp composer.json .ci/5.5/composer.json
+	$(DOCKER_RUN) -e COMPOSER=.ci/5.5/composer.json $(PHP_55) php -d memory_limit=-1 /usr/bin/composer require --dev "orchestra/testbench:~3.1.0" --no-suggest
+
+.ci/7.1/composer.lock: composer.json
+	make prepare-for-test
+	cp composer.json .ci/7.1/composer.json
+	$(DOCKER_RUN) -e COMPOSER=.ci/7.1/composer.json $(PHP_71) php -d memory_limit=-1 /usr/bin/composer require --dev "orchestra/testbench:~3.8.0" --no-suggest
+
+test55: prepare-for-test docker-php-55
+ifeq ($(ENV),local)
+	make .ci/5.5/composer.lock
+endif
+	$(DOCKER_RUN) -e COMPOSER=.ci/5.5/composer.json $(PHP_55) composer install --no-suggest
+	$(DOCKER_RUN) $(PHP_55) ./vendor/bin/phpunit
+
+test71: prepare-for-test docker-php-71
+ifeq ($(ENV),local)
+	make .ci/7.1/composer.lock
+endif
+	$(DOCKER_RUN) -e COMPOSER=.ci/7.1/composer.json $(PHP_71) composer install --no-suggest
+	$(DOCKER_RUN) $(PHP_71) ./vendor/bin/phpunit
+
+test:
+ifeq ($(USE_DOCKER),true)
+	make test55 && make test71
 else
 	./vendor/bin/phpunit
 endif
@@ -78,6 +104,9 @@ endif
 clean:
 	rm -rf node_modules
 	rm -rf vendor
-ifeq ($(ENV),docker)
-	docker rmi $(PHP_TAG) 2>/dev/null || true
+	rm -rf .composer
+ifeq ($(USE_DOCKER),true)
+	docker rmi $(PHP_55) 2>/dev/null || true
+	docker rmi $(PHP_56) 2>/dev/null || true
+	docker rmi $(PHP_71) 2>/dev/null || true
 endif

@@ -7,13 +7,16 @@ The expression parser is written in PEG and compiled with
 [PEG.js](https://pegjs.org/) into both a js target and a php target.
 
 # Building
-The included `makefile` can be used to build the parsers:
+The included `makefile` should be used to build the parsers:
 
 `make`, the default task, will build the js and php PEG parsers using `docker`
-for the environment by default. You can set the environment variable ENV to nil
-to skip using docker -- e.g. `make ENV=`
+for the environment by default. You can set the environment variable USE_DOCKER 
+to anything but 'true' to skip using docker -- e.g. `make USE_DOCKER=false`
 
-Tests via phpunit are included in `/tests` and can be run with `make test`
+Tests via phpunit are included in `/tests` and should be run with `make test`
+These tests will ensure compatibility with Laravel 5.1 and 5.8.
+These tests will ensure compatibility with PHP 5.5 and PHP 7.1.
+These tests are run automatically when a push is made to bitbucket.
 
 # Releasing
 1. Always rebuild the parsers and run the evaluator tests
