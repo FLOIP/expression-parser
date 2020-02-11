@@ -1,7 +1,7 @@
 PEGJS_TAG="node:8-alpine"
 PHP_55="floip-php:5.5-alpine"
 PHP_56="floip-php:5.6-alpine"
-PHP_72="floip-php:7.2-alpine"
+PHP_71="floip-php:7.1-alpine"
 COMPOSER_TAG="floip-php:5.5-alpine"
 DOCKER_RUN=docker run $(DOCKER_OPTS) -v `pwd`:/src -u `id -u` -w '/src' -e COMPOSER_HOME=.composer
 PEGJS=$(DOCKER_RUN) $(PEGJS_TAG) npx pegjs
@@ -17,7 +17,7 @@ USE_DOCKER=true
 ENV=local
 DOCKER_OPTS=--rm -it
 
-.PHONY: clean default parsers parse-php parse-js parse-ts docker-php testall prepare-for-test docker-php-55 docker-php-72
+.PHONY: clean default parsers parse-php parse-js parse-ts docker-php testall prepare-for-test docker-php-55 docker-php-71
 
 default: parsers
 
@@ -62,8 +62,8 @@ endif
 docker-php-55:
 	docker build -t $(PHP_55) .docker/php/5.5
 
-docker-php-72:
-	docker build -t $(PHP_72) .docker/php/7.2
+docker-php-71:
+	docker build -t $(PHP_71) .docker/php/7.1
 
 prepare-for-test: docker-php
 	# since we are testing against different environments we must be fresh
@@ -75,10 +75,10 @@ prepare-for-test: docker-php
 	cp composer.json .ci/5.5/composer.json
 	$(DOCKER_RUN) -e COMPOSER=.ci/5.5/composer.json $(PHP_55) php -d memory_limit=-1 /usr/bin/composer require --dev "orchestra/testbench:~3.1.0" --no-suggest
 
-.ci/7.2/composer.lock: composer.json
+.ci/7.1/composer.lock: composer.json
 	make prepare-for-test
-	cp composer.json .ci/7.2/composer.json
-	$(DOCKER_RUN) -e COMPOSER=.ci/7.2/composer.json $(PHP_72) php -d memory_limit=-1 /usr/bin/composer require --dev "orchestra/testbench:~3.8.0" --no-suggest
+	cp composer.json .ci/7.1/composer.json
+	$(DOCKER_RUN) -e COMPOSER=.ci/7.1/composer.json $(PHP_71) php -d memory_limit=-1 /usr/bin/composer require --dev "orchestra/testbench:~3.8.0" --no-suggest
 
 test55: prepare-for-test docker-php-55
 ifeq ($(ENV),local)
@@ -87,16 +87,16 @@ endif
 	$(DOCKER_RUN) -e COMPOSER=.ci/5.5/composer.json $(PHP_55) composer install --no-suggest
 	$(DOCKER_RUN) $(PHP_55) ./vendor/bin/phpunit
 
-test72: prepare-for-test docker-php-72
+test71: prepare-for-test docker-php-71
 ifeq ($(ENV),local)
-	make .ci/7.2/composer.lock
+	make .ci/7.1/composer.lock
 endif
-	$(DOCKER_RUN) -e COMPOSER=.ci/7.2/composer.json $(PHP_72) composer install --no-suggest
-	$(DOCKER_RUN) $(PHP_72) ./vendor/bin/phpunit
+	$(DOCKER_RUN) -e COMPOSER=.ci/7.1/composer.json $(PHP_71) composer install --no-suggest
+	$(DOCKER_RUN) $(PHP_71) ./vendor/bin/phpunit
 
 test:
 ifeq ($(USE_DOCKER),true)
-	make test55 && make test72
+	make test55 && make test71
 else
 	./vendor/bin/phpunit
 endif
@@ -108,5 +108,5 @@ clean:
 ifeq ($(USE_DOCKER),true)
 	docker rmi $(PHP_55) 2>/dev/null || true
 	docker rmi $(PHP_56) 2>/dev/null || true
-	docker rmi $(PHP_72) 2>/dev/null || true
+	docker rmi $(PHP_71) 2>/dev/null || true
 endif
