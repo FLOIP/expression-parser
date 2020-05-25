@@ -2,6 +2,7 @@
 
 namespace Viamo\Floip\Evaluator;
 
+use ArrayAccess;
 use Viamo\Floip\Evaluator\Exception\NodeEvaluatorException;
 use Viamo\Floip\Contract\ParsesFloip;
 
@@ -37,13 +38,17 @@ class MemberNodeEvaluator extends AbstractNodeEvaluator
 
         // at this point, we have a value associated with our key
 		// if it is a nested context, return its default value or JSON
-        if (is_array($currentContext) && $this->isAssociative($currentContext)) {
+        if ($this->isArray($currentContext) && $this->isAssociative($currentContext)) {
             if (\key_exists('__value__', $currentContext)) {
                 return $currentContext['__value__'];
             }
             return \json_encode($currentContext, \JSON_FORCE_OBJECT);
         }
         return $currentContext;
+    }
+
+    private function isArray($thing) {
+        return $thing instanceof ArrayAccess || is_array($thing);
     }
 
     public function handles()

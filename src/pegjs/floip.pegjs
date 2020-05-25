@@ -219,7 +219,7 @@ Function_Args = arg:(arg:Function_Arg_Types Arg_Delimiter? {return arg /**<?php 
  * Functions can take any other kind of expression as an argument, or quoted text, or numbers.
  * This means that you can also nest functions deeply.
  */
-Function_Arg_Types = Logic / Math / Function_Arg_Inner_Function / Null / Member_Access / QuotedText / $('-'* numbers+)
+Function_Arg_Types = Concatenation / Logic / Math / Function_Arg_Inner_Function / Null / Member_Access / QuotedText / $('-'* numbers+)
 Function_Arg_Inner_Function = arg:Function Arg_Delimiter? {return arg /**<?php return $arg;?> **/}
 
 /**
@@ -238,7 +238,7 @@ Member_Access = key:$((MemberVariable)+ (('.' [a-zA-Z_0-9]+)+)?) {
 /**
  * Math looks like @(1 + 2)
  */
-Math = lhs:Math_Arg ws* op:$math_chars ws+ rhs:(Math / Math_Arg) ws* {
+Math = lhs:Math_Arg ws* op:$math_chars ws+ rhs:(Concatenation / Math / Math_Arg) ws* {
   return  math(lhs, rhs, op, location())
   /** <?php
     return call_user_func_array($this->_math, [$lhs, $rhs, $op]);
@@ -251,7 +251,7 @@ Math_Arg_Inner_Math = OpenParen child:Math CloseParen { return child; /**<?php r
 /**
  * Logic looks like @(1 < 2) or @(contact.name = "Henry")
  */
-Logic = lhs:Logic_Arg ws* op:$logic_chars ws* rhs:(Logic / Logic_Arg) ws* {
+Logic = lhs:Logic_Arg ws* op:$logic_chars ws* rhs:(Concatenation / Logic / Logic_Arg) ws* {
   return  logic(lhs, rhs, op, location())
   /** <?php
     return call_user_func_array($this->_logic, [$lhs, $rhs, $op]);

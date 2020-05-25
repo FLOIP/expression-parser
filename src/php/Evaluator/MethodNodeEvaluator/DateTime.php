@@ -5,9 +5,12 @@ namespace Viamo\Floip\Evaluator\MethodNodeEvaluator;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract\DateTime as DateTimeInterface;
 use Carbon\Carbon;
 use Carbon\CarbonInterval;
+use Viamo\Floip\Evaluator\MethodNodeEvaluator\DateTime\CarbonAdapter;
 
 class DateTime extends AbstractMethodHandler implements DateTimeInterface
 {
+    const TIME_FORMAT = "/^([0-9]{1,2}):([0-9]{2})$/";
+
     public function date($year, $month, $day)
     {
         return Carbon::createFromDate($year, $month, $day)->startOfDay();
@@ -50,11 +53,15 @@ class DateTime extends AbstractMethodHandler implements DateTimeInterface
     }
     public function timeValue($string)
     {
-        return CarbonInterval::createFromDateString($string);
+        $matches = [];
+        if (\preg_match(self::TIME_FORMAT, $string, $matches)) {
+            return CarbonInterval::fromString("{$matches[1]}h {$matches[2]}m");
+        }
+        return CarbonInterval::fromString($string);
     }
     public function today()
     {
-        return Carbon::today();
+        return CarbonAdapter::today()->settings(['toStringFormat' => 'Y-m-d']);
     }
     public function weekday($date)
     {

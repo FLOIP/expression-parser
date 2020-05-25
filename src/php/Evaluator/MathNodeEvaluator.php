@@ -4,6 +4,8 @@ namespace Viamo\Floip\Evaluator;
 
 use Carbon\Carbon;
 use Carbon\CarbonInterval;
+use Carbon\CarbonPeriod;
+use DateInterval;
 use Viamo\Floip\Evaluator\Node;
 use Viamo\Floip\Contract\ParsesFloip;
 use Viamo\Floip\Evaluator\AbstractNodeEvaluator;
@@ -39,12 +41,13 @@ class MathNodeEvaluator extends AbstractNodeEvaluator
         throw new NodeEvaluatorException('invalid operator ' . $operator);
     }
 
-    private function evaluateDates(Carbon $lhs, CarbonInterval $rhs, $operator) {
+    private function evaluateDates(Carbon $lhs, $rhs, $operator) {
         if (!($lhs instanceof Carbon)) {
             throw new NodeEvaluatorException('When performing date math, left hand side must be a date');
         }
-        if (!($rhs instanceof CarbonInterval)) {
-            throw new NodeEvaluatorException('When performing date math, right hand side must be a time interval');
+        if (!($rhs instanceof DateInterval)) {
+            $rhs = CarbonInterval::createFromDateString($rhs);
+            // throw new NodeEvaluatorException('When performing date math, right hand side must be a time interval');
         }
         switch ($operator) {
             case '+':
@@ -65,7 +68,11 @@ class MathNodeEvaluator extends AbstractNodeEvaluator
             $thing = $thing->getValue();
         }
         if (!\is_numeric($thing) && !($this->isDateValue($thing))) {
-            throw new NodeEvaluatorException("Can only perform math on numbers, got: '$thing'");
+            try {
+                return CarbonPeriod::create($thing);
+            } catch (\Exception $e) {
+                throw new NodeEvaluatorException("Can only perform math on numbers, got: '$thing'");
+            }
         }
         return $thing;
     }

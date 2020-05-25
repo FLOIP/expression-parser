@@ -38,7 +38,7 @@ class EvaluatorIntegrationTest extends TestCase
     protected $escapeNodeEvaluator;
     /** @var EvaluatesExpression */
     protected $concatenationNodeEvaluator;
-    /** @var EvaluatesExpressions */
+    /** @var EvaluatesExpression */
     protected $nullNodeHandler;
 
     public function setUp()
@@ -88,7 +88,7 @@ class EvaluatorIntegrationTest extends TestCase
         
         $result = $this->evaluator->evaluate($expression, $context);
 
-        $this->assertEquals($expected, $result);        
+        $this->assertEquals($expected, $result);
     }
 
     public function testEvaluatesMethodWithArgs()
@@ -100,7 +100,7 @@ class EvaluatorIntegrationTest extends TestCase
         
         $result = $this->evaluator->evaluate($expression, $context);
 
-        $this->assertEquals($expected, $result);   
+        $this->assertEquals($expected, $result);
     }
 
     public function testEvaluatesNestedMethod()
@@ -194,6 +194,8 @@ class EvaluatorIntegrationTest extends TestCase
     public function testEvaluatesMathExpressions($expression, array $context, $expected)
     {
         $this->MethodNodeEvaluator->addHandler(new Math);
+        $this->MethodNodeEvaluator->addHandler(new DateTime);
+
         $result = $this->evaluator->evaluate($expression, $context);
 
         $this->assertEquals($expected, $result);
@@ -320,6 +322,9 @@ class EvaluatorIntegrationTest extends TestCase
             ],
             'bedmas 3' => [
                 '@(1 + (2 - 3) * 4 / 5 ^ 6)', [], '0.999744'
+            ],
+            'date math with concatenated duration' => [
+                '@(DATE(2012,12,12) + flow.appt & " days")', ['flow' => ['appt' => '4']], '2012-12-16 00:00:00'
             ]
         ];
     }

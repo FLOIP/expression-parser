@@ -2,6 +2,7 @@
 
 namespace Viamo\Floip;
 
+use ArrayAccess;
 use Viamo\Floip\Contract\ParsesFloip;
 use Viamo\Floip\Contract\EvaluatesExpression;
 use Viamo\Floip\Evaluator\Node;
@@ -36,12 +37,19 @@ class Evaluator
      * via addNodeEvaluator.
      *
      * @param string $expression Expression to evaluate
-     * @param array $context The expression context
+     * @param array|ArrayAccess $context The expression context
+     * @throws EvaluatorException
      * @see Evaluator::addNodeEvaluator
      * @return string
      */
-    public function evaluate($expression, array $context)
+    public function evaluate($expression, $context)
     {
+        // check that our context is array accessable
+        if (!is_array($context) && !($context instanceof ArrayAccess)) {
+            var_dump([is_array($context), $context instanceof ArrayAccess]);
+            throw new EvaluatorException('Context must be array or implement ArrayAccess');
+        }
+
         $ast = $this->parser->parse($expression);
 
         $nodes = array_map([$this, 'mapNodes'], $ast);
