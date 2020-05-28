@@ -203,8 +203,8 @@ Expression_Types = Escaped_Identifier / Math / Logic / Concatenation / Function 
  * Function looks like @(SOME_METHOD(argument, argument...))
  * Functions always wrap their arguments in parens.
  */
-Function = call:$valid_expression_characters+ OpenParen args:( Function_Args* ) CloseParen {
-  return  method(call, args, location())
+Function = call:$valid_expression_characters* OpenParen args:( Function_Args* ) CloseParen {
+  return method(call, args, location())
   /** <?php
     return call_user_func_array($this->_method, [$call, $args]);
   ?> **/
@@ -245,7 +245,7 @@ Math = lhs:Math_Arg ws* op:$math_chars ws+ rhs:(Concatenation / Math / Math_Arg)
   ?> **/
 }
 
-Math_Arg = Math_Arg_Inner_Math / Function / Member_Access / $numbers+
+Math_Arg = Math_Arg_Inner_Math / Function / Member_Access / $numbers+ / QuotedText
 Math_Arg_Inner_Math = OpenParen child:Math CloseParen { return child; /**<?php return $child; ?>**/}
 
 /**

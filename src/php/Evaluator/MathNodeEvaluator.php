@@ -10,6 +10,7 @@ use Viamo\Floip\Evaluator\Node;
 use Viamo\Floip\Contract\ParsesFloip;
 use Viamo\Floip\Evaluator\AbstractNodeEvaluator;
 use Viamo\Floip\Evaluator\Exception\NodeEvaluatorException;
+use Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract\DateTime;
 
 class MathNodeEvaluator extends AbstractNodeEvaluator
 {
@@ -41,7 +42,7 @@ class MathNodeEvaluator extends AbstractNodeEvaluator
         throw new NodeEvaluatorException('invalid operator ' . $operator);
     }
 
-    private function evaluateDates(Carbon $lhs, $rhs, $operator) {
+    private function evaluateDates($lhs, $rhs, $operator) {
         if (!($lhs instanceof Carbon)) {
             throw new NodeEvaluatorException('When performing date math, left hand side must be a date');
         }
@@ -67,14 +68,24 @@ class MathNodeEvaluator extends AbstractNodeEvaluator
         if ($thing instanceof Node) {
             $thing = $thing->getValue();
         }
-        if (!\is_numeric($thing) && !($this->isDateValue($thing))) {
-            try {
-                return CarbonPeriod::create($thing);
-            } catch (\Exception $e) {
-                throw new NodeEvaluatorException("Can only perform math on numbers, got: '$thing'");
+        try {
+            if (!\is_numeric($thing) && !($this->isDateValue($thing))) {
+                return $this->parseDateTime($thing);
             }
+        } catch (\Exception $e) {
+            throw new NodeEvaluatorException("Can only perform math on numbers, got: '$thing'", 0, $e);
         }
         return $thing;
+    }
+
+    private function parseDateTime($thing) {
+        // does this look like a date interval string? e.g. "4 days"
+        if (\preg_match(DateTime::DATE_INTERVAL_REGEX, $thing) === 1) {
+            return CarbonInterval::createFromDateString($thing);
+        }
+        // otherwise try parsing it as a datetime
+        return Carbon::parse($thing);
+
     }
 
     public function handles()

@@ -202,7 +202,7 @@ function peg$parse(input: string, options?: IParseOptions) {
   };
   const peg$c3 = function(): any {return location() /**<?php return call_user_func($this->_location); ?>**/};
   const peg$c4 = function(call: any, args: any): any {
-    return  method(call, args, location())
+    return method(call, args, location())
     /** <?php
       return call_user_func_array($this->_method, [$call, $args]);
     ?> **/
@@ -685,13 +685,9 @@ function peg$parse(input: string, options?: IParseOptions) {
     s1 = peg$currPos;
     s2 = [];
     s3 = peg$parsevalid_variable_characters();
-    if (s3 !== peg$FAILED) {
-      while (s3 !== peg$FAILED) {
-        s2.push(s3);
-        s3 = peg$parsevalid_variable_characters();
-      }
-    } else {
-      s2 = peg$FAILED;
+    while (s3 !== peg$FAILED) {
+      s2.push(s3);
+      s3 = peg$parsevalid_variable_characters();
     }
     if (s2 !== peg$FAILED) {
       s1 = input.substring(s1, peg$currPos);
@@ -1171,6 +1167,9 @@ function peg$parse(input: string, options?: IParseOptions) {
             s0 = input.substring(s0, peg$currPos);
           } else {
             s0 = s1;
+          }
+          if (s0 === peg$FAILED) {
+            s0 = peg$parseQuotedText();
           }
         }
       }

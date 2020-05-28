@@ -544,13 +544,9 @@ class BaseExpressionParser {
       $s1 = $this->peg_currPos;
       $s2 = array();
       $s3 = $this->peg_parsevalid_variable_characters();
-      if ($s3 !== $this->peg_FAILED) {
-        while ($s3 !== $this->peg_FAILED) {
-          $s2[] = $s3;
-          $s3 = $this->peg_parsevalid_variable_characters();
-        }
-      } else {
-        $s2 = $this->peg_FAILED;
+      while ($s3 !== $this->peg_FAILED) {
+        $s2[] = $s3;
+        $s3 = $this->peg_parsevalid_variable_characters();
       }
       if ($s2 !== $this->peg_FAILED) {
         $s1 = $this->input_substr($s1, $this->peg_currPos - $s1);
@@ -1034,6 +1030,9 @@ class BaseExpressionParser {
               $s0 = $this->input_substr($s0, $this->peg_currPos - $s0);
             } else {
               $s0 = $s1;
+            }
+            if ($s0 === $this->peg_FAILED) {
+              $s0 = $this->peg_parseQuotedText();
             }
           }
         }

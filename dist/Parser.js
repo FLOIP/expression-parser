@@ -557,14 +557,9 @@ function peg$parse(input, options) {
         s1 = peg$currPos;
         s2 = [];
         s3 = peg$parsevalid_variable_characters();
-        if (s3 !== peg$FAILED) {
-            while (s3 !== peg$FAILED) {
-                s2.push(s3);
-                s3 = peg$parsevalid_variable_characters();
-            }
-        }
-        else {
-            s2 = peg$FAILED;
+        while (s3 !== peg$FAILED) {
+            s2.push(s3);
+            s3 = peg$parsevalid_variable_characters();
         }
         if (s2 !== peg$FAILED) {
             s1 = input.substring(s1, peg$currPos);
@@ -1060,6 +1055,9 @@ function peg$parse(input, options) {
                     }
                     else {
                         s0 = s1;
+                    }
+                    if (s0 === peg$FAILED) {
+                        s0 = peg$parseQuotedText();
                     }
                 }
             }

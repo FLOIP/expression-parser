@@ -9,8 +9,6 @@ use Viamo\Floip\Evaluator\MethodNodeEvaluator\DateTime\CarbonAdapter;
 
 class DateTime extends AbstractMethodHandler implements DateTimeInterface
 {
-    const TIME_FORMAT = "/^([0-9]{1,2}):([0-9]{2})$/";
-
     public function date($year, $month, $day)
     {
         return Carbon::createFromDate($year, $month, $day)->startOfDay();
@@ -54,7 +52,7 @@ class DateTime extends AbstractMethodHandler implements DateTimeInterface
     public function timeValue($string)
     {
         $matches = [];
-        if (\preg_match(self::TIME_FORMAT, $string, $matches)) {
+        if (\preg_match(DateTimeInterface::TIME_REGEX, $string, $matches)) {
             return CarbonInterval::fromString("{$matches[1]}h {$matches[2]}m");
         }
         return CarbonInterval::fromString($string);

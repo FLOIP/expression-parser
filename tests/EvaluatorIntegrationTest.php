@@ -113,7 +113,7 @@ class EvaluatorIntegrationTest extends TestCase
 
         $result = $this->evaluator->evaluate($expression, $context);
 
-        $this->assertEquals($expected, $result);   
+        $this->assertEquals($expected, $result);
     }
 
     public function testEvaluatesMultipleMethods()
@@ -228,6 +228,8 @@ class EvaluatorIntegrationTest extends TestCase
     {
         $this->MethodNodeEvaluator->addHandler(new Logical);
         $this->MethodNodeEvaluator->addHandler(new Text);
+        $this->MethodNodeEvaluator->addHandler(new Math);
+        $this->MethodNodeEvaluator->addHandler(new DateTime);
         $result = $this->evaluator->evaluate($expression, $context);
 
         $this->assertEquals($expected, $result);
@@ -325,7 +327,7 @@ class EvaluatorIntegrationTest extends TestCase
             ],
             'date math with concatenated duration' => [
                 '@(DATE(2012,12,12) + flow.appt & " days")', ['flow' => ['appt' => '4']], '2012-12-16 00:00:00'
-            ]
+            ],
         ];
     }
 
@@ -368,7 +370,7 @@ class EvaluatorIntegrationTest extends TestCase
                     'first_name' => 'Big',
                     'last_name' => 'Papa'
                 ]]
-                , 'Your name is Big Papa' 
+                , 'Your name is Big Papa'
             ],
             'fixed' => ['You have @(FIXED(contact.balance, 2)) in your account', [
                 'contact' => ['balance' => '4.209922']
@@ -390,13 +392,15 @@ class EvaluatorIntegrationTest extends TestCase
             'substitute' => ['@(SUBSTITUTE(step.value, "can\'t", "can"))', [
                 'step' => ['value' => 'I can\'t do it']
             ], 'I can do it'],
-            'upper' => ['WELCOME @(UPPER(contact))!!', 
+            'upper' => ['WELCOME @(UPPER(contact))!!',
                 ['contact' => ['__value__' => 'home']],
                 'WELCOME HOME!!']
         ];
     }
 
     public function flowProvider() {
+        $now = Carbon::parse("2020-02-07 12:00:00");
+        Carbon::setTestNow($now);
         return [
             'double quoted' => [
                 '@(OR(AND(channel.mode = "ivr", block.value = "7"), AND(channel.mode != "ivr", OR(AND(flow.language = "5", LOWER(block.value)="yup"), AND(flow.language = "5", LOWER(block.value)="1"), AND(flow.language = "5", LOWER(block.value)="yes"), AND(flow.language = "6", LOWER(block.value)="aane"), AND(flow.language = "6", LOWER(block.value)="1"), AND(flow.language = "6", LOWER(block.value)="a")))))',
@@ -421,6 +425,19 @@ class EvaluatorIntegrationTest extends TestCase
                     ],
                 ],
                 'TRUE'
+            ],
+            'vmo-1278' => [
+                "2 Hours and 30minutes from now is @(date.today + TIME(2, 30, 0)). And your appointment is at @(date.today + TIMEVALUE(\"4:50\")). Today's date is @(TODAY()) and it is day no. @(WEEKDAY(TODAY())) in the week",
+                [
+                    'date' => [
+                        '__value__' => $now->toDateTimeString(),
+                        'now' => $now->toDateString(),
+                        'today' => $now->toDateString(),
+                        'yesterday' => $now->yesterday()->toDateString(),
+                        'tomorrow' => $now->tomorrow()->toDateString(),
+                    ]
+                ],
+                "2 Hours and 30minutes from now is 2020-02-07 02:30:00. And your appointment is at 2020-02-07 04:50:00. Today's date is 2020-02-07 and it is day no. 5 in the week",
             ]
         ];
     }
@@ -432,7 +449,7 @@ class EvaluatorIntegrationTest extends TestCase
                 ['val' => ['num' => '3']],
                 'TRUE'
             ],
-            'is number true' => [
+            'is number true 2' => [
                 '@(isnumber("5"))',
                 [],
                 'TRUE'

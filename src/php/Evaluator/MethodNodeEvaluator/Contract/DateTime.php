@@ -7,6 +7,9 @@ use Carbon\CarbonInterval;
 
 interface DateTime extends EvaluatesMethods
 {
+    const TIME_REGEX = "/^([0-9]{1,2}):([0-9]{2})$/";
+    const DATE_INTERVAL_REGEX = "/^([0-9]+)\s\w+$/i";
+
     /**
      * Defines a new date value
      *

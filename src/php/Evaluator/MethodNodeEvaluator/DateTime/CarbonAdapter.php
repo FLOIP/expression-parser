@@ -19,7 +19,7 @@ class CarbonAdapter extends Carbon {
 
 	private function deferIfImplemented($methodName, callable $implementation, array $args = []) {
 		if (self::$shouldDefer === true) {
-			return call_user_func_array([$this, "parent::$methodName"], $args);
+			return call_user_func_array([$this, "parent::$methodName"], [$args]);
 		}
 		if (\method_exists(parent::class, $methodName)) {
 			self::$shouldDefer = true;
@@ -29,19 +29,18 @@ class CarbonAdapter extends Carbon {
 		return $implementation($args);
 	}
 
-	public function add($value) {
-		return (new Carbon($this))->add($value);
+	public function add($unit, $value = 1, $overflow = null) {
+		return (new Carbon($this))->add($unit, $value, $overflow);
 	}
 
-	public function sub($value) {
-		return (new Carbon($this))->sub($value);
+	public function sub($unit, $value = 1, $overflow = null) {
+		return (new Carbon($this))->sub($unit, $value, $overflow);
 	}
 
 	public function __toString() {
-		return $this->deferIfImplemented('settings', function () {
-			$format = (isset($this->settings['toStringFormat'])) ? 
-				$this->settings['toStringFormat'] : static::$toStringFormat;
-			return $this->format($format instanceof \Closure ? $format($this) : $format);
-		});
+		if (\method_exists(parent::class, 'settings')) {
+			return parent::__toString();
+		}
+		return $this->format($this->settings['toStringFormat']);
 	}
 }
