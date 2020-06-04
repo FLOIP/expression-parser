@@ -245,8 +245,8 @@ Math = lhs:Math_Arg ws* op:$math_chars ws+ rhs:(Concatenation / Math / Math_Arg)
   ?> **/
 }
 
-Math_Arg = Math_Arg_Inner_Math / Function / Member_Access / $numbers+ / QuotedText
-Math_Arg_Inner_Math = OpenParen child:Math CloseParen { return child; /**<?php return $child; ?>**/}
+Math_Arg = OpenParen arg:(Math / Math_Arg_Types) CloseParen {return arg /**<?php return $arg; ?>**/} / Math_Arg_Types
+Math_Arg_Types = Function / Member_Access / $numbers+ / QuotedText
 
 /**
  * Logic looks like @(1 < 2) or @(contact.name = "Henry")
@@ -258,8 +258,8 @@ Logic = lhs:Logic_Arg ws* op:$logic_chars ws* rhs:(Concatenation / Logic / Logic
   ?> **/
 }
 
-Logic_Arg = Logic_Arg_Inner_Logic / Math / Function / Null / Member_Access / $numbers+ / QuotedText
-Logic_Arg_Inner_Logic = OpenParen child:Logic CloseParen { return child; /**<?php return $child; ?>**/}
+Logic_Arg = OpenParen arg:(Logic_Arg_Types / Logic) CloseParen {return arg /**<?php return $arg; ?>**/} / Logic_Arg_Types
+Logic_Arg_Types = Math / Function / Null / Member_Access / $numbers+ / QuotedText
 
 /**
  * Concatenation looks like @("Some" & " " & "String") or @(contact.firstname & " " & contact.lastname)

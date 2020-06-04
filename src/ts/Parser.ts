@@ -226,7 +226,7 @@ function peg$parse(input: string, options?: IParseOptions) {
       return call_user_func_array($this->_math, [$lhs, $rhs, $op]);
     ?> **/
   };
-  const peg$c14 = function(child: any): any { return child; /**<?php return $child; ?>**/};
+  const peg$c14 = function(arg: any): any {return arg /**<?php return $arg; ?>**/};
   const peg$c15 = function(lhs: any, op: any, rhs: any): any {
     return  logic(lhs, rhs, op, location())
     /** <?php
@@ -1135,55 +1135,9 @@ function peg$parse(input: string, options?: IParseOptions) {
   }
 
   function peg$parseMath_Arg(): any {
-    let s0, s1, s2;
-
-    const key = peg$currPos * 37 + 12;
-    const cached: ICached = peg$resultsCache[key];
-
-    if (cached) {
-      peg$currPos = cached.nextPos;
-
-      return cached.result;
-    }
-
-    s0 = peg$parseMath_Arg_Inner_Math();
-    if (s0 === peg$FAILED) {
-      s0 = peg$parseFunction();
-      if (s0 === peg$FAILED) {
-        s0 = peg$parseMember_Access();
-        if (s0 === peg$FAILED) {
-          s0 = peg$currPos;
-          s1 = [];
-          s2 = peg$parsenumbers();
-          if (s2 !== peg$FAILED) {
-            while (s2 !== peg$FAILED) {
-              s1.push(s2);
-              s2 = peg$parsenumbers();
-            }
-          } else {
-            s1 = peg$FAILED;
-          }
-          if (s1 !== peg$FAILED) {
-            s0 = input.substring(s0, peg$currPos);
-          } else {
-            s0 = s1;
-          }
-          if (s0 === peg$FAILED) {
-            s0 = peg$parseQuotedText();
-          }
-        }
-      }
-    }
-
-    peg$resultsCache[key] = { nextPos: peg$currPos, result: s0 };
-
-    return s0;
-  }
-
-  function peg$parseMath_Arg_Inner_Math(): any {
     let s0, s1, s2, s3;
 
-    const key = peg$currPos * 37 + 13;
+    const key = peg$currPos * 37 + 12;
     const cached: ICached = peg$resultsCache[key];
 
     if (cached) {
@@ -1196,6 +1150,9 @@ function peg$parse(input: string, options?: IParseOptions) {
     s1 = peg$parseOpenParen();
     if (s1 !== peg$FAILED) {
       s2 = peg$parseMath();
+      if (s2 === peg$FAILED) {
+        s2 = peg$parseMath_Arg_Types();
+      }
       if (s2 !== peg$FAILED) {
         s3 = peg$parseCloseParen();
         if (s3 !== peg$FAILED) {
@@ -1213,6 +1170,52 @@ function peg$parse(input: string, options?: IParseOptions) {
     } else {
       peg$currPos = s0;
       s0 = peg$FAILED;
+    }
+    if (s0 === peg$FAILED) {
+      s0 = peg$parseMath_Arg_Types();
+    }
+
+    peg$resultsCache[key] = { nextPos: peg$currPos, result: s0 };
+
+    return s0;
+  }
+
+  function peg$parseMath_Arg_Types(): any {
+    let s0, s1, s2;
+
+    const key = peg$currPos * 37 + 13;
+    const cached: ICached = peg$resultsCache[key];
+
+    if (cached) {
+      peg$currPos = cached.nextPos;
+
+      return cached.result;
+    }
+
+    s0 = peg$parseFunction();
+    if (s0 === peg$FAILED) {
+      s0 = peg$parseMember_Access();
+      if (s0 === peg$FAILED) {
+        s0 = peg$currPos;
+        s1 = [];
+        s2 = peg$parsenumbers();
+        if (s2 !== peg$FAILED) {
+          while (s2 !== peg$FAILED) {
+            s1.push(s2);
+            s2 = peg$parsenumbers();
+          }
+        } else {
+          s1 = peg$FAILED;
+        }
+        if (s1 !== peg$FAILED) {
+          s0 = input.substring(s0, peg$currPos);
+        } else {
+          s0 = s1;
+        }
+        if (s0 === peg$FAILED) {
+          s0 = peg$parseQuotedText();
+        }
+      }
     }
 
     peg$resultsCache[key] = { nextPos: peg$currPos, result: s0 };
@@ -1306,61 +1309,9 @@ function peg$parse(input: string, options?: IParseOptions) {
   }
 
   function peg$parseLogic_Arg(): any {
-    let s0, s1, s2;
-
-    const key = peg$currPos * 37 + 15;
-    const cached: ICached = peg$resultsCache[key];
-
-    if (cached) {
-      peg$currPos = cached.nextPos;
-
-      return cached.result;
-    }
-
-    s0 = peg$parseLogic_Arg_Inner_Logic();
-    if (s0 === peg$FAILED) {
-      s0 = peg$parseMath();
-      if (s0 === peg$FAILED) {
-        s0 = peg$parseFunction();
-        if (s0 === peg$FAILED) {
-          s0 = peg$parseNull();
-          if (s0 === peg$FAILED) {
-            s0 = peg$parseMember_Access();
-            if (s0 === peg$FAILED) {
-              s0 = peg$currPos;
-              s1 = [];
-              s2 = peg$parsenumbers();
-              if (s2 !== peg$FAILED) {
-                while (s2 !== peg$FAILED) {
-                  s1.push(s2);
-                  s2 = peg$parsenumbers();
-                }
-              } else {
-                s1 = peg$FAILED;
-              }
-              if (s1 !== peg$FAILED) {
-                s0 = input.substring(s0, peg$currPos);
-              } else {
-                s0 = s1;
-              }
-              if (s0 === peg$FAILED) {
-                s0 = peg$parseQuotedText();
-              }
-            }
-          }
-        }
-      }
-    }
-
-    peg$resultsCache[key] = { nextPos: peg$currPos, result: s0 };
-
-    return s0;
-  }
-
-  function peg$parseLogic_Arg_Inner_Logic(): any {
     let s0, s1, s2, s3;
 
-    const key = peg$currPos * 37 + 16;
+    const key = peg$currPos * 37 + 15;
     const cached: ICached = peg$resultsCache[key];
 
     if (cached) {
@@ -1372,7 +1323,10 @@ function peg$parse(input: string, options?: IParseOptions) {
     s0 = peg$currPos;
     s1 = peg$parseOpenParen();
     if (s1 !== peg$FAILED) {
-      s2 = peg$parseLogic();
+      s2 = peg$parseLogic_Arg_Types();
+      if (s2 === peg$FAILED) {
+        s2 = peg$parseLogic();
+      }
       if (s2 !== peg$FAILED) {
         s3 = peg$parseCloseParen();
         if (s3 !== peg$FAILED) {
@@ -1390,6 +1344,58 @@ function peg$parse(input: string, options?: IParseOptions) {
     } else {
       peg$currPos = s0;
       s0 = peg$FAILED;
+    }
+    if (s0 === peg$FAILED) {
+      s0 = peg$parseLogic_Arg_Types();
+    }
+
+    peg$resultsCache[key] = { nextPos: peg$currPos, result: s0 };
+
+    return s0;
+  }
+
+  function peg$parseLogic_Arg_Types(): any {
+    let s0, s1, s2;
+
+    const key = peg$currPos * 37 + 16;
+    const cached: ICached = peg$resultsCache[key];
+
+    if (cached) {
+      peg$currPos = cached.nextPos;
+
+      return cached.result;
+    }
+
+    s0 = peg$parseMath();
+    if (s0 === peg$FAILED) {
+      s0 = peg$parseFunction();
+      if (s0 === peg$FAILED) {
+        s0 = peg$parseNull();
+        if (s0 === peg$FAILED) {
+          s0 = peg$parseMember_Access();
+          if (s0 === peg$FAILED) {
+            s0 = peg$currPos;
+            s1 = [];
+            s2 = peg$parsenumbers();
+            if (s2 !== peg$FAILED) {
+              while (s2 !== peg$FAILED) {
+                s1.push(s2);
+                s2 = peg$parsenumbers();
+              }
+            } else {
+              s1 = peg$FAILED;
+            }
+            if (s1 !== peg$FAILED) {
+              s0 = input.substring(s0, peg$currPos);
+            } else {
+              s0 = s1;
+            }
+            if (s0 === peg$FAILED) {
+              s0 = peg$parseQuotedText();
+            }
+          }
+        }
+      }
     }
 
     peg$resultsCache[key] = { nextPos: peg$currPos, result: s0 };
