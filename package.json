@@ -1,7 +1,8 @@
 {
-  "name": "floip-parser",
+  "name": "@floip/expression-parser",
   "version": "1.6.1",
   "description": "",
+  "repository": "git@github.com:FLOIP/expression-parser.git",
   "main": "./dist/Parser.js",
   "types": "./dist/Parser.d.ts",
   "scripts": {
@@ -10,7 +11,8 @@
     "watch": "tsc --watch"
   },
   "author": "Kyle Seifert",
-  "license": "",
+  "license": "MIT",
+  "publishConfig": {"registry": "https://npm.pkg.github.com/"},
   "devDependencies": {
     "pegjs": "^0.10.0",
     "phpegjs": "^1.0.0-beta7",
