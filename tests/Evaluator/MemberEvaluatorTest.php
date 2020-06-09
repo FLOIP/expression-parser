@@ -6,6 +6,7 @@ use PHPUnit\Framework\TestCase;
 use Viamo\Floip\Evaluator\MemberNodeEvaluator;
 use Viamo\Floip\Contract\ParsesFloip;
 use Viamo\Floip\Evaluator\Node;
+use Viamo\Floip\Tests\Evaluator\Mocks\MockArrayContext;
 
 class MemberNodeEvaluatorTest extends TestCase
 {
@@ -76,6 +77,66 @@ class MemberNodeEvaluatorTest extends TestCase
         $evaluated = $this->evaluator->evaluate($node, $context);
         $this->assertEquals($expected, $evaluated);
     }
+
+    /**
+     * @dataProvider absentKeyProvider
+     */
+    public function testEvaluatesAbsentKeyObjectContext(Node $node, array $context, $expected) {
+        $evaluated = $this->evaluator->evaluate($node, new MockArrayContext($context));
+        $this->assertEquals($expected, $evaluated);
+    }
+
+    /**
+     * @dataProvider arrayReturnProvider
+     */
+    public function testArrayReturnObjectContext(Node $node, array $context, $expected) {
+        $evaluated = $this->evaluator->evaluate($node, new MockArrayContext($context));
+        $this->assertEquals($expected, $evaluated);
+    }
+
+    /**
+     * @dataProvider keyAndValueProvider
+     */
+    public function testEvaluatesKeyAndValueObjectContext(Node $node, array $context, $expected)
+    {
+        $evaluated = $this->evaluator->evaluate($node, new MockArrayContext($context));
+        $this->assertEquals($expected, $evaluated);
+    }
+
+    /**
+     * @dataProvider keyNoValueProvider
+     */
+    public function testEvaluatesKeyNoValueObjectContext(Node $node, array $context, $expected)
+    {
+        $evaluated = $this->evaluator->evaluate($node, new MockArrayContext($context));
+        $this->assertEquals($expected, $evaluated);
+    }
+
+    /**
+     * @dataProvider keyDefaultValueProvider
+     */
+    public function testEvaluatesKeyWithDefaultValueObjectContext(Node $node, array $context, $expected)
+    {
+        $evaluated = $this->evaluator->evaluate($node, new MockArrayContext($context));
+        $this->assertEquals($expected, $evaluated);
+    }
+
+    /**
+     * @dataProvider nestedContextProvider
+     */
+    public function testNestedContextObjectContext(Node $node, array $context, $expected)
+    {
+        $evaluated = $this->evaluator->evaluate($node, new MockArrayContext($context));
+        $this->assertEquals($expected, $evaluated);
+    }
+
+    /**
+     * @dataProvider numericKeyProvider
+     */
+    public function testNumericKeysObjectContext(Node $node, array $context, $expected) {
+        $evaluated = $this->evaluator->evaluate($node, new MockArrayContext($context));
+        $this->assertEquals($expected, $evaluated);
+    }    
 
     private function makeNode($key, $location = []) {
         return new Node([

@@ -10,10 +10,10 @@ interface EvaluatesExpression
      * Given a node and a context, evaluate the output value of the node.
      *
      * @param Node $node
-     * @param array $context
+     * @param array|ArrayAccess $context
      * @return mixed
      */
-    public function evaluate(Node $node, array $context);
+    public function evaluate(Node $node, $context);
 
     /**
      * Reports what type of node this evaluator handles.

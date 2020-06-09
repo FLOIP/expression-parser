@@ -14,7 +14,7 @@ use Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract\DateTime;
 
 class MathNodeEvaluator extends AbstractNodeEvaluator
 {
-    public function evaluate(Node $node, array $context)
+    public function evaluate(Node $node, $context)
     {
         if (!isset($node['rhs'], $node['lhs'], $node['operator'])) {
             throw new NodeEvaluatorException('Math node is the wrong shape, should have "rhs", "lhs", "operator"');

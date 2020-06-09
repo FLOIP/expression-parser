@@ -9,7 +9,7 @@ use Viamo\Floip\Evaluator\Exception\NodeEvaluatorException;
 
 class ConcatenationNodeEvaluator extends AbstractNodeEvaluator
 {
-    public function evaluate(Node $node, array $context)
+    public function evaluate(Node $node, $context)
     {
         if (!isset($node['rhs'], $node['lhs'])) {
             throw new NodeEvaluatorException('Concatenation node is the wrong shape, should have "rhs", "lhs"');

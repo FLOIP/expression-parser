@@ -28,6 +28,10 @@ class EvaluatorFactory
 		return $eval;
 	}
 
+	public function create() {
+		return $this->newInstance();
+	}
+
     protected function methodNodeInstance()
     {
 		$eval = new MethodNodeEvaluator;

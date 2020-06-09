@@ -71,7 +71,7 @@ class EvaluatorIntegrationTest extends TestCase
                 'name' => 'Kyle',
             ]
         ];
-        
+
         $result = $this->evaluator->evaluate($expression, $context);
 
         $this->assertEquals($expected, $result);
@@ -85,7 +85,7 @@ class EvaluatorIntegrationTest extends TestCase
         $expected = "Today is $now";
         $context = [];
         $this->MethodNodeEvaluator->addHandler(new DateTime);
-        
+
         $result = $this->evaluator->evaluate($expression, $context);
 
         $this->assertEquals($expected, $result);
@@ -97,7 +97,7 @@ class EvaluatorIntegrationTest extends TestCase
         $expected = "Today is " . Carbon::createFromDate(2012, 12, 12)->startOfDay();
         $context = [];
         $this->MethodNodeEvaluator->addHandler(new DateTime);
-        
+
         $result = $this->evaluator->evaluate($expression, $context);
 
         $this->assertEquals($expected, $result);
@@ -149,7 +149,7 @@ class EvaluatorIntegrationTest extends TestCase
 
         $result = $this->evaluator->evaluate($expression, $context);
 
-        $this->assertEquals($expected, $result);  
+        $this->assertEquals($expected, $result);
     }
 
     /**
@@ -175,7 +175,7 @@ class EvaluatorIntegrationTest extends TestCase
 
         $this->assertEquals($expected, $result);
     }
-    
+
     /**
      * @dataProvider textMethodsProvider
      */
@@ -345,12 +345,12 @@ class EvaluatorIntegrationTest extends TestCase
     public function logicProvider()
     {
         return [
-            ['@(and(contact.gender = "f", contact.age >= 10))',[
+            ['@(and(contact.gender = "f", contact.age >= 10))', [
                 'contact' => [
                     'gender' => 'f',
                     'age' => '9',
-                ]], 'FALSE'
-            ],
+                ]
+            ], 'FALSE'],
             ['@(and(1 = 1, 3 = 3))', [], 'TRUE']
         ];
     }
@@ -365,12 +365,13 @@ class EvaluatorIntegrationTest extends TestCase
                 ]
             ], 'You entered ABC'],
             'code' => ['The numeric code of A is @(CODE("A"))', [], 'The numeric code of A is 65'],
-            'concat' => ['Your name is @(CONCATENATE(contact.first_name, " ", contact.last_name))',[
-                'contact' => [
-                    'first_name' => 'Big',
-                    'last_name' => 'Papa'
-                ]]
-                , 'Your name is Big Papa'
+            'concat' => [
+                'Your name is @(CONCATENATE(contact.first_name, " ", contact.last_name))', [
+                    'contact' => [
+                        'first_name' => 'Big',
+                        'last_name' => 'Papa'
+                    ]
+                ], 'Your name is Big Papa'
             ],
             'fixed' => ['You have @(FIXED(contact.balance, 2)) in your account', [
                 'contact' => ['balance' => '4.209922']
@@ -392,13 +393,16 @@ class EvaluatorIntegrationTest extends TestCase
             'substitute' => ['@(SUBSTITUTE(step.value, "can\'t", "can"))', [
                 'step' => ['value' => 'I can\'t do it']
             ], 'I can do it'],
-            'upper' => ['WELCOME @(UPPER(contact))!!',
+            'upper' => [
+                'WELCOME @(UPPER(contact))!!',
                 ['contact' => ['__value__' => 'home']],
-                'WELCOME HOME!!']
+                'WELCOME HOME!!'
+            ]
         ];
     }
 
-    public function flowProvider() {
+    public function flowProvider()
+    {
         $now = Carbon::parse("2020-02-07 12:00:00");
         Carbon::setTestNow($now);
         return [
@@ -442,7 +446,8 @@ class EvaluatorIntegrationTest extends TestCase
         ];
     }
 
-    public function isXXXProvider() {
+    public function isXXXProvider()
+    {
         return [
             'is number true' => [
                 '@(isnumber(val.num))',
@@ -488,8 +493,7 @@ class EvaluatorIntegrationTest extends TestCase
                 '@(isbool("FALSE"))',
                 [],
                 'TRUE'
-            ]
-            ,
+            ],
             'isxxx all together now' => [
                 '@(AND(isbool("TRUE"), isstring("foo"), isnumber("5")))',
                 [],

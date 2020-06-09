@@ -229,7 +229,7 @@ use Viamo\Floip\Contract\EvaluatesExpression;
 
 class MathNodeEvaluator implements EvaluatesExpression
 {
-    public function evaluate(Node $node, array $context) {
+    public function evaluate(Node $node, $context) {
         // a naive implementation
         $lhs = $node['lhs'];
         $rhs = $node['rhs'];

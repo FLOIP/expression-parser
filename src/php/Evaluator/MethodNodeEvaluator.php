@@ -49,10 +49,10 @@ class MethodNodeEvaluator extends AbstractNodeEvaluator
      * Evaluate the method call node with the given context.
      *
      * @param Node $node
-     * @param array $context
+     * @param array|ArrayAccess $context
      * @return mixed
      */
-    public function evaluate(Node $node, array $context)
+    public function evaluate(Node $node, $context)
     {
         if (!isset($node['call'], $node['args']) || !is_array($node['args'])) {
             throw new NodeEvaluatorException('Method node is the wrong shape, should have "call", "args"');
