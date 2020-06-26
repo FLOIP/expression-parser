@@ -23,6 +23,13 @@ class MemberNodeEvaluator extends AbstractNodeEvaluator
         $keys = explode('.', $key);
         $currentContext = $context;
 
+        // if the top-level key does not exist at the top-level
+        // of the context, return the expression as originally
+        // entered (prefixed with @)
+        if (!Arr::exists($currentContext, reset($keys))) {
+            return "@{$key}";
+        }
+
         // traverse the context tree until we run out of keys
         foreach ($keys as $currentKey) {
             if (Arr::exists($currentContext, $currentKey)) {
