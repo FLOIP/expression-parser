@@ -258,6 +258,15 @@ class EvaluatorIntegrationTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
+    /**
+     * @dataProvider emailsProvider
+     */
+    public function testEmailsNotClobbered($expression, array $context, $expected) {
+        $result = $this->evaluator->evaluate($expression, $context);
+
+        $this->assertEquals($expected, $result);
+    }
+
     public function nullExpressionProvider()
     {
         return [
@@ -498,6 +507,26 @@ class EvaluatorIntegrationTest extends TestCase
                 '@(AND(isbool("TRUE"), isstring("foo"), isnumber("5")))',
                 [],
                 'TRUE'
+            ]
+        ];
+    }
+
+    public function emailsProvider() {
+        return [
+            [
+                'Contact us at foo@example.com',
+                [],
+                'Contact us at foo@example.com'
+            ],
+            [
+                'Contact us at foo@@example.com',
+                [],
+                'Contact us at foo@example.com'
+            ],
+            [
+                'Contact us at foo@@contact.com',
+                [],
+                'Contact us at foo@contact.com'
             ]
         ];
     }
