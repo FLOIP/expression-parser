@@ -136,7 +136,7 @@ class MemberNodeEvaluatorTest extends TestCase
     public function testNumericKeysObjectContext(Node $node, array $context, $expected) {
         $evaluated = $this->evaluator->evaluate($node, new MockArrayContext($context));
         $this->assertEquals($expected, $evaluated);
-    }    
+    }
 
     private function makeNode($key, $location = []) {
         return new Node([
@@ -154,7 +154,7 @@ class MemberNodeEvaluatorTest extends TestCase
                 [
                     // empty context
                 ],
-                'contact.name'
+                '@contact.name'
             ],
         ];
     }
