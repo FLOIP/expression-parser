@@ -507,9 +507,9 @@ class BaseExpressionParser {
 
       $s0 = $this->peg_parseEscaped_Identifier();
       if ($s0 === $this->peg_FAILED) {
-        $s0 = $this->peg_parseMath();
+        $s0 = $this->peg_parseLogic();
         if ($s0 === $this->peg_FAILED) {
-          $s0 = $this->peg_parseLogic();
+          $s0 = $this->peg_parseMath();
           if ($s0 === $this->peg_FAILED) {
             $s0 = $this->peg_parseConcatenation();
             if ($s0 === $this->peg_FAILED) {
@@ -942,13 +942,9 @@ class BaseExpressionParser {
           if ($s3 !== $this->peg_FAILED) {
             $s4 = array();
             $s5 = $this->peg_parsews();
-            if ($s5 !== $this->peg_FAILED) {
-              while ($s5 !== $this->peg_FAILED) {
-                $s4[] = $s5;
-                $s5 = $this->peg_parsews();
-              }
-            } else {
-              $s4 = $this->peg_FAILED;
+            while ($s5 !== $this->peg_FAILED) {
+              $s4[] = $s5;
+              $s5 = $this->peg_parsews();
             }
             if ($s4 !== $this->peg_FAILED) {
               $s5 = $this->peg_parseConcatenation();

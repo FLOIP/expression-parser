@@ -646,9 +646,9 @@ function peg$parse(input: string, options?: IParseOptions) {
 
     s0 = peg$parseEscaped_Identifier();
     if (s0 === peg$FAILED) {
-      s0 = peg$parseMath();
+      s0 = peg$parseLogic();
       if (s0 === peg$FAILED) {
-        s0 = peg$parseLogic();
+        s0 = peg$parseMath();
         if (s0 === peg$FAILED) {
           s0 = peg$parseConcatenation();
           if (s0 === peg$FAILED) {
@@ -1077,13 +1077,9 @@ function peg$parse(input: string, options?: IParseOptions) {
         if (s3 !== peg$FAILED) {
           s4 = [];
           s5 = peg$parsews();
-          if (s5 !== peg$FAILED) {
-            while (s5 !== peg$FAILED) {
-              s4.push(s5);
-              s5 = peg$parsews();
-            }
-          } else {
-            s4 = peg$FAILED;
+          while (s5 !== peg$FAILED) {
+            s4.push(s5);
+            s5 = peg$parsews();
           }
           if (s4 !== peg$FAILED) {
             s5 = peg$parseConcatenation();

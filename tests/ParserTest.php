@@ -133,6 +133,15 @@ class ParserTest extends TestCase
         $this->assertArraySubset($expected, $node);
     }
 
+    /**
+     * @dataProvider regressionProvider
+     */
+    public function testExceptionRegressions($string) {
+        $ast = $this->parser->parse($string);
+        // an exception should be thrown on a parser regression
+        $this->assertTrue(true);
+    }
+
     private function methodNode($call, array $args)
     {
         $type = 'METHOD';
@@ -311,6 +320,14 @@ class ParserTest extends TestCase
             ['@(some.number > other.number) is a number', ['type' => 'MEMBER'], ['type' => 'MEMBER'], '-'],
             ['@(SOMEFUNC() = OTHERFUNC())', ['type' => 'METHOD'], ['type' => 'METHOD'], '+'],
             ['@(SOMEFUNC() <= some.member)', ['type' => 'METHOD'], ['type' => 'MEMBER'], '/'],
+        ];
+    }
+
+    public function regressionProvider() {
+        return [
+            // test evaluation of logic with complex lhs or rhs
+            ['flow.case2 = flow.case1 + flow.case3 + flow.case4 + flow.case5 + flow.case6'],
+            ['flow.case1 + flow.case3 + flow.case4 + flow.case5 + flow.case6 = flow.case2 '],
         ];
     }
 }
