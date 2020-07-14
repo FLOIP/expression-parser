@@ -12,7 +12,9 @@
   },
   "author": "Kyle Seifert",
   "license": "MIT",
-  "publishConfig": {"registry": "https://npm.pkg.github.com/"},
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
   "devDependencies": {
     "pegjs": "^0.10.0",
     "phpegjs": "^1.0.0-beta7",

@@ -2,3 +2,4 @@ node_modules
 vendor
 .composer
 ./composer.lock
+package.lock

@@ -197,7 +197,7 @@ Expression_Identifier = Identifier {return location() /**<?php return call_user_
  * The order they are expressed here is the order in which the parser tries
  * to match them.
  */
-Expression_Types = Escaped_Identifier / Math / Logic / Concatenation / Function / Null / Member_Access
+Expression_Types = Escaped_Identifier / Logic / Math / Concatenation / Function / Null / Member_Access
 
 /**
  * Function looks like @(SOME_METHOD(argument, argument...))
@@ -238,7 +238,7 @@ Member_Access = key:$((MemberVariable)+ (('.' [a-zA-Z_0-9]+)+)?) {
 /**
  * Math looks like @(1 + 2)
  */
-Math = lhs:Math_Arg ws* op:$math_chars ws+ rhs:(Concatenation / Math / Math_Arg) ws* {
+Math = lhs:Math_Arg ws* op:$math_chars ws* rhs:(Concatenation / Math / Math_Arg) ws* {
   return  math(lhs, rhs, op, location())
   /** <?php
     return call_user_func_array($this->_math, [$lhs, $rhs, $op]);
