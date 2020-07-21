@@ -124,4 +124,14 @@ interface DateTime extends EvaluatesMethods
      * @return int
      */
     public function year($date);
+
+    /**
+     * Determine if a date falls between $start and $end, inclusive.
+     *
+     * @param Carbon|string $date
+     * @param Carbon|string $start
+     * @param Carbon|string $end
+     * @return bool
+     */
+    public function between($date, $start, $end);
 }

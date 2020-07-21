@@ -69,4 +69,7 @@ class DateTime extends AbstractMethodHandler implements DateTimeInterface
     {
         return Carbon::parse($date)->year;
     }
+    public function between($date, $start, $end) {
+        return Carbon::parse($date)->between(Carbon::parse($start), Carbon::parse($end));
+    }
 }
