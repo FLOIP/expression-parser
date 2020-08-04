@@ -1,6 +1,6 @@
 {
   "name": "@floip/expression-parser",
-  "version": "1.9.2",
+  "version": "1.9.3",
   "description": "",
   "repository": "git@github.com:FLOIP/expression-parser.git",
   "main": "./dist/Parser.js",
