@@ -7,7 +7,7 @@ use Viamo\Floip\Evaluator\Node;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\ArrayHandler;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract\ArrayHandler as ArrayHandlerContract;
 
-class ArrayHandlerHandlerTest extends TestCase
+class ArrayHandlerTest extends TestCase
 {
     /** @var ArrayHandlerContract */
     private $arrayHandler;
