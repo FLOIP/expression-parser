@@ -15,6 +15,7 @@ use Viamo\Floip\Evaluator\MethodNodeEvaluator\Excellent;
 use Viamo\Floip\Evaluator\EscapeNodeEvaluator;
 use Viamo\Floip\Evaluator\ConcatenationNodeEvaluator;
 use Viamo\Floip\Evaluator\MathNodeEvaluator;
+use Viamo\Floip\Evaluator\MethodNodeEvaluator\ArrayHandler;
 use Viamo\Floip\Evaluator\NullNodeEvaluator;
 
 class EvaluatorFactory
@@ -32,8 +33,8 @@ class EvaluatorFactory
 		return $this->newInstance();
 	}
 
-    protected function methodNodeInstance()
-    {
+	protected function methodNodeInstance()
+	{
 		$eval = new MethodNodeEvaluator;
 		foreach ($this->getMethodHandlers() as $methodHandler) {
 			$eval->addHandler($methodHandler);
@@ -50,20 +51,21 @@ class EvaluatorFactory
 			new Logical,
 			new Math,
 			new Text,
+			new ArrayHandler,
 		];
 	}
 
 	protected function getNodeEvaluators()
-    {
-        return [
-            new LogicNodeEvaluator,
-            new MemberNodeEvaluator,
-            new EscapeNodeEvaluator,
-            new ConcatenationNodeEvaluator,
-            new MathNodeEvaluator,
-            new NullNodeEvaluator,
+	{
+		return [
+			new LogicNodeEvaluator,
+			new MemberNodeEvaluator,
+			new EscapeNodeEvaluator,
+			new ConcatenationNodeEvaluator,
+			new MathNodeEvaluator,
+			new NullNodeEvaluator,
 			new MethodNodeEvaluator,
 			$this->methodNodeInstance()
-        ];
-    }
+		];
+	}
 }

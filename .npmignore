@@ -4,3 +4,4 @@ composer**
 .docker
 .vscode
 phpunit.xml
+vendor
