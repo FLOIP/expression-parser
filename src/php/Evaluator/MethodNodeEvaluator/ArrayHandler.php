@@ -27,6 +27,7 @@ class ArrayHandler extends AbstractMethodHandler implements ArrayHandlerInterfac
         return [
             'array',
             'in',
+			'count',
         ];
     }
 
@@ -41,4 +42,16 @@ class ArrayHandler extends AbstractMethodHandler implements ArrayHandlerInterfac
         }
         \trigger_error('Call to undefined method ' . static::class . '::' . $name . '()', \E_USER_ERROR);
     }
+
+    
+	public function count($array) {
+		if ($array instanceof Node) {
+			$array = $array->getValue();
+		}
+		if (!is_array($array)) {
+			$type = \gettype($array);
+			throw new MethodNodeException("Can only perform COUNT on an array, got $type");
+		}
+		return count($array);
+	}
 }
