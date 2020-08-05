@@ -62,4 +62,35 @@ class ArrayHandlerTest extends TestCase
             ]
         ];
     }
+
+	/**
+	 * @param $array
+	 * @param $expected
+	 * @dataProvider countProvider
+	 */
+	public function testCount($array, $expected) {
+		$search = new Node([]);
+		$search->setValue($array);
+
+		$actual = $this->arrayHandler->count($search);
+
+		$this->assertEquals($expected, $actual);
+    }
+
+	public function countProvider() {
+    	return [
+    		[
+    			[],
+				0
+			],
+			[
+				[''],
+				1
+			],
+			[
+				['hello', 'foo', 'bar'],
+				3
+			]
+		];
+    }
 }
