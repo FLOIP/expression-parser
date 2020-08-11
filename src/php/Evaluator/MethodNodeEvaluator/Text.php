@@ -74,4 +74,9 @@ class Text extends AbstractMethodHandler implements TextInterface
     {
         return \strtoupper($string);
     }
+
+    public function contains($needle, $haystack)
+    {
+        return (strpos($haystack, $needle) !== false);
+    }
 }
