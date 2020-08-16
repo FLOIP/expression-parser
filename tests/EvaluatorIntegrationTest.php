@@ -116,6 +116,23 @@ class EvaluatorIntegrationTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
+    public function testEvaluatesDateStringMethod()
+    {
+        $now = Carbon::now();
+        $expression = 'Today is @(DATE(YEAR(date.now), MONTH(date.now), DAY(date.now)))';
+        $expected = "Today is " . Carbon::parse('2020-01-02T20:20:20Z')->startOfDay();
+        $context = [
+            'date' => [
+                'now' => '2020-01-02T20:20:20Z'
+            ]
+        ];
+        $this->MethodNodeEvaluator->addHandler(new DateTime);
+
+        $result = $this->evaluator->evaluate($expression, $context);
+
+        $this->assertEquals($expected, $result);
+    }
+
     public function testEvaluatesMultipleMethods()
     {
         $now = Carbon::now();
@@ -262,6 +279,16 @@ class EvaluatorIntegrationTest extends TestCase
      * @dataProvider emailsProvider
      */
     public function testEmailsNotClobbered($expression, array $context, $expected) {
+        $result = $this->evaluator->evaluate($expression, $context);
+
+        $this->assertEquals($expected, $result);
+    }
+
+
+    /**
+     * @dataProvider dateStringProvider
+     */
+    public function testDateStrings($expression, array $context, $expected) {
         $result = $this->evaluator->evaluate($expression, $context);
 
         $this->assertEquals($expected, $result);
@@ -527,6 +554,27 @@ class EvaluatorIntegrationTest extends TestCase
                 'Contact us at foo@@contact.com',
                 [],
                 'Contact us at foo@contact.com'
+            ]
+        ];
+    }
+
+    public function dateStringProvider()
+    {
+        $now = Carbon::parse("2020-02-07 00:00:00");
+        Carbon::setTestNow($now);
+        return [
+            'vmo-2586' => [
+                "7 days from today is @(date.today + '7 days')",
+                [
+                    'date' => [
+                        '__value__' => $now->toDateTimeString(),
+                        'now' => $now->toDateString(),
+                        'today' => "2020-02-07",
+                        'yesterday' => $now->yesterday()->toDateString(),
+                        'tomorrow' => $now->tomorrow()->toDateString(),
+                    ]
+                ],
+                "7 days from today is 2020-02-14 00:00:00",
             ]
         ];
     }
