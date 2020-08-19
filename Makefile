@@ -15,7 +15,7 @@ JS_OUT=dist/$(PARSER_NAME).js
 TS_OUT=src/ts/$(PARSER_NAME).ts
 USE_DOCKER=true
 ENV=local
-DOCKER_OPTS=--rm -it
+DOCKER_OPTS=--rm
 
 .PHONY: clean default parsers parse-php parse-js parse-ts docker-php testall prepare-for-test docker-php-55 docker-php-71
 
@@ -23,7 +23,7 @@ default: parsers
 
 node_modules: package.json
 ifeq ($(USE_DOCKER),true)
-	docker run --rm -it -v `pwd`:`pwd` -w `pwd` -u `id -u` $(PEGJS_TAG) npm install
+	docker run --rm -v `pwd`:`pwd` -w `pwd` -u `id -u` $(PEGJS_TAG) npm install
 else
 	npm install
 endif
