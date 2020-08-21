@@ -132,4 +132,13 @@ interface Text extends EvaluatesMethods
      * @return string
      */
     public function upper($string);
+
+    /**
+     * Determines whether one string may be found within another string
+     * 
+     * @param string $needle
+     * @param string $haystack
+     * @return boolean
+     */
+    public function contains($needle, $haystack);
 }
