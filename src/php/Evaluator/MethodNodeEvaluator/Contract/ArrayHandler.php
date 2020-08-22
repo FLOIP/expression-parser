@@ -20,4 +20,12 @@ interface ArrayHandler extends EvaluatesMethods
      * @return bool
      */
     public function in($value, $array);
+
+	/**
+	 * Count the number of elements in an array
+	 *
+	 * @param $array
+	 * @return int
+	 */
+	public function count($array);
 }
