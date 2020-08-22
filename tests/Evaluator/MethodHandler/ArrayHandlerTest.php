@@ -7,7 +7,7 @@ use Viamo\Floip\Evaluator\Node;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\ArrayHandler;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract\ArrayHandler as ArrayHandlerContract;
 
-class ArrayHandlerHandlerTest extends TestCase
+class ArrayHandlerTest extends TestCase
 {
     /** @var ArrayHandlerContract */
     private $arrayHandler;
@@ -61,5 +61,36 @@ class ArrayHandlerHandlerTest extends TestCase
                 false
             ]
         ];
+    }
+
+	/**
+	 * @param $array
+	 * @param $expected
+	 * @dataProvider countProvider
+	 */
+	public function testCount($array, $expected) {
+		$search = new Node([]);
+		$search->setValue($array);
+
+		$actual = $this->arrayHandler->count($search);
+
+		$this->assertEquals($expected, $actual);
+    }
+
+	public function countProvider() {
+    	return [
+    		[
+    			[],
+				0
+			],
+			[
+				[''],
+				1
+			],
+			[
+				['hello', 'foo', 'bar'],
+				3
+			]
+		];
     }
 }
