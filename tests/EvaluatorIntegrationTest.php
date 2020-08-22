@@ -382,6 +382,12 @@ class EvaluatorIntegrationTest extends TestCase
                     ]
                 ], 'Your name is Big Papa'
             ],
+            'contains' => [ '@(CONTAINS(contact.needle, contact.haystack))', [
+                'contact' => [
+                    'needle' => 'Raptors',
+                    'haystack' => 'Toronto Raptors'
+                ]
+            ], 'TRUE'],
             'fixed' => ['You have @(FIXED(contact.balance, 2)) in your account', [
                 'contact' => ['balance' => '4.209922']
             ], 'You have 4.20 in your account'],
