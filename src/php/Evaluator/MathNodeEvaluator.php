@@ -24,7 +24,7 @@ class MathNodeEvaluator extends AbstractNodeEvaluator
         $operator = $node['operator'];
 
         if ($this->isDateValue($rhs) || $this->isDateValue($lhs)) {
-            return $this->evaluateDates($lhs, $rhs, $operator);
+            return $this->evaluateDates((clone $lhs), $rhs, $operator);
         }
 
         switch ($operator) {
