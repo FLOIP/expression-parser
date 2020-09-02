@@ -8,6 +8,7 @@ interface ArrayHandler extends EvaluatesMethods
      * Cast a series of values to an array.
      *
      * @param mixed ...$args
+     * @param array $context
      * @return array
      */
     public function _array();

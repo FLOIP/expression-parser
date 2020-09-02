@@ -8,8 +8,17 @@ use Viamo\Floip\Evaluator\Node;
 
 class ArrayHandler extends AbstractMethodHandler implements ArrayHandlerInterface
 {
+    public function handles() {
+        return [
+            'array',
+            'in',
+            'count',
+        ];
+    }
+
     public function _array() {
-        return array_map([$this, 'value'], func_get_args());
+        // slice the args since the last is the eval context
+        return array_map([$this, 'value'], array_slice(func_get_args(), 0, -1));
     }
 
     public function in($value, $array) {
@@ -23,12 +32,15 @@ class ArrayHandler extends AbstractMethodHandler implements ArrayHandlerInterfac
         return in_array($value, $array);
     }
 
-    public function handles() {
-        return [
-			'array',
-			'in',
-			'count',
-        ];
+    public function count($array) {
+        if ($array instanceof Node) {
+            $array = $array->getValue();
+        }
+        if (!is_array($array)) {
+            $type = \gettype($array);
+            throw new MethodNodeException("Can only perform COUNT on an array, got $type");
+        }
+        return count($array);
     }
 
     public function __call($name, array $args) {
@@ -42,16 +54,4 @@ class ArrayHandler extends AbstractMethodHandler implements ArrayHandlerInterfac
         }
         \trigger_error('Call to undefined method ' . static::class . '::' . $name . '()', \E_USER_ERROR);
     }
-
-
-	public function count($array) {
-		if ($array instanceof Node) {
-			$array = $array->getValue();
-		}
-		if (!is_array($array)) {
-			$type = \gettype($array);
-			throw new MethodNodeException("Can only perform COUNT on an array, got $type");
-		}
-		return count($array);
-	}
 }
