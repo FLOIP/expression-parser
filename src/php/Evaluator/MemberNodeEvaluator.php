@@ -5,6 +5,7 @@ namespace Viamo\Floip\Evaluator;
 use ArrayAccess;
 use Viamo\Floip\Evaluator\Exception\NodeEvaluatorException;
 use Viamo\Floip\Contract\ParsesFloip;
+use Viamo\Floip\Evaluator\MemberNodeEvaluator\MemberObject;
 use Viamo\Floip\Util\Arr;
 
 class MemberNodeEvaluator extends AbstractNodeEvaluator
@@ -41,13 +42,14 @@ class MemberNodeEvaluator extends AbstractNodeEvaluator
         }
 
         // at this point, we have a value associated with our key
-        // if it is a nested context, return its default value or JSON
+        // if it is a nested context, return its default value or a
+        // representation that, when coerced into a string, becomes JSON
         if (Arr::isArray($currentContext)) {
-            if ((is_array($currentContext) && Arr::isAssoc($currentContext)) || $currentContext instanceof ArrayAccess) {
+            if ((Arr::isArray($currentContext) && Arr::isAssoc($currentContext)) || $currentContext instanceof ArrayAccess) {
                 if (Arr::exists($currentContext, '__value__')) {
                     return $currentContext['__value__'];
                 }
-                return \json_encode($currentContext, \JSON_FORCE_OBJECT);
+                return new MemberObject($currentContext);
             }
         }
         return $currentContext;

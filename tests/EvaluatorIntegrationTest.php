@@ -15,6 +15,7 @@ use Viamo\Floip\Evaluator\MethodNodeEvaluator;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\Math;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\Text;
 use Viamo\Floip\Evaluator\ConcatenationNodeEvaluator;
+use Viamo\Floip\Evaluator\MethodNodeEvaluator\ArrayHandler;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\Logical;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\DateTime;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\Excellent;
@@ -583,5 +584,31 @@ class EvaluatorIntegrationTest extends TestCase
                 "7 days from today is 2020-02-14 00:00:00",
             ]
         ];
+    }
+
+
+    public function testInGroupsNestedMemberObject() {
+        $e = "@(IN(groups.group, contact.groups))";
+        $c = [
+            'groups' => [
+                'group' => [
+                    '__value__' => 'group0'
+                ],
+                'group1'
+            ],
+            'contact' => [
+                'groups' => [
+                    'group0' => [
+                        '__value__' => 'group0'
+                    ],
+                    ['group1' => [
+                        '__value__' => 'group1'
+                    ]]
+                ]
+            ]
+                ];
+        $this->MethodNodeEvaluator->addHandler(new ArrayHandler);
+        $this->assertEquals('TRUE', $this->evaluator->evaluate($e, $c));
+        $this->assertEquals('2', $this->evaluator->evaluate('@(COUNT(contact.groups))', $c));
     }
 }
