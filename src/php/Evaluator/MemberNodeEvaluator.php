@@ -45,7 +45,7 @@ class MemberNodeEvaluator extends AbstractNodeEvaluator
         // if it is a nested context, return its default value or a
         // representation that, when coerced into a string, becomes JSON
         if (Arr::isArray($currentContext)) {
-            if ((Arr::isArray($currentContext) && Arr::isAssoc($currentContext)) || $currentContext instanceof ArrayAccess) {
+            if ((is_array($currentContext) && Arr::isAssoc($currentContext)) || $currentContext instanceof ArrayAccess) {
                 if (Arr::exists($currentContext, '__value__')) {
                     return $currentContext['__value__'];
                 }
