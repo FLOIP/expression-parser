@@ -226,7 +226,15 @@ class ParserTest extends TestCase
                 'The date is ',
                 $this->methodNode('NOW', [])
             ]],
+            ['The date is @NOW()', [
+                'The date is ',
+                $this->methodNode('NOW', [])
+            ]],
             ['@(DATE(2012, 12, 25)) was a holiday.', [
+                $this->methodNode('DATE', ['2012', '12', '25']),
+                ' was a holiday.',
+            ]],
+            ['@DATE(2012, 12, 25) was a holiday.', [
                 $this->methodNode('DATE', ['2012', '12', '25']),
                 ' was a holiday.',
             ]],
@@ -234,7 +242,12 @@ class ParserTest extends TestCase
                 'This ',
                 $this->methodNode('upper', ['hello']),
                 ' is a function.'
-            ]]
+            ]],
+            ['This @upper("hello") is a function.', [
+                'This ',
+                $this->methodNode('upper', ['hello']),
+                ' is a function.'
+            ]],
         ];
     }
 
