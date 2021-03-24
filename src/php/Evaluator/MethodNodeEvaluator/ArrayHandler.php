@@ -2,6 +2,8 @@
 
 namespace Viamo\Floip\Evaluator\MethodNodeEvaluator;
 
+use Countable;
+use Traversable;
 use Viamo\Floip\Evaluator\Exception\MethodNodeException;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract\ArrayHandler as ArrayHandlerInterface;
 use Viamo\Floip\Evaluator\Node;
@@ -25,20 +27,27 @@ class ArrayHandler extends AbstractMethodHandler implements ArrayHandlerInterfac
         if ($array instanceof Node) {
             $array = $array->getValue();
         }
-        if (!is_array($array)) {
+        if (!(is_array($array) || $array instanceof Traversable)) {
             $type = \gettype($array);
-            throw new MethodNodeException("Can only perform IN on an array, got $type");
+            throw new MethodNodeException("Can only perform IN on an array or Traversable, got $type");
         }
-        return in_array($value, $array);
+        // we can't just do in_array since we want to inspect the __value__ of
+        // object-like values
+        foreach ($array as $item) {
+            if ($item == $value) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public function count($array) {
         if ($array instanceof Node) {
             $array = $array->getValue();
         }
-        if (!is_array($array)) {
+        if (!(is_array($array) || $array instanceof Countable)) {
             $type = \gettype($array);
-            throw new MethodNodeException("Can only perform COUNT on an array, got $type");
+            throw new MethodNodeException("Can only perform COUNT on an array or Countable, got $type");
         }
         return count($array);
     }
