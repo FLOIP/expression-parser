@@ -128,4 +128,12 @@ class Excellent extends AbstractMethodHandler implements ExcellentInterface
         }
         return $value === 'TRUE' || $value === 'FALSE';
     }
+
+    public function rand() {
+        return \lcg_value();
+    }
+
+    public function randBetween($min, $max) {
+        return \mt_rand($min, $max);
+    }
 }

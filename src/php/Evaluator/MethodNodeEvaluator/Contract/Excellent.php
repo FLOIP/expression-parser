@@ -105,4 +105,21 @@ interface Excellent extends EvaluatesMethods
      * @return bool
      */
     public function isBool($value);
+    
+    /**
+     * Returns a single random number between [0.0-1.0).
+     *
+     * @return float
+     */
+    public function rand();
+    
+    /**
+     * Returns a single random integer in the given inclusive range.
+     *
+     * @param int $min
+     * @param int $max
+     *
+     * @return int
+     */
+    public function randBetween($min, $max);
 }
