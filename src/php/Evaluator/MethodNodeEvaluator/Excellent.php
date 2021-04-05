@@ -128,4 +128,27 @@ class Excellent extends AbstractMethodHandler implements ExcellentInterface
         }
         return $value === 'TRUE' || $value === 'FALSE';
     }
+
+    public function regexMatch($text, $pattern, $group = null) {
+        $matches = [];
+
+        // we'll use / as our delimiter, escaping any already present
+        $pattern = \str_replace('/', '\/', $pattern);
+        $pattern = "/$pattern/";
+
+        $result = @\preg_match($pattern, "$text", $matches);
+        if ($result === false) {
+            if (preg_last_error() !== \PREG_NO_ERROR) {
+                throw new MethodNodeException(\error_get_last()['message']);
+            }
+            throw new MethodNodeException("No match found for regex '$pattern' on '$text'");
+        }
+        if ($group > count($matches)) {
+            throw new MethodNodeException("No match group index $group found for regex '$pattern' on '$text'");
+        }
+        if ($group > 0) {
+            return $matches[$group];
+        }
+        return $matches[0];
+    }
 }

@@ -88,6 +88,49 @@ class ExcellentHandlerTest extends TestCase
         $this->assertEquals($expected, $this->excellent->isBool($value));
     }
 
+    /**
+     * @dataProvider regexMatchProvider
+     */
+    public function testRegexMatch($args, $expected) {
+        $this->assertEquals($expected, \call_user_func_array([$this->excellent, 'regexMatch'], $args));
+    }
+
+    /**
+     * @expectedException Viamo\Floip\Evaluator\Exception\MethodNodeException
+     * @dataProvider regexMatchExceptionProvider
+     */
+    public function testRegexMatchThrows($args) {
+        \call_user_func_array([$this->excellent, 'regexMatch'], $args);
+    }
+
+    public function regexMatchProvider() {
+        return [
+            [
+                ["sda34dfddg67", "\d+"],
+                '34'
+            ],
+            [
+                ["Bob Smith", "(\w+) (\w+)", 1],
+                'Bob'
+            ],
+            [
+                ["Bob Smith", "(\w+) (\w+)", 2],
+                'Smith'
+            ]
+        ];
+    }
+
+    public function regexMatchExceptionProvider() {
+        return [
+            [
+                ["Bob Smith", "(\w+) (\w+)", 5],
+            ],
+            [
+                ["abc", "[\."],
+            ]
+        ];
+    }
+
     public function wordCountProvider()
     {
         return [

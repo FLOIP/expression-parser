@@ -105,4 +105,15 @@ interface Excellent extends EvaluatesMethods
      * @return bool
      */
     public function isBool($value);
+
+    /**
+     * Returns the first match of the regular expression pattern in text.
+     * An optional third parameter group determines which matching group will be returned.
+     *
+     * @param string $text
+     * @param string $pattern
+     * @param int $group
+     * @return string
+     */
+    public function regexMatch($text, $pattern, $group = null);
 }
