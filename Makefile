@@ -73,12 +73,12 @@ prepare-for-test: docker-php
 .ci/5.5/composer.lock: composer.json
 	make prepare-for-test
 	cp composer.json .ci/5.5/composer.json
-	$(DOCKER_RUN) -e COMPOSER=.ci/5.5/composer.json $(PHP_55) php -d memory_limit=-1 /usr/bin/composer require --dev "orchestra/testbench:~3.1.0" --no-suggest --no-plugins
+	$(DOCKER_RUN) -e COMPOSER=.ci/5.5/composer.json $(PHP_55) php -d memory_limit=-1 /usr/bin/composer require --dev "orchestra/testbench:~3.1.0" --no-suggest
 
 .ci/7.1/composer.lock: composer.json
 	make prepare-for-test
 	cp composer.json .ci/7.1/composer.json
-	$(DOCKER_RUN) -e COMPOSER=.ci/7.1/composer.json $(PHP_71) php -d memory_limit=-1 /usr/bin/composer require --dev "orchestra/testbench:~3.8.0" --no-suggest --no-plugins
+	$(DOCKER_RUN) -e COMPOSER=.ci/7.1/composer.json $(PHP_71) php -d memory_limit=-1 /usr/bin/composer require --dev "orchestra/testbench:~3.8.0" --no-suggest
 
 test55: prepare-for-test docker-php-55
 ifeq ($(ENV),local)
