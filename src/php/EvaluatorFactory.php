@@ -4,6 +4,7 @@ namespace Viamo\Floip;
 
 use Viamo\Floip\Parser;
 use Viamo\Floip\Evaluator;
+use Viamo\Floip\Evaluator\BoolNodeEvaluator;
 use Viamo\Floip\Evaluator\LogicNodeEvaluator;
 use Viamo\Floip\Evaluator\MemberNodeEvaluator;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator;
@@ -65,6 +66,7 @@ class EvaluatorFactory
 			new MathNodeEvaluator,
 			new NullNodeEvaluator,
 			new MethodNodeEvaluator,
+			new BoolNodeEvaluator,
 			$this->methodNodeInstance()
 		];
 	}

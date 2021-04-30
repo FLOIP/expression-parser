@@ -8,6 +8,7 @@ use Viamo\Floip\Evaluator;
 use PHPUnit\Framework\TestCase;
 use Viamo\Floip\Evaluator\MathNodeEvaluator;
 use Viamo\Floip\Contract\EvaluatesExpression;
+use Viamo\Floip\Evaluator\BoolNodeEvaluator;
 use Viamo\Floip\Evaluator\LogicNodeEvaluator;
 use Viamo\Floip\Evaluator\EscapeNodeEvaluator;
 use Viamo\Floip\Evaluator\MemberNodeEvaluator;
@@ -41,6 +42,8 @@ class EvaluatorIntegrationTest extends TestCase
     protected $concatenationNodeEvaluator;
     /** @var EvaluatesExpression */
     protected $nullNodeHandler;
+    /** @var EvaluatesExpression */
+    protected $boolNodeEvaluator;
 
     public function setUp()
     {
@@ -52,6 +55,7 @@ class EvaluatorIntegrationTest extends TestCase
         $this->escapeNodeEvaluator = new EscapeNodeEvaluator;
         $this->concatenationNodeEvaluator = new ConcatenationNodeEvaluator;
         $this->nullNodeHandler = new NullNodeEvaluator;
+        $this->boolNodeEvaluator = new BoolNodeEvaluator;
 
         $this->evaluator = new Evaluator($this->parser);
         $this->evaluator->addNodeEvaluator($this->MethodNodeEvaluator);
@@ -61,6 +65,7 @@ class EvaluatorIntegrationTest extends TestCase
         $this->evaluator->addNodeEvaluator($this->escapeNodeEvaluator);
         $this->evaluator->addNodeEvaluator($this->concatenationNodeEvaluator);
         $this->evaluator->addNodeEvaluator($this->nullNodeHandler);
+        $this->evaluator->addNodeEvaluator($this->boolNodeEvaluator);
     }
 
     public function testEvaluatesMemberAccess()
@@ -610,5 +615,11 @@ class EvaluatorIntegrationTest extends TestCase
         $this->MethodNodeEvaluator->addHandler(new ArrayHandler);
         $this->assertEquals('TRUE', $this->evaluator->evaluate($e, $c));
         $this->assertEquals('2', $this->evaluator->evaluate('@(COUNT(contact.groups))', $c));
+    }
+
+    public function testBoolKeywordEvaluation() {
+        $e = "Hello @(true) it's @(false) and @(true = true) but not @(true = false)";
+        $c = [];
+        $this->assertEquals('Hello TRUE it\'s FALSE and TRUE but not FALSE', $this->evaluator->evaluate($e, $c));
     }
 }
