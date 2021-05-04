@@ -129,6 +129,24 @@
     };
   ?> **/
 
+  const boolNode = function(location, value) {
+    return {
+      type: 'BOOL',
+      value: value,
+      location: location
+    }
+  }
+
+  /** <?php
+    $this->_bool = function() {
+      return [
+        'type' => 'BOOL',
+        'value' => call_user_func($this->_text),
+        'location' => call_user_func($this->_location)
+      ];
+    };
+  ?> **/  
+
 
   /** <?php
     // we can build the location information the same way as
@@ -153,6 +171,12 @@
     };
     // Bind the location fn to the parser instance to allow private access
     $this->_location = $_location->bindTo($this);
+
+    // same for text
+    $_text = function() {
+      return substr(implode($this->input), $this->peg_reportedPos, $this->peg_currPos - $this->peg_reportedPos);
+    };
+    $this->_text = $_text->bindTo($this);
   ?> **/
 }
 
@@ -197,7 +221,7 @@ Expression_Identifier = Identifier {return location() /**<?php return call_user_
  * The order they are expressed here is the order in which the parser tries
  * to match them.
  */
-Expression_Types = Escaped_Identifier / Logic / Math / Concatenation / Function / Null / Member_Access
+Expression_Types = Escaped_Identifier / Logic / Math / Concatenation / Function / Null / Bool / Member_Access
 
 /**
  * Function looks like @(SOME_METHOD(argument, argument...))
@@ -219,7 +243,7 @@ Function_Args = arg:(arg:Function_Arg_Types Arg_Delimiter? {return arg /**<?php 
  * Functions can take any other kind of expression as an argument, or quoted text, or numbers.
  * This means that you can also nest functions deeply.
  */
-Function_Arg_Types = Concatenation / Logic / Math / Function_Arg_Inner_Function / Null / Member_Access / QuotedText / $('-'* numbers+)
+Function_Arg_Types = Concatenation / Logic / Math / Function_Arg_Inner_Function / Null / Bool / Member_Access / QuotedText / $('-'* numbers+)
 Function_Arg_Inner_Function = arg:Function Arg_Delimiter? {return arg /**<?php return $arg;?> **/}
 
 /**
@@ -259,7 +283,7 @@ Logic = lhs:Logic_Arg ws* op:$logic_chars ws* rhs:(Concatenation / Logic / Logic
 }
 
 Logic_Arg = OpenParen arg:(Logic_Arg_Types / Logic) CloseParen {return arg /**<?php return $arg; ?>**/} / Logic_Arg_Types
-Logic_Arg_Types = Math / Function / Null / Member_Access / $numbers+ / QuotedText
+Logic_Arg_Types = Math / Function / Null / Bool / Member_Access / $numbers+ / QuotedText
 
 /**
  * Concatenation looks like @("Some" & " " & "String") or @(contact.firstname & " " & contact.lastname)
@@ -284,6 +308,13 @@ Null = ('null' / 'NULL') {
   return nullNode(location())
   /** <?php
     return call_user_func_array($this->_null, []);
+  ?> **/
+}
+
+Bool = ('true' / 'TRUE' / 'false' / 'FALSE') {
+  return boolNode(location(), text())
+    /** <?php
+    return call_user_func_array($this->_bool, []);
   ?> **/
 }
 

@@ -10,6 +10,7 @@ interface ParsesFloip
     const LOGIC_TYPE = 'LOGIC';
     const ESCAPE_TYPE = 'ESCAPE';
     const NULL_TYPE = 'NULL';
+    const BOOL_TYPE = 'BOOL';
     const CONCATENATION_TYPE = 'CONCATENATE';
     const IDENTIFIER = '@';
     
