@@ -192,7 +192,7 @@ Start = (Expression / $Text+)*
  */
 Expression = Escaped_Identifier / Closed_Expression / Open_Expression
 
-Open_Expression = id:Expression_Identifier ex:Member_Access {
+Open_Expression = id:Expression_Identifier ex:(Member_Access / Function) {
   // we want the location to begin with the identifier for a given expression
   ex.location.start = id.start;
   return ex;
@@ -252,7 +252,7 @@ Function_Arg_Inner_Function = arg:Function Arg_Delimiter? {return arg /**<?php r
  * member access, as long as 'google' does not exist in the context then our
  * evaluator should just print the literal 'google.com'
  */
-Member_Access = key:$((MemberVariable)+ (('.' [a-zA-Z_0-9]+)+)?) {
+Member_Access = key:$((MemberVariable)+ !OpenParen (('.' [a-zA-Z_0-9^]+)+)?) {
   return  member(key, location())
   /** <?php
     return call_user_func_array($this->_member, [$key]);
