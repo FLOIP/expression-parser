@@ -17,7 +17,7 @@ interface ArrayHandler extends EvaluatesMethods
      * Determine whether a value is contained within an array.
      *
      * @param mixed $value
-     * @param array $array
+     * @param array|Traversable $array
      * @return bool
      */
     public function in($value, $array);
@@ -25,7 +25,7 @@ interface ArrayHandler extends EvaluatesMethods
 	/**
 	 * Count the number of elements in an array
 	 *
-	 * @param $array
+	 * @param array|Countable $array
 	 * @return int
 	 */
 	public function count($array);

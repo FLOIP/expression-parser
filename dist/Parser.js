@@ -24,6 +24,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.parse = exports.SyntaxError = void 0;
 var SyntaxError = /** @class */ (function (_super) {
     __extends(SyntaxError, _super);
     function SyntaxError(message, expected, found, location) {
@@ -229,14 +230,16 @@ function peg$parse(input, options) {
     var peg$c52 = peg$literalExpectation("<=", false);
     var peg$c53 = ">=";
     var peg$c54 = peg$literalExpectation(">=", false);
-    var peg$c55 = /^[=<>]/;
-    var peg$c56 = peg$classExpectation(["=", "<", ">"], false, false);
-    var peg$c57 = "!=";
-    var peg$c58 = peg$literalExpectation("!=", false);
-    var peg$c59 = /^[\-+*\^\/]/;
-    var peg$c60 = peg$classExpectation(["-", "+", "*", "^", "/"], false, false);
-    var peg$c61 = /^[0-9.]/;
-    var peg$c62 = peg$classExpectation([["0", "9"], "."], false, false);
+    var peg$c55 = "<>";
+    var peg$c56 = peg$literalExpectation("<>", false);
+    var peg$c57 = /^[=<>]/;
+    var peg$c58 = peg$classExpectation(["=", "<", ">"], false, false);
+    var peg$c59 = "!=";
+    var peg$c60 = peg$literalExpectation("!=", false);
+    var peg$c61 = /^[\-+*\^\/]/;
+    var peg$c62 = peg$classExpectation(["-", "+", "*", "^", "/"], false, false);
+    var peg$c63 = /^[0-9.]/;
+    var peg$c64 = peg$classExpectation([["0", "9"], "."], false, false);
     var peg$currPos = 0;
     var peg$savedPos = 0;
     var peg$posDetailsCache = [{ line: 1, column: 1 }];
@@ -1924,9 +1927,9 @@ function peg$parse(input, options) {
                 }
             }
             if (s0 === peg$FAILED) {
-                if (peg$c55.test(input.charAt(peg$currPos))) {
-                    s0 = input.charAt(peg$currPos);
-                    peg$currPos++;
+                if (input.substr(peg$currPos, 2) === peg$c55) {
+                    s0 = peg$c55;
+                    peg$currPos += 2;
                 }
                 else {
                     s0 = peg$FAILED;
@@ -1935,14 +1938,26 @@ function peg$parse(input, options) {
                     }
                 }
                 if (s0 === peg$FAILED) {
-                    if (input.substr(peg$currPos, 2) === peg$c57) {
-                        s0 = peg$c57;
-                        peg$currPos += 2;
+                    if (peg$c57.test(input.charAt(peg$currPos))) {
+                        s0 = input.charAt(peg$currPos);
+                        peg$currPos++;
                     }
                     else {
                         s0 = peg$FAILED;
                         if (peg$silentFails === 0) {
                             peg$fail(peg$c58);
+                        }
+                    }
+                    if (s0 === peg$FAILED) {
+                        if (input.substr(peg$currPos, 2) === peg$c59) {
+                            s0 = peg$c59;
+                            peg$currPos += 2;
+                        }
+                        else {
+                            s0 = peg$FAILED;
+                            if (peg$silentFails === 0) {
+                                peg$fail(peg$c60);
+                            }
                         }
                     }
                 }
@@ -1959,14 +1974,14 @@ function peg$parse(input, options) {
             peg$currPos = cached.nextPos;
             return cached.result;
         }
-        if (peg$c59.test(input.charAt(peg$currPos))) {
+        if (peg$c61.test(input.charAt(peg$currPos))) {
             s0 = input.charAt(peg$currPos);
             peg$currPos++;
         }
         else {
             s0 = peg$FAILED;
             if (peg$silentFails === 0) {
-                peg$fail(peg$c60);
+                peg$fail(peg$c62);
             }
         }
         peg$resultsCache[key] = { nextPos: peg$currPos, result: s0 };
@@ -1980,14 +1995,14 @@ function peg$parse(input, options) {
             peg$currPos = cached.nextPos;
             return cached.result;
         }
-        if (peg$c61.test(input.charAt(peg$currPos))) {
+        if (peg$c63.test(input.charAt(peg$currPos))) {
             s0 = input.charAt(peg$currPos);
             peg$currPos++;
         }
         else {
             s0 = peg$FAILED;
             if (peg$silentFails === 0) {
-                peg$fail(peg$c62);
+                peg$fail(peg$c64);
             }
         }
         peg$resultsCache[key] = { nextPos: peg$currPos, result: s0 };
