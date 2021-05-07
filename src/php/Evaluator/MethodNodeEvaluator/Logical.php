@@ -16,24 +16,26 @@ class Logical extends AbstractMethodHandler implements LogicalInterface
 {
     public function _and()
     {
-        foreach (array_filter(\array_map([$this, 'value'], func_get_args()), 'is_scalar') as $arg) {
+        foreach (array_map([$this, 'value'], func_get_args()) as $arg) {
             if ($arg == false) {
                 return false;
             }
         }
         return true;
     }
+
     public function _if()
     {
-        $args = array_filter(\array_map([$this, 'value'], \func_get_args()), 'is_scalar');
+        $args = array_map([$this, 'value'], \func_get_args());
         if (count($args) != 3) {
             throw new MethodNodeException('Wrong number of args for if: ', \func_num_args());
         }
         return $args[0] ? $args[1] : $args[2];
     }
+
     public function _or()
     {
-        foreach (array_filter(\array_map([$this, 'value'], func_get_args()), 'is_scalar') as $arg) {
+        foreach (\array_map([$this, 'value'], func_get_args()) as $arg) {
             if ($arg == true) {
                 return true;
             }

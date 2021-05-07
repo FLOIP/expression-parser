@@ -623,4 +623,32 @@ class EvaluatorIntegrationTest extends TestCase
         $c = [];
         $this->assertEquals('Hello TRUE it\'s FALSE and TRUE but not FALSE', $this->evaluator->evaluate($e, $c));
     }
+
+    public function testIfWithNullValue() {
+        $e = "@(IF(ISNUMBER(flow.1620421744601_32.value), flow.1620421744601_32.value, NULL))";
+        $c = [
+            'flow' => [
+                '1620421744601_32' => [
+                    'value' => 'String'
+                ]
+            ]
+        ];
+        $this->MethodNodeEvaluator->addHandler(new Excellent);
+        $this->MethodNodeEvaluator->addHandler(new Logical);
+        $this->assertEquals('NULL', $this->evaluator->evaluate($e, $c));
+    }
+
+    public function testIfWithEmptyStringValue() {
+        $e = "@(IF(ISNUMBER(flow.1620421744601_32.value), flow.1620421744601_32.value, ''))";
+        $c = [
+            'flow' => [
+                '1620421744601_32' => [
+                    'value' => 'String'
+                ]
+            ]
+        ];
+        $this->MethodNodeEvaluator->addHandler(new Excellent);
+        $this->MethodNodeEvaluator->addHandler(new Logical);
+        $this->assertEquals('', $this->evaluator->evaluate($e, $c));
+    }    
 }

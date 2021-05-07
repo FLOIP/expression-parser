@@ -66,7 +66,6 @@ class MethodNodeEvaluator extends AbstractNodeEvaluator
             }
             return $arg;
         }, $args);
-        $args[] = $context;
 
         // if the call is in snake case, strip out the '_'
         \str_replace('_', '', $call);
