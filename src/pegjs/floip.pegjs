@@ -320,8 +320,8 @@ Bool = ('true' / 'TRUE' / 'false' / 'FALSE') {
 
 Quote = '"'
 QuotedText = SingleQuotedText / DoubleQuotedText
-SingleQuotedText = "'" ch:$[^']+ "'" {return ch; /**<?php return $ch; ?>**/}
-DoubleQuotedText = '"' ch:$[^"]+ '"' {return ch; /**<?php return $ch; ?>**/}
+SingleQuotedText = "'" ch:$[^']* "'" {return ch; /**<?php return $ch; ?>**/}
+DoubleQuotedText = '"' ch:$[^"]* '"' {return ch; /**<?php return $ch; ?>**/}
 OpenParen = '('
 CloseParen = ')'
 Identifier = '@'
