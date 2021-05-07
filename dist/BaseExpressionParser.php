@@ -1617,21 +1617,17 @@ class BaseExpressionParser {
               $this->peg_fail($this->peg_c23);
           }
         }
-        if ($s4 !== $this->peg_FAILED) {
-          while ($s4 !== $this->peg_FAILED) {
-            $s3[] = $s4;
-            if (peg_regex_test($this->peg_c22, $this->input_substr($this->peg_currPos, 1))) {
-              $s4 = $this->input_substr($this->peg_currPos, 1);
-              $this->peg_currPos++;
-            } else {
-              $s4 = $this->peg_FAILED;
-              if ($this->peg_silentFails === 0) {
-                  $this->peg_fail($this->peg_c23);
-              }
+        while ($s4 !== $this->peg_FAILED) {
+          $s3[] = $s4;
+          if (peg_regex_test($this->peg_c22, $this->input_substr($this->peg_currPos, 1))) {
+            $s4 = $this->input_substr($this->peg_currPos, 1);
+            $this->peg_currPos++;
+          } else {
+            $s4 = $this->peg_FAILED;
+            if ($this->peg_silentFails === 0) {
+                $this->peg_fail($this->peg_c23);
             }
           }
-        } else {
-          $s3 = $this->peg_FAILED;
         }
         if ($s3 !== $this->peg_FAILED) {
           $s2 = $this->input_substr($s2, $this->peg_currPos - $s2);
@@ -1702,21 +1698,17 @@ class BaseExpressionParser {
               $this->peg_fail($this->peg_c25);
           }
         }
-        if ($s4 !== $this->peg_FAILED) {
-          while ($s4 !== $this->peg_FAILED) {
-            $s3[] = $s4;
-            if (peg_regex_test($this->peg_c24, $this->input_substr($this->peg_currPos, 1))) {
-              $s4 = $this->input_substr($this->peg_currPos, 1);
-              $this->peg_currPos++;
-            } else {
-              $s4 = $this->peg_FAILED;
-              if ($this->peg_silentFails === 0) {
-                  $this->peg_fail($this->peg_c25);
-              }
+        while ($s4 !== $this->peg_FAILED) {
+          $s3[] = $s4;
+          if (peg_regex_test($this->peg_c24, $this->input_substr($this->peg_currPos, 1))) {
+            $s4 = $this->input_substr($this->peg_currPos, 1);
+            $this->peg_currPos++;
+          } else {
+            $s4 = $this->peg_FAILED;
+            if ($this->peg_silentFails === 0) {
+                $this->peg_fail($this->peg_c25);
             }
           }
-        } else {
-          $s3 = $this->peg_FAILED;
         }
         if ($s3 !== $this->peg_FAILED) {
           $s2 = $this->input_substr($s2, $this->peg_currPos - $s2);

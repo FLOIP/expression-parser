@@ -1619,23 +1619,18 @@ function peg$parse(input, options) {
                     peg$fail(peg$c37);
                 }
             }
-            if (s4 !== peg$FAILED) {
-                while (s4 !== peg$FAILED) {
-                    s3.push(s4);
-                    if (peg$c36.test(input.charAt(peg$currPos))) {
-                        s4 = input.charAt(peg$currPos);
-                        peg$currPos++;
-                    }
-                    else {
-                        s4 = peg$FAILED;
-                        if (peg$silentFails === 0) {
-                            peg$fail(peg$c37);
-                        }
+            while (s4 !== peg$FAILED) {
+                s3.push(s4);
+                if (peg$c36.test(input.charAt(peg$currPos))) {
+                    s4 = input.charAt(peg$currPos);
+                    peg$currPos++;
+                }
+                else {
+                    s4 = peg$FAILED;
+                    if (peg$silentFails === 0) {
+                        peg$fail(peg$c37);
                     }
                 }
-            }
-            else {
-                s3 = peg$FAILED;
             }
             if (s3 !== peg$FAILED) {
                 s2 = input.substring(s2, peg$currPos);
@@ -1708,23 +1703,18 @@ function peg$parse(input, options) {
                     peg$fail(peg$c40);
                 }
             }
-            if (s4 !== peg$FAILED) {
-                while (s4 !== peg$FAILED) {
-                    s3.push(s4);
-                    if (peg$c39.test(input.charAt(peg$currPos))) {
-                        s4 = input.charAt(peg$currPos);
-                        peg$currPos++;
-                    }
-                    else {
-                        s4 = peg$FAILED;
-                        if (peg$silentFails === 0) {
-                            peg$fail(peg$c40);
-                        }
+            while (s4 !== peg$FAILED) {
+                s3.push(s4);
+                if (peg$c39.test(input.charAt(peg$currPos))) {
+                    s4 = input.charAt(peg$currPos);
+                    peg$currPos++;
+                }
+                else {
+                    s4 = peg$FAILED;
+                    if (peg$silentFails === 0) {
+                        peg$fail(peg$c40);
                     }
                 }
-            }
-            else {
-                s3 = peg$FAILED;
             }
             if (s3 !== peg$FAILED) {
                 s2 = input.substring(s2, peg$currPos);
