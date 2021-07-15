@@ -12,7 +12,7 @@ class TestResult implements TestResultInterface
     /** @var mixed $match */
     private $match;
 
-    public function __construct($value, $match) {
+    public function __construct($value = false, $match = null) {
         $this->value = $value;
         $this->match = $match;
     }

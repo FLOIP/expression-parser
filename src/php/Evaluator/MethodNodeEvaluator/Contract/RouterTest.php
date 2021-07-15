@@ -43,11 +43,11 @@ interface RouterTest extends EvaluatesMethods
     /**
      * Tests whether the category of a result on of the passed in categories
      *
-     * @param string $result
-     * @param string $categories
+     * @param array|Traversable|Node $result
+     * @param string ...$categories
      * @return TestResult
      */
-    public function has_category($result, $categories);
+    public function has_category($result);
 
     /**
      * Tests whether text contains a date formatted according to our environment.
