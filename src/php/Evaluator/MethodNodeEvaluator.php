@@ -5,6 +5,8 @@ namespace Viamo\Floip\Evaluator;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract\EvaluatesMethods;
 use Viamo\Floip\Evaluator\Exception\NodeEvaluatorException;
 use Viamo\Floip\Contract\ParsesFloip;
+use Viamo\Floip\Evaluator\Exception\MethodNodeException;
+use Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract\Chainable;
 
 /**
  * Evaluates METHOD nodes -- expressions that look like @(FUNC(arg...))
@@ -72,7 +74,20 @@ class MethodNodeEvaluator extends AbstractNodeEvaluator
         $call = \strtolower($call);
 
         $handler = $this->getHandler($call);
-        return call_user_func_array([$handler, $call], $args);
+
+        $result = call_user_func_array([$handler, $call], $args);
+
+        if (isset($node['chain'])) {
+            foreach ($node['chain'] as $chain) {
+                if ($result instanceof Chainable) {
+                    $result = $result->chain($chain);
+                } else {
+                    throw new MethodNodeException("Must chain on Chainable object, got " . \gettype($result));
+                }
+            }
+        }
+
+        return $result;
     }
 
     public function handles()

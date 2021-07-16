@@ -20,20 +20,22 @@
     ];
   };
   ?> **/
-  const method = function(call, args, location) {
+  const method = function(call, args, chain, location) {
     return {
       type: 'METHOD',
       call: call,
       args: args,
+      chain: chain,
       location: location
     }
   }
   /** <?php
-  $this->_method = function($call, $args) {
+  $this->_method = function($call, $args, $chain) {
     return [
       'type' => 'METHOD',
       'call' => $call,
       'args' => $args,
+      'chain' => $chain,
       'location' => call_user_func($this->_location)
     ];
   };
@@ -227,12 +229,17 @@ Expression_Types = Escaped_Identifier / Logic / Math / Concatenation / Function 
  * Function looks like @(SOME_METHOD(argument, argument...))
  * Functions always wrap their arguments in parens.
  */
-Function = call:$valid_expression_characters* OpenParen args:( Function_Args* ) CloseParen {
-  return method(call, args, location())
+Function = call:$valid_expression_characters* OpenParen args:( Function_Args* ) CloseParen chain:Chain_Function* {
+  return method(call, args, chain, location())
   /** <?php
-    return call_user_func_array($this->_method, [$call, $args]);
+    return call_user_func_array($this->_method, [$call, $args, $chain]);
   ?> **/
   }
+
+Chain_Function = '.' call:$valid_expression_characters+ {
+  return call
+  /** <?php return $call; ?> **/
+}
 
 /**
  * Function arguments are variadic and comma delimited
