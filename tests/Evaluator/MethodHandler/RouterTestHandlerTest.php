@@ -416,6 +416,372 @@ class RouterTestHandlerTest extends TestCase
         ];
     }
 
+    /**
+     * @dataProvider hasNumberProvider
+     */
+    public function testHasNumber($args, $expected) {
+        $result = $this->handler
+        ->has_number($args[0])
+        ->getValue();
+
+        $this->assertEquals($expected, $result);
+    }
+
+    /**
+     * @dataProvider hasNumberMatchProvider
+     */
+    public function testHasNumberMatch($args, $expected) {
+        $result = $this->handler
+        ->has_number($args[0])
+        ->getMatch();
+
+        $this->assertEquals($expected, $result);
+    }
+
+    public function hasNumberProvider() {
+        return [
+            [["the number is 42"], true],
+            [["العدد ٤٢"], true],
+            [["the number is forty two"], false]
+        ];
+    }
+
+    public function hasNumberMatchProvider() {
+        return [
+            [["the number is 42"], 42],
+            [["العدد ٤٢"], "٤٢"]
+        ];
+    }
+    
+    /**
+     * @dataProvider hasNumberBetweenProvider
+     */
+    public function testHasNumberBetween($args, $expected) {
+        $result = $this->handler
+        ->has_number_between($args[0], $args[1], $args[2])
+        ->getValue();
+
+        $this->assertEquals($expected, $result);
+    }
+
+    /**
+     * @dataProvider hasNumberBetweenMatchProvider
+     */
+    public function testHasNumberBetweenMatch($args, $expected) {
+        $result = $this->handler
+        ->has_number_between($args[0], $args[1], $args[2])
+        ->getMatch();
+
+        $this->assertEquals($expected, $result);
+    }
+
+    public function hasNumberBetweenProvider() {
+        return [
+            [["the number is 42", 40, 44], true],
+            [["the number is 42", 50, 60], false],
+            [["the number is not there", 50, 60], false],
+        ];
+    }
+
+    public function hasNumberBetweenMatchProvider() {
+        return [
+            [["the number is 42", 40, 44], 42],
+        ];
+    }
+
+    /**
+     * @dataProvider hasNumberEqProvider
+     */
+    public function testHasNumberEq($args, $expected) {
+        $result = $this->handler
+        ->has_number_eq($args[0], $args[1])
+        ->getValue();
+
+        $this->assertEquals($expected, $result);
+    }
+
+    /**
+     * @dataProvider hasNumberEqMatchProvider
+     */
+    public function testHasNumberEqMatch($args, $expected) {
+        $result = $this->handler
+        ->has_number_eq($args[0], $args[1])
+        ->getMatch();
+
+        $this->assertEquals($expected, $result);
+    }
+
+    public function hasNumberEqProvider() {
+        return [
+            [["the number is 42", 42], true],
+            [["the number is not 42", 40], false],
+            [["the number is not there", 40], false],
+        ];
+    }
+
+    public function hasNumberEqMatchProvider() {
+        return [
+            [["the number is 42", 42], 42],
+        ];
+    }
+
+    /**
+     * @dataProvider hasNumberGtProvider
+     */
+    public function testHasNumberGt($args, $expected) {
+        $result = $this->handler
+        ->has_number_gt($args[0], $args[1])
+        ->getValue();
+
+        $this->assertEquals($expected, $result);
+    }
+
+    /**
+     * @dataProvider hasNumberGtMatchProvider
+     */
+    public function testHasNumberGtMatch($args, $expected) {
+        $result = $this->handler
+        ->has_number_gt($args[0], $args[1])
+        ->getMatch();
+
+        $this->assertEquals($expected, $result);
+    }
+
+    public function hasNumberGtProvider() {
+        return [
+            [["the number is 42", 40], true],
+            [["the number is 42", 42], false],
+            [["the number is not there", 40], false],
+        ];
+    }
+
+    public function hasNumberGtMatchProvider() {
+        return [
+            [["the number is 42", 40], 42],
+        ];
+    }
+
+    /**
+     * @dataProvider hasNumberGteProvider
+     */
+    public function testHasNumberGte($args, $expected) {
+        $result = $this->handler
+        ->has_number_gte($args[0], $args[1])
+        ->getValue();
+
+        $this->assertEquals($expected, $result);
+    }
+
+    /**
+     * @dataProvider hasNumberGteMatchProvider
+     */
+    public function testHasNumberGteMatch($args, $expected) {
+        $result = $this->handler
+        ->has_number_gte($args[0], $args[1])
+        ->getMatch();
+
+        $this->assertEquals($expected, $result);
+    }
+
+    public function hasNumberGteProvider() {
+        return [
+            [["the number is 42", 42], true],
+            [["the number is 42", 45], false],
+            [["the number is not there", 40], false],
+        ];
+    }
+
+    public function hasNumberGteMatchProvider() {
+        return [
+            [["the number is 42", 42], 42],
+        ];
+    }
+
+    /**
+     * @dataProvider hasNumberLtProvider
+     */
+    public function testHasNumberLt($args, $expected) {
+        $result = $this->handler
+        ->has_number_lt($args[0], $args[1])
+        ->getValue();
+
+        $this->assertEquals($expected, $result);
+    }
+
+    /**
+     * @dataProvider hasNumberLtMatchProvider
+     */
+    public function testHasNumberLtMatch($args, $expected) {
+        $result = $this->handler
+        ->has_number_lt($args[0], $args[1])
+        ->getMatch();
+
+        $this->assertEquals($expected, $result);
+    }
+
+    public function hasNumberLtProvider() {
+        return [
+            [["the number is 42", 44], true],
+            [["the number is 42", 40], false],
+            [["the number is not there", 40], false],
+        ];
+    }
+
+    public function hasNumberLtMatchProvider() {
+        return [
+            [["the number is 42", 44], 42],
+        ];
+    }
+
+    /**
+     * @dataProvider hasNumberLteProvider
+     */
+    public function testHasNumberLte($args, $expected) {
+        $result = $this->handler
+        ->has_number_lte($args[0], $args[1])
+        ->getValue();
+
+        $this->assertEquals($expected, $result);
+    }
+
+    /**
+     * @dataProvider hasNumberLteMatchProvider
+     */
+    public function testHasNumberLteMatch($args, $expected) {
+        $result = $this->handler
+        ->has_number_lte($args[0], $args[1])
+        ->getMatch();
+
+        $this->assertEquals($expected, $result);
+    }
+
+    public function hasNumberLteProvider() {
+        return [
+            [["the number is 42", 42], true],
+            [["the number is 42", 40], false],
+            [["the number is not there", 40], false],
+        ];
+    }
+
+    public function hasNumberLteMatchProvider() {
+        return [
+            [["the number is 42", 42], 42],
+        ];
+    }
+
+    /**
+     * @dataProvider hasOnlyPhraseProvider
+     */
+    public function testHasOnlyPhrase($args, $expected) {
+        $result = $this->handler
+        ->has_only_phrase($args[0], $args[1])
+        ->getValue();
+
+        $this->assertEquals($expected, $result);
+    }
+
+    /**
+     * @dataProvider hasOnlyPhraseMatchProvider
+     */
+    public function testHasOnlyPhraseMatch($args, $expected) {
+        $result = $this->handler
+        ->has_only_phrase($args[0], $args[1])
+        ->getMatch();
+
+        $this->assertEquals($expected, $result);
+    }
+
+    public function hasOnlyPhraseProvider() {
+        return [
+            [["Quick Brown", "quick brown"], true],
+            [["The Quick Brown Fox", "quick brown"], false],
+            [["the Quick Brown fox", ""], false],
+            [["", "",], true],
+            [["The Quick Brown Fox", "red fox"], false],
+        ];
+    }
+
+    public function hasOnlyPhraseMatchProvider() {
+        return [
+            [["Quick Brown", "quick brown"], "quick brown"],
+            [["", ""], ""]
+        ];
+    }
+
+    /**
+     * @dataProvider hasOnlyTextProvider
+     */
+    public function testHasOnlyText($args, $expected) {
+        $result = $this->handler
+        ->has_only_text($args[0], $args[1])
+        ->getValue();
+
+        $this->assertEquals($expected, $result);
+    }
+
+    /**
+     * @dataProvider hasOnlyTextMatchProvider
+     */
+    public function testHasOnlyTextMatch($args, $expected) {
+        $result = $this->handler
+        ->has_only_text($args[0], $args[1])
+        ->getMatch();
+
+        $this->assertEquals($expected, $result);
+    }
+
+    public function hasOnlyTextProvider() {
+        return [
+            [["foo", "foo"], true],
+            [["foo", "FOO"], false],
+            [["foo", "bar"], false],
+            [["foo", " foo "], false],
+            [["The Quick Brown Fox", "red fox"], false],
+        ];
+    }
+
+    public function hasOnlyTextMatchProvider() {
+        return [
+            [["foo", "foo"], "foo"],
+            [["FOO", "FOO"], "FOO"],
+        ];
+    }
+
+    /**
+     * @dataProvider hasPatternProvider
+     */
+    public function testHasPattern($args, $expected) {
+        $result = $this->handler
+        ->has_pattern($args[0], $args[1])
+        ->getValue();
+
+        $this->assertEquals($expected, $result);
+    }
+
+    /**
+     * @dataProvider hasPatternMatchProvider
+     */
+    public function testHasPatternMatch($args, $expected) {
+        $result = $this->handler
+        ->has_pattern($args[0], $args[1])
+        ->getMatch();
+
+        $this->assertEquals($expected, $result);
+    }
+
+    public function hasPatternProvider() {
+        return [
+            [["Buy cheese please", "buy (\w+)"], true],
+            [["Sell cheese please", "buy (\w+)"], false],
+        ];
+    }
+
+    public function hasPatternMatchProvider() {
+        return [
+            [["Buy cheese please", "buy (\w+)"], "Buy cheese"],
+        ];
+    }
+
     private function getContactData() {
         return json_decode(
 <<<JSON

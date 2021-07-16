@@ -11,6 +11,7 @@ use Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract\RouterTest as RouterTestI
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\TestResult;
 use Viamo\Floip\Evaluator\Node;
 
+// todo: do we need utf aware string comparison?
 class RouterTest implements RouterTestInterface
 {
     /**
@@ -237,25 +238,113 @@ class RouterTest implements RouterTestInterface
         return new TestResult;
     }
 
-    public function has_number($text) { }
+    const NUMBER_REGEX = "/\d+([.,]\d+)?/u";
 
-    public function has_number_between($text, $min, $max) { }
+    public function has_number($text) {
+        $matches = [];
 
-    public function has_number_eq($text, $value) { }
+        $result = \preg_match_all(self::NUMBER_REGEX, $text, $matches);
 
-    public function has_number_gt($text, $min) { }
+        if ($result) {
+            return new TestResult(true, $matches[0][0]);
+        } else {
+            return new TestResult;
+        }
+    }
 
-    public function has_number_gte($text, $min) { }
+    private function assertNumeric($values) {
+        foreach (\func_get_args() as $value) {
+            if (!(\is_numeric($value))) {
+                throw new MethodNodeException("Value must be a number has_number_between: " . \json_encode(\func_get_args()));
+            }
+        }
+    }
 
-    public function has_number_lt($text, $max) { }
+    private function has_number_callback($text, callable $closure) {
+        $matches = [];
+        \preg_match_all(self::NUMBER_REGEX, $text, $matches);
 
-    public function has_number_lte($text, $max) { }
+        foreach ($matches[0] as $match) {
+            if ($closure($match)) {
+                return new TestResult(true, $match);
+            }
+        }
+        return new TestResult;
+    }
 
-    public function has_only_phrase($text, $phrase) { }
+    public function has_number_between($text, $min, $max) {
+        $this->assertNumeric($min, $max);
+        return $this->has_number_callback($text, function ($number) use ($min, $max) {
+            return $number >= $min && $number <= $max;
+        });
+    }
 
-    public function has_only_text($text1, $text2) { }
+    public function has_number_eq($text, $value) {
+        $this->assertNumeric($value);
+        return $this->has_number_callback($text, function ($number) use ($value) {
+            return $number == $value;
+        });
+    }
 
-    public function has_pattern($text, $pattern) { }
+    public function has_number_gt($text, $min) {
+        $this->assertNumeric($min);
+        return $this->has_number_callback($text, function ($number) use ($min) {
+            return $number > $min;
+        });
+    }
+
+    public function has_number_gte($text, $min) {
+        $this->assertNumeric($min);
+        return $this->has_number_callback($text, function ($number) use ($min) {
+            return $number >= $min;
+        });
+    }
+
+    public function has_number_lt($text, $max) {
+        $this->assertNumeric($max);
+        return $this->has_number_callback($text, function ($number) use ($max) {
+            return $number < $max;
+        });
+    }
+
+    public function has_number_lte($text, $max) {
+        $this->assertNumeric($max);
+        return $this->has_number_callback($text, function ($number) use ($max) {
+            return $number <= $max;
+        });
+    }
+
+    public function has_only_phrase($text, $phrase) {
+        $result = \strcasecmp(trim($text), trim($phrase));
+
+        if ($result === 0) {
+            return new TestResult(true, $phrase);
+        } else {
+            return new TestResult;
+        }
+    }
+
+    public function has_only_text($text1, $text2) {
+        if ($text1 === $text2) {
+            return new TestResult(true, $text1);
+        } else {
+            return new TestResult;
+        }
+    }
+
+    // todo this should return an object that has an "extra" field... what's that?
+    public function has_pattern($text, $pattern) {
+        $pattern = \addcslashes($pattern, '%');
+
+        $matches = [];
+        $result = \preg_match("%$pattern%i", $text, $matches);
+
+        if ($result) {
+            return new TestResult(true, $matches[0]);
+        } else {
+            return new TestResult;
+        }
+    }
 
     public function has_phone($text, $country_code) { }
 
