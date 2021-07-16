@@ -325,10 +325,20 @@ Bool = ('true' / 'TRUE' / 'false' / 'FALSE') {
   ?> **/
 }
 
-Quote = '"'
+
+Backslash = '\\'
+
+// quote marks can be escaped with a backslash
+EscapedSingleQuote = Backslash ch:"'" {return ch; /**<?php return $ch; ?>**/}
+EscapedDoubleQuote = Backslash ch:'"' {return ch; /**<?php return $ch; ?>**/}
+// text can be quoted with either single or double quotes
 QuotedText = SingleQuotedText / DoubleQuotedText
-SingleQuotedText = "'" ch:$[^']* "'" {return ch; /**<?php return $ch; ?>**/}
-DoubleQuotedText = '"' ch:$[^"]* '"' {return ch; /**<?php return $ch; ?>**/}
+// inside a quoted string can be escaped quotes
+InnerDoubleQuotedText = ch:(EscapedDoubleQuote / [^"])* {return ch.join('') /**<?php return implode($ch); ?>**/}
+InnerSingleQuotedText = ch:(EscapedSingleQuote / [^'])* {return ch.join('') /**<?php return implode($ch); ?>**/}
+SingleQuotedText = "'" ch:InnerSingleQuotedText "'" {return ch; /**<?php return $ch; ?>**/}
+DoubleQuotedText = '"' ch:InnerDoubleQuotedText '"' {return ch; /**<?php return $ch; ?>**/}
+
 OpenParen = '('
 CloseParen = ')'
 Identifier = '@'
