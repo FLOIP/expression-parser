@@ -41,8 +41,8 @@ class RouterTestHandlerTest extends TestCase
 
     public function hasAllWordsProvider() {
         return [
-            [["the quick brown FOX", "the fox"], true],
-            [["the quick brown FOX", "red fox"], false]
+            [["the quick brown FOX", "the fox"], "TRUE"],
+            [["the quick brown FOX", "red fox"], "FALSE"]
         ];
     }
 
@@ -77,8 +77,8 @@ class RouterTestHandlerTest extends TestCase
 
     public function hasAnyWordProvider() {
         return [
-            [["The Quick Brown Fox", "fox quick"], true],
-            [["The Quick Brown Fox", "foo bar"], false],
+            [["The Quick Brown Fox", "fox quick"], "TRUE"],
+            [["The Quick Brown Fox", "foo bar"], "FALSE"],
         ];
     }
 
@@ -113,9 +113,9 @@ class RouterTestHandlerTest extends TestCase
 
     public function hasBeginningProvider() {
         return [
-            [["The Quick Brown Fox", "the quick"], true],
-            [["The Quick Brown Fox", "quick brown"], false],
-            [["The Quick Brown Fox", "the   quick"], false],
+            [["The Quick Brown Fox", "the quick"], "TRUE"],
+            [["The Quick Brown Fox", "quick brown"], "FALSE"],
+            [["The Quick Brown Fox", "the   quick"], "FALSE"],
         ];
     }
 
@@ -150,8 +150,8 @@ class RouterTestHandlerTest extends TestCase
 
     public function hasCategoryProvider() {
         return [
-            [[$this->getResultsData()['webhook'], 'Success', 'Failure' ], true],
-            [[$this->getResultsData()['webhook'], 'Failure' ], false],
+            [[$this->getResultsData()['webhook'], 'Success', 'Failure' ], "TRUE"],
+            [[$this->getResultsData()['webhook'], 'Failure' ], "FALSE"],
         ];
     }
 
@@ -185,8 +185,8 @@ class RouterTestHandlerTest extends TestCase
 
     public function hasDateProvider() {
         return [
-            ["the date is 15/01/2017", true],
-            ["there is no date here, just a year 2017", false],
+            ["the date is 15/01/2017", "TRUE"],
+            ["there is no date here, just a year 2017", "FALSE"],
         ];
     }
 
@@ -220,8 +220,8 @@ class RouterTestHandlerTest extends TestCase
 
     public function hasDateEqProvider() {
         return [
-            [["the date is 15/01/2017", "2017-01-15"], true],
-            [["there is no date here, just a year 2017", "2017-06-01"], false],
+            [["the date is 15/01/2017", "2017-01-15"], "TRUE"],
+            [["there is no date here, just a year 2017", "2017-06-01"], "FALSE"],
         ];
     }
 
@@ -256,9 +256,9 @@ class RouterTestHandlerTest extends TestCase
 
     public function hasDateGtProvider() {
         return [
-            [["the date is 15/01/2017", "2017-01-01"], true],
-            [["the date is 15/01/2017", "2017-03-15"], false],
-            [["there is no date here, just a year 2017", "2017-06-01"], false]
+            [["the date is 15/01/2017", "2017-01-01"], "TRUE"],
+            [["the date is 15/01/2017", "2017-03-15"], "FALSE"],
+            [["there is no date here, just a year 2017", "2017-06-01"], "FALSE"]
         ];
     }
 
@@ -295,9 +295,9 @@ class RouterTestHandlerTest extends TestCase
 
     public function hasDistrictProvider() {
         return [
-            [["Gasabo", "Kigali"], true],
-            [["I live in Gasabo", "Kigali"], true],
-            [["Gasabo", "Boston"], false],
+            [["Gasabo", "Kigali"], "TRUE"],
+            [["I live in Gasabo", "Kigali"], "TRUE"],
+            [["Gasabo", "Boston"], "FALSE"],
         ];
     }
 
@@ -333,9 +333,9 @@ class RouterTestHandlerTest extends TestCase
 
     public function hasEmailProvider() {
         return [
-            [["my email is foo1@bar.com, please respond"], true],
-            [["my email is <foo@bar2.com>"], true],
-            [["i'm not sharing my email"], false]
+            [["my email is foo1@bar.com, please respond"], "TRUE"],
+            [["my email is <foo@bar2.com>"], "TRUE"],
+            [["i'm not sharing my email"], "FALSE"]
         ];
     }
 
@@ -370,8 +370,8 @@ class RouterTestHandlerTest extends TestCase
 
     public function hasGroupProvider() {
         return [
-            [[$this->getContactData()['groups'], "b7cf0d83-f1c9-411c-96fd-c511a4cfa86d"], true],
-            [[$this->getContactData()['groups'], "97fe7029-3a15-4005-b0c7-277b884fc1d5"], false],
+            [[$this->getContactData()['groups'], "b7cf0d83-f1c9-411c-96fd-c511a4cfa86d"], "TRUE"],
+            [[$this->getContactData()['groups'], "97fe7029-3a15-4005-b0c7-277b884fc1d5"], "FALSE"],
         ];
     }
 
@@ -405,9 +405,9 @@ class RouterTestHandlerTest extends TestCase
 
     public function hasIntentProvider() {
         return [
-            [[$this->getResultsData()['intent'], "book_flight", 0.5], true],
-            [[$this->getResultsData()['intent'], "book_hotel", 0.2], true],
-            [[$this->getResultsData()['intent'], "book_car", 0.9], false],
+            [[$this->getResultsData()['intent'], "book_flight", 0.5], "TRUE"],
+            [[$this->getResultsData()['intent'], "book_hotel", 0.2], "TRUE"],
+            [[$this->getResultsData()['intent'], "book_car", 0.9], "FALSE"],
         ];
     }
 
@@ -440,9 +440,9 @@ class RouterTestHandlerTest extends TestCase
 
     public function hasNumberProvider() {
         return [
-            [["the number is 42"], true],
-            [["العدد ٤٢"], true],
-            [["the number is forty two"], false]
+            [["the number is 42"], "TRUE"],
+            [["العدد ٤٢"], "TRUE"],
+            [["the number is forty two"], "FALSE"]
         ];
     }
 
@@ -477,9 +477,9 @@ class RouterTestHandlerTest extends TestCase
 
     public function hasNumberBetweenProvider() {
         return [
-            [["the number is 42", 40, 44], true],
-            [["the number is 42", 50, 60], false],
-            [["the number is not there", 50, 60], false],
+            [["the number is 42", 40, 44], "TRUE"],
+            [["the number is 42", 50, 60], "FALSE"],
+            [["the number is not there", 50, 60], "FALSE"],
         ];
     }
 
@@ -513,9 +513,9 @@ class RouterTestHandlerTest extends TestCase
 
     public function hasNumberEqProvider() {
         return [
-            [["the number is 42", 42], true],
-            [["the number is not 42", 40], false],
-            [["the number is not there", 40], false],
+            [["the number is 42", 42], "TRUE"],
+            [["the number is not 42", 40], "FALSE"],
+            [["the number is not there", 40], "FALSE"],
         ];
     }
 
@@ -549,9 +549,9 @@ class RouterTestHandlerTest extends TestCase
 
     public function hasNumberGtProvider() {
         return [
-            [["the number is 42", 40], true],
-            [["the number is 42", 42], false],
-            [["the number is not there", 40], false],
+            [["the number is 42", 40], "TRUE"],
+            [["the number is 42", 42], "FALSE"],
+            [["the number is not there", 40], "FALSE"],
         ];
     }
 
@@ -585,9 +585,9 @@ class RouterTestHandlerTest extends TestCase
 
     public function hasNumberGteProvider() {
         return [
-            [["the number is 42", 42], true],
-            [["the number is 42", 45], false],
-            [["the number is not there", 40], false],
+            [["the number is 42", 42], "TRUE"],
+            [["the number is 42", 45], "FALSE"],
+            [["the number is not there", 40], "FALSE"],
         ];
     }
 
@@ -621,9 +621,9 @@ class RouterTestHandlerTest extends TestCase
 
     public function hasNumberLtProvider() {
         return [
-            [["the number is 42", 44], true],
-            [["the number is 42", 40], false],
-            [["the number is not there", 40], false],
+            [["the number is 42", 44], "TRUE"],
+            [["the number is 42", 40], "FALSE"],
+            [["the number is not there", 40], "FALSE"],
         ];
     }
 
@@ -657,9 +657,9 @@ class RouterTestHandlerTest extends TestCase
 
     public function hasNumberLteProvider() {
         return [
-            [["the number is 42", 42], true],
-            [["the number is 42", 40], false],
-            [["the number is not there", 40], false],
+            [["the number is 42", 42], "TRUE"],
+            [["the number is 42", 40], "FALSE"],
+            [["the number is not there", 40], "FALSE"],
         ];
     }
 
@@ -693,11 +693,11 @@ class RouterTestHandlerTest extends TestCase
 
     public function hasOnlyPhraseProvider() {
         return [
-            [["Quick Brown", "quick brown"], true],
-            [["The Quick Brown Fox", "quick brown"], false],
-            [["the Quick Brown fox", ""], false],
-            [["", "",], true],
-            [["The Quick Brown Fox", "red fox"], false],
+            [["Quick Brown", "quick brown"], "TRUE"],
+            [["The Quick Brown Fox", "quick brown"], "FALSE"],
+            [["the Quick Brown fox", ""], "FALSE"],
+            [["", "",], "TRUE"],
+            [["The Quick Brown Fox", "red fox"], "FALSE"],
         ];
     }
 
@@ -732,11 +732,11 @@ class RouterTestHandlerTest extends TestCase
 
     public function hasOnlyTextProvider() {
         return [
-            [["foo", "foo"], true],
-            [["foo", "FOO"], false],
-            [["foo", "bar"], false],
-            [["foo", " foo "], false],
-            [["The Quick Brown Fox", "red fox"], false],
+            [["foo", "foo"], "TRUE"],
+            [["foo", "FOO"], "FALSE"],
+            [["foo", "bar"], "FALSE"],
+            [["foo", " foo "], "FALSE"],
+            [["The Quick Brown Fox", "red fox"], "FALSE"],
         ];
     }
 
@@ -771,8 +771,8 @@ class RouterTestHandlerTest extends TestCase
 
     public function hasPatternProvider() {
         return [
-            [["Buy cheese please", "buy (\w+)"], true],
-            [["Sell cheese please", "buy (\w+)"], false],
+            [["Buy cheese please", "buy (\w+)"], "TRUE"],
+            [["Sell cheese please", "buy (\w+)"], "FALSE"],
         ];
     }
 
@@ -806,9 +806,9 @@ class RouterTestHandlerTest extends TestCase
 
     public function hasPhoneProvider() {
         return [
-            [["my number is +12067799294 thanks", null], true],
-            [["my number is 2067799294", "US"], true],
-            [["my number is none of your business", "US"], false],
+            [["my number is +12067799294 thanks", null], "TRUE"],
+            [["my number is 2067799294", "US"], "TRUE"],
+            [["my number is none of your business", "US"], "FALSE"],
         ];
     }
 
@@ -844,8 +844,8 @@ class RouterTestHandlerTest extends TestCase
 
     public function hasPhraseProvider() {
         return [
-            [["the quick brown fox", "brown fox"], true],
-            [["the Quick Brown fox", "quick fox"], false],
+            [["the quick brown fox", "brown fox"], "TRUE"],
+            [["the Quick Brown fox", "quick fox"], "FALSE"],
         ];
     }
 
@@ -880,10 +880,10 @@ class RouterTestHandlerTest extends TestCase
 
     public function hasTextProvider() {
         return [
-            [["quick brown"], true],
-            [[""], false],
-            [[" \n"], false],
-            [[123], true]
+            [["quick brown"], "TRUE"],
+            [[""], "FALSE"],
+            [[" \n"], "FALSE"],
+            [[123], "TRUE"]
         ];
     }
 
@@ -918,10 +918,10 @@ class RouterTestHandlerTest extends TestCase
 
     public function hasTimeProvider() {
         return [
-            [["the time is 10:30"], true],
-            [["the time is 10 PM"], true],
-            [["the time is 10:30:45"], true],
-            [["there is no time here, just the number 25"], false]
+            [["the time is 10:30"], "TRUE"],
+            [["the time is 10 PM"], "TRUE"],
+            [["the time is 10:30:45"], "TRUE"],
+            [["there is no time here, just the number 25"], "FALSE"]
         ];
     }
 
@@ -946,7 +946,7 @@ class RouterTestHandlerTest extends TestCase
 }
 JSON
 ,
-            true
+            "TRUE"
         );
     }
 
@@ -1027,7 +1027,7 @@ JSON
 }
 JSON
 ,
-            true
+            "TRUE"
         );
     }
 }

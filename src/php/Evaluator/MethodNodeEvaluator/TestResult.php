@@ -2,6 +2,7 @@
 
 namespace Viamo\Floip\Evaluator\MethodNodeEvaluator;
 
+use Viamo\Floip\Evaluator\Exception\MethodNodeException;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract\TestResult as TestResultInterface;
 
 class TestResult implements TestResultInterface
@@ -16,13 +17,30 @@ class TestResult implements TestResultInterface
         $this->value = $value;
         $this->match = $match;
     }
+
+    public function chain($method) {
+        switch ($method) {
+            case 'value':
+                return $this->getValue();
+            case 'match':
+                return $this->getMatch();
+            default:
+                throw new MethodNodeException("Unknown chain method $method on TestResult");
+        }
+    }
     
     public function getMatch() {
         return (string) $this->match;
     }
 
     public function getValue() {
-        return (string) $this->value;
+        if ($this->value === true) {
+            return 'TRUE';
+        } elseif ($this->value === false) {
+            return 'FALSE';
+        } else {
+            return (string) $this->value;
+        }
     }
 
     public function __toString() {

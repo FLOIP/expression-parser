@@ -2,7 +2,8 @@
 
 namespace Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract;
 
-interface TestResult
+
+interface TestResult extends ValueObject, Chainable
 {
     public function getMatch();
 
