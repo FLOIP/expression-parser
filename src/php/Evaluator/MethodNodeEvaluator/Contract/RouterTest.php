@@ -114,11 +114,11 @@ interface RouterTest extends EvaluatesMethods
     /**
      * Returns whether the contact is part of group with the passed in UUID.
      *
-     * @param array $contact
+     * @param array $groups
      * @param string $group_uuid
      * @return TestResult
      */
-    public function has_group($contact, $group_uuid);
+    public function has_group($groups, $group_uuid);
 
     /**
      * Tests whether any intent in a classification result has name and minimum

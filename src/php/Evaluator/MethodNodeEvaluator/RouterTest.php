@@ -6,7 +6,6 @@ use ArrayAccess;
 use Carbon\Carbon;
 use Exception;
 use NajiDev\Permutation\PermutationIterator;
-use Traversable;
 use Viamo\Floip\Evaluator\Exception\MethodNodeException;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract\RouterTest as RouterTestInterface;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\TestResult;
@@ -106,7 +105,7 @@ class RouterTest implements RouterTestInterface
      */
     private function parseDateTimeFromString($string) {
         // remove non numeric or separator chars
-        $string = trim(\preg_replace('%[^\d\-/\\\]%i', ' ', $string));
+        $string = trim(\preg_replace('%[^\d\-/\\\:]%i', ' ', $string));
         // collapse whitespace
         $string = trim(\preg_replace('/\s+/', ' ', $string));
         // try splitting the string into parts
@@ -116,12 +115,12 @@ class RouterTest implements RouterTestInterface
             return false;
         }
 
-        if (count($parts) !== 3) {
+        if (count($parts) < 3) {
             return false;
         }
 
         // try permutations of what we have
-        foreach (new PermutationIterator(array_slice($parts, 0, 3)) as $permutation) {
+        foreach (new PermutationIterator($parts) as $permutation) {
             try {
                 if ($result = \strtotime(implode('/', $permutation))) {
                     return $result;
@@ -142,21 +141,101 @@ class RouterTest implements RouterTestInterface
         }
     }
 
-    public function has_date_eq($text, $date) { }
+    private function has_date_callback($text, $compare, callable $fn) {
+        $parsed = $this->parseDateTimeFromString($text);
+        if ($parsed === false) {
+            return new TestResult;
+        }
+        $compare = $this->parseDateTimeFromString($compare);
+        if ($compare === false) {
+            throw new MethodNodeException("arg 2 in has_date_eq must be a date, got " . json_encode($compare));
+        }
 
-    public function has_date_gt($text, $min) { }
+        $parsed = Carbon::createFromTimestamp($parsed);
+        $compare = Carbon::createFromTimestamp($compare);
 
-    public function has_date_lt($text, $max) { }
+        $result = $fn($parsed->copy(), $compare->startOfDay());
 
-    public function has_district($text, $state = null) { }
+        if ($result) {
+            return new TestResult(true, $parsed);
+        } else {
+            return new TestResult;
+        }
+    }
 
-    public function has_email($text) { }
+    public function has_date_eq($text, $date) {
+        return $this->has_date_callback($text, $date, function (Carbon $lhs, Carbon $rhs) {
+            return $lhs->startOfDay()->eq($rhs);
+        });
+    }
 
-    public function has_error($value) { }
+    public function has_date_gt($text, $min) {
+        return $this->has_date_callback($text, $min, function (Carbon $lhs, Carbon $rhs) {
+            return $lhs->gt($rhs);
+        });
+    }
 
-    public function has_group($contact, $group_uuid) { }
+    public function has_date_lt($text, $max) {
+        return $this->has_date_callback($text, $max, function (Carbon $lhs, Carbon $rhs) {
+            return $lhs->lt($rhs);
+        });
+    }
 
-    public function has_intent($result, $name, $confidence) { }
+    // todo: implementation?
+    public function has_district($text, $state = null) {
+        throw new MethodNodeException('has_district not implemented');
+    }
+
+    public function has_email($text) {
+        // this loose check should handle the cases we want.
+        $regex = "/[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}/";
+        $matches = [];
+        if (preg_match($regex, $text, $matches)) {
+            return new TestResult(true, $matches[0]);
+        } else {
+            return new TestResult;
+        }
+    }
+
+    // todo: implementation once exceptions turn into error objects
+    public function has_error($value) {
+        throw new MethodNodeException('has_error not implemented');
+    }
+
+    public function has_group($groups, $group_uuid) {
+        if ($groups instanceof Node) {
+            $groups = $groups->getValue();
+        }
+        if (!(is_array($groups) || $groups instanceof ArrayAccess)) {
+            $type = \gettype($groups);
+            throw new MethodNodeException("Can only perform has_group on an array or ArrayAccess, got $type");
+        }
+        foreach ($groups as $group) {
+            if (isset($group['uuid']) && $group['uuid'] === $group_uuid) {
+                return new TestResult(true, json_encode($group));
+            }
+        }
+        return new TestResult;
+    }
+
+    public function has_intent($result, $name, $confidence) {
+        if ($result instanceof Node) {
+            $result = $result->getValue();
+        }
+        if (!(is_array($result) || $result instanceof ArrayAccess)) {
+            $type = \gettype($result);
+            throw new MethodNodeException("Can only perform has_group on an array or ArrayAccess, got $type");
+        }
+        if (!isset($result['extra']['intents'])) {
+            return new TestResult;
+        }
+        foreach ($result['extra']['intents'] as $intent) {
+            if (isset($intent['name']) && $intent['name'] === $name && isset($intent['confidence']) && $intent['confidence'] >= $confidence) {
+                return new TestResult(true, json_encode($intent));
+            }
+        }
+        return new TestResult;
+    }
 
     public function has_number($text) { }
 
