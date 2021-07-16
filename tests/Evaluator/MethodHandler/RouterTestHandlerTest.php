@@ -936,15 +936,16 @@ class RouterTestHandlerTest extends TestCase
     private function getContactData() {
         return json_decode(
 <<<JSON
-    {
-        "groups": [
-            {
-                "name": "Testers",
-                "uuid": "b7cf0d83-f1c9-411c-96fd-c511a4cfa86d"
-            }
-        ]
-    }
-JSON,
+{
+    "groups": [
+        {
+            "name": "Testers",
+            "uuid": "b7cf0d83-f1c9-411c-96fd-c511a4cfa86d"
+        }
+    ]
+}
+JSON
+,
             true
         );
     }
@@ -1024,7 +1025,8 @@ JSON,
         "value": "200"
     }
 }
-JSON,
+JSON
+,
             true
         );
     }
