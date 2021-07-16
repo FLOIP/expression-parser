@@ -5,6 +5,8 @@ namespace Viamo\Floip\Evaluator\MethodNodeEvaluator;
 use ArrayAccess;
 use Carbon\Carbon;
 use Exception;
+use libphonenumber\PhoneNumberFormat;
+use libphonenumber\PhoneNumberUtil;
 use NajiDev\Permutation\PermutationIterator;
 use Viamo\Floip\Evaluator\Exception\MethodNodeException;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract\RouterTest as RouterTestInterface;
@@ -346,19 +348,105 @@ class RouterTest implements RouterTestInterface
         }
     }
 
-    public function has_phone($text, $country_code) { }
+    public function has_phone($text, $country_code = null) {
+        $phoneUtil = PhoneNumberUtil::getInstance();
 
-    public function has_phrase($text, $phrase) { }
+        $text = \preg_replace('/[^\d+-]/', '', $text);
 
-    public function has_state($text) { }
+        try {
+            $number = $phoneUtil->parse($text, $country_code);
 
-    public function has_text($text) { }
+            if ($phoneUtil->isValidNumber($number)) {
+                return new TestResult(true, $phoneUtil->format($number, PhoneNumberFormat::E164));
+            } else {
+                return new TestResult;
+            }
+        } catch (Exception $e) {
+            return new TestResult;
+        }
+    }
 
-    public function has_time($text) { }
+    public function has_phrase($text, $phrase) {
+        $matches = [];
+        $result = preg_match("/$phrase/i", $text, $matches);
 
-    public function has_top_intent($result, $name, $confidence) { }
+        if ($result) {
+            return new TestResult(true, $matches[0]);
+        } else {
+            return new TestResult;
+        }
+    }
 
-    public function has_ward($text, $district, $state) { }
+    // todo: implementation? perhaps up to the consumer
+    public function has_state($text) {
+        throw new MethodNodeException('has_district not implemented');
+    }
 
-    public function handles() { }
+    public function has_text($text) {
+        $result = preg_match("/\S/", $text);
+
+        if ($result) {
+            return new TestResult(true, $text);
+        } else {
+            return new TestResult;
+        }
+    }
+
+    public function has_time($text) {
+        $matches = [];
+        $result = preg_match('/\d{2}((:\d{2}){1,2}|\s[\w]{2})/', $text, $matches);
+
+        if ($result) {
+            $date = \strtotime($matches[0]);
+            if ($date) {
+                return new TestResult(true, Carbon::createFromTimestamp($date)->toTimeString());
+            }
+        }
+        return new TestResult;
+    }
+
+    // todo: implementation
+    public function has_top_intent($result, $name, $confidence) {
+        throw new MethodNodeException('has_top_intent not implemented');
+    }
+
+    // todo: implementation
+    public function has_ward($text, $district, $state) {
+        throw new MethodNodeException('has_top_intent not implemented');
+    }
+
+    public function handles() {
+        return [
+            'has_all_words',
+            'has_any_word',
+            'has_beginning',
+            'has_category',
+            'has_date',
+            'has_date_eq',
+            'has_date_gt',
+            'has_date_lt',
+            'has_district',
+            'has_email',
+            'has_error',
+            'has_group',
+            'has_intent',
+            'has_number',
+            'has_number_between',
+            'has_number_eq',
+            'has_number_gt',
+            'has_number_gte',
+            'has_number_lt',
+            'has_number_lte',
+            'has_only_phrase',
+            'has_only_text',
+            'has_pattern',
+            'has_phone',
+            'has_phrase',
+            'has_state',
+            'has_text',
+            'has_time',
+            'has_top_intent',
+            'has_ward',
+        ];
+    }
 }

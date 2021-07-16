@@ -782,6 +782,157 @@ class RouterTestHandlerTest extends TestCase
         ];
     }
 
+    /**
+     * @dataProvider hasPhoneProvider
+     */
+    public function testHasPhone($args, $expected) {
+        $result = $this->handler
+        ->has_phone($args[0], $args[1])
+        ->getValue();
+
+        $this->assertEquals($expected, $result);
+    }
+
+    /**
+     * @dataProvider hasPhoneMatchProvider
+     */
+    public function testHasPhoneMatch($args, $expected) {
+        $result = $this->handler
+        ->has_phone($args[0], $args[1])
+        ->getMatch();
+
+        $this->assertEquals($expected, $result);
+    }
+
+    public function hasPhoneProvider() {
+        return [
+            [["my number is +12067799294 thanks", null], true],
+            [["my number is 2067799294", "US"], true],
+            [["my number is none of your business", "US"], false],
+        ];
+    }
+
+    public function hasPhoneMatchProvider() {
+        return [
+            [["my number is +12067799294 thanks", null], "+12067799294"],
+            [["my number is 2067799294", "US"], "+12067799294"],
+            [["my number is 206 779 9294", "US"], "+12067799294"]
+        ];
+    }
+
+    /**
+     * @dataProvider hasPhraseProvider
+     */
+    public function testHasPhrase($args, $expected) {
+        $result = $this->handler
+        ->has_phrase($args[0], $args[1])
+        ->getValue();
+
+        $this->assertEquals($expected, $result);
+    }
+
+    /**
+     * @dataProvider hasPhraseMatchProvider
+     */
+    public function testHasPhraseMatch($args, $expected) {
+        $result = $this->handler
+        ->has_phrase($args[0], $args[1])
+        ->getMatch();
+
+        $this->assertEquals($expected, $result);
+    }
+
+    public function hasPhraseProvider() {
+        return [
+            [["the quick brown fox", "brown fox"], true],
+            [["the Quick Brown fox", "quick fox"], false],
+        ];
+    }
+
+    public function hasPhraseMatchProvider() {
+        return [
+            [["the quick brown fox", "brown fox"], "brown fox"],
+            [["the Quick Brown fox", ""], ""],
+        ];
+    }
+
+    /**
+     * @dataProvider hasTextProvider
+     */
+    public function testHasText($args, $expected) {
+        $result = $this->handler
+        ->has_text($args[0])
+        ->getValue();
+
+        $this->assertEquals($expected, $result);
+    }
+
+    /**
+     * @dataProvider hasTextMatchProvider
+     */
+    public function testHasTextMatch($args, $expected) {
+        $result = $this->handler
+        ->has_text($args[0])
+        ->getMatch();
+
+        $this->assertEquals($expected, $result);
+    }
+
+    public function hasTextProvider() {
+        return [
+            [["quick brown"], true],
+            [[""], false],
+            [[" \n"], false],
+            [[123], true]
+        ];
+    }
+
+    public function hasTextMatchProvider() {
+        return [
+            [["quick brown"], "quick brown"],
+            [[123], "123"]
+        ];
+    }
+
+    /**
+     * @dataProvider hasTimeProvider
+     */
+    public function testHasTime($args, $expected) {
+        $result = $this->handler
+        ->has_time($args[0])
+        ->getValue();
+
+        $this->assertEquals($expected, $result);
+    }
+
+    /**
+     * @dataProvider hasTimeMatchProvider
+     */
+    public function testHasTimeMatch($args, $expected) {
+        $result = $this->handler
+        ->has_time($args[0])
+        ->getMatch();
+
+        $this->assertEquals($expected, $result);
+    }
+
+    public function hasTimeProvider() {
+        return [
+            [["the time is 10:30"], true],
+            [["the time is 10 PM"], true],
+            [["the time is 10:30:45"], true],
+            [["there is no time here, just the number 25"], false]
+        ];
+    }
+
+    public function hasTimeMatchProvider() {
+        return [
+            [["the time is 10:30"], "10:30:00"],
+            [["the time is 10 PM"], "22:00:00"],
+            [["the time is 10:30:45"], "10:30:45"],
+        ];
+    }
+
     private function getContactData() {
         return json_decode(
 <<<JSON

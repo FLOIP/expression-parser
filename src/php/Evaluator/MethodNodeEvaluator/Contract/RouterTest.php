@@ -230,10 +230,10 @@ interface RouterTest extends EvaluatesMethods
      * argument specifies the country to use for parsing.
      *
      * @param string $text
-     * @param string $country_code
+     * @param string|null $country_code
      * @return TestResult
      */
-    public function has_phone($text, $country_code);
+    public function has_phone($text, $country_code = null);
 
     /**
      * Tests whether phrase is contained in text.
