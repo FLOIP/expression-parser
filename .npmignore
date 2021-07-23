@@ -5,3 +5,5 @@ composer**
 .vscode
 phpunit.xml
 vendor
+.composer**
+.github**
