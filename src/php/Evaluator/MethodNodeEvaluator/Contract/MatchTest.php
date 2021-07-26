@@ -5,7 +5,7 @@ namespace Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract\EvaluatesMethods;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract\TestResult;
 
-interface RouterTest extends EvaluatesMethods
+interface MatchTest extends EvaluatesMethods
 {
     const PUNCTUATION=',:;!?.-';
 
@@ -47,7 +47,7 @@ interface RouterTest extends EvaluatesMethods
      * @param string ...$categories
      * @return TestResult
      */
-    public function has_category($result);
+    public function has_category($result, $categories);
 
     /**
      * Tests whether text contains a date formatted according to our environment.

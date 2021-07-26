@@ -3,18 +3,17 @@
 namespace Viamo\Floip\Tests\Evaluator\MethodHandler;
 
 use PHPUnit\Framework\TestCase;
-use Viamo\Floip\Evaluator\Node;
-use Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract\RouterTest as RouterTestContract;
-use Viamo\Floip\Evaluator\MethodNodeEvaluator\RouterTest;
+use Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract\MatchTest as MatchTestContract;
+use Viamo\Floip\Evaluator\MethodNodeEvaluator\MatchTest;
 
-class RouterTestHandlerTest extends TestCase
+class MatchTestHandlerTest extends TestCase
 {
-    /** @var RouterTestContract */
+    /** @var MatchTestContract */
     private $handler;
 
     public function setUp()
     {
-        $this->handler = new RouterTest;
+        $this->handler = new MatchTest;
     }
 
     /**

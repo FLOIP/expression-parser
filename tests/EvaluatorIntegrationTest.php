@@ -20,7 +20,7 @@ use Viamo\Floip\Evaluator\MethodNodeEvaluator\ArrayHandler;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\Logical;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\DateTime;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\Excellent;
-use Viamo\Floip\Evaluator\MethodNodeEvaluator\RouterTest;
+use Viamo\Floip\Evaluator\MethodNodeEvaluator\MatchTest;
 use Viamo\Floip\Evaluator\NullNodeEvaluator;
 
 class EvaluatorIntegrationTest extends TestCase
@@ -656,14 +656,14 @@ class EvaluatorIntegrationTest extends TestCase
     public function testRouterTestMethod() {
         $e = "@(has_any_word('The Quick Brown Fox', 'fox quick'))";
         $c = [];
-        $this->MethodNodeEvaluator->addHandler(new RouterTest);
+        $this->MethodNodeEvaluator->addHandler(new MatchTest);
         $this->assertEquals('TRUE', $this->evaluator->evaluate($e, $c));
     }
 
     public function testRouterTestMethodChaining() {
         $e = "@(has_any_word('The Quick Brown Fox', 'fox quick').match)";
         $c = [];
-        $this->MethodNodeEvaluator->addHandler(new RouterTest);
+        $this->MethodNodeEvaluator->addHandler(new MatchTest);
         $this->assertEquals('Quick Fox', $this->evaluator->evaluate($e, $c));
     }
 }

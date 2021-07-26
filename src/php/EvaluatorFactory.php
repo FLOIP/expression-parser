@@ -17,7 +17,7 @@ use Viamo\Floip\Evaluator\EscapeNodeEvaluator;
 use Viamo\Floip\Evaluator\ConcatenationNodeEvaluator;
 use Viamo\Floip\Evaluator\MathNodeEvaluator;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\ArrayHandler;
-use Viamo\Floip\Evaluator\MethodNodeEvaluator\RouterTest;
+use Viamo\Floip\Evaluator\MethodNodeEvaluator\MatchTest;
 use Viamo\Floip\Evaluator\NullNodeEvaluator;
 
 class EvaluatorFactory
@@ -54,7 +54,7 @@ class EvaluatorFactory
 			new Math,
 			new Text,
 			new ArrayHandler,
-			new RouterTest,
+			new MatchTest,
 		];
 	}
 

@@ -9,12 +9,12 @@ use libphonenumber\PhoneNumberFormat;
 use libphonenumber\PhoneNumberUtil;
 use NajiDev\Permutation\PermutationIterator;
 use Viamo\Floip\Evaluator\Exception\MethodNodeException;
-use Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract\RouterTest as RouterTestInterface;
+use Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract\MatchTest as MatchTestInterface;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\TestResult;
 use Viamo\Floip\Evaluator\Node;
 
 // todo: do we need utf aware string comparison?
-class RouterTest implements RouterTestInterface
+class MatchTest implements MatchTestInterface
 {
     /**
      * Splits a string by punctuation or spaces
@@ -80,7 +80,7 @@ class RouterTest implements RouterTestInterface
     }
 
     // todo what exactly is the point of this...?
-    public function has_category($result) {
+    public function has_category($result, $categories) {
         if ($result instanceof Node) {
             $result = $result->getValue();
         }
@@ -379,7 +379,7 @@ class RouterTest implements RouterTestInterface
 
     // todo: implementation? perhaps up to the consumer
     public function has_state($text) {
-        throw new MethodNodeException('has_district not implemented');
+        throw new MethodNodeException('has_state not implemented');
     }
 
     public function has_text($text) {
@@ -412,7 +412,7 @@ class RouterTest implements RouterTestInterface
 
     // todo: implementation
     public function has_ward($text, $district, $state) {
-        throw new MethodNodeException('has_top_intent not implemented');
+        throw new MethodNodeException('has_ward not implemented');
     }
 
     public function handles() {
