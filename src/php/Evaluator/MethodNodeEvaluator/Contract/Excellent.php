@@ -37,7 +37,7 @@ interface Excellent extends EvaluatesMethods
      * @param string $string
      * @return string
      */
-    public function removeFistWord($string);
+    public function removeFirstWord($string);
 
     /**
      * Extracts the nth word from the given text string. If stop is a negative

@@ -43,6 +43,8 @@ class MethodNodeEvaluator extends AbstractNodeEvaluator
     {
         if (isset($this->handlers[$method])) {
             return $this->handlers[$method];
+        } elseif (isset($this->handlers[\str_replace('_', '', $method)])) {
+            return $this->handlers[\str_replace('_', '', $method)];
         }
         throw new NodeEvaluatorException('No node method handler found for ' . $method);
     }
@@ -70,7 +72,6 @@ class MethodNodeEvaluator extends AbstractNodeEvaluator
         }, $args);
 
         // if the call is in snake case, strip out the '_'
-        \str_replace('_', '', $call);
         $call = \strtolower($call);
 
         $handler = $this->getHandler($call);

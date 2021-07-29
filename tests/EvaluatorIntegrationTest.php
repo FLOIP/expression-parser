@@ -548,6 +548,11 @@ class EvaluatorIntegrationTest extends TestCase
                 '@(AND(isbool("TRUE"), isstring("foo"), isnumber("5")))',
                 [],
                 'TRUE'
+            ],
+            'isxxx all together now but snake case' => [
+                '@(AND(is_bool("TRUE"), is_string("foo"), is_number("5")))',
+                [],
+                'TRUE'
             ]
         ];
     }

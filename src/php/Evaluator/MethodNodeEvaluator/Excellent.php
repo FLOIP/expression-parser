@@ -13,6 +13,10 @@ class Excellent extends AbstractMethodHandler implements ExcellentInterface
         return $this->word($string, 1);
     }
 
+    public function first_word($string) {
+        return $this->firstWord($string);
+    }
+
     public function percent($number)
     {
         return $number * 100 . "%";
@@ -27,10 +31,18 @@ class Excellent extends AbstractMethodHandler implements ExcellentInterface
         return $string;
     }
 
-    public function removeFistWord($string)
+    public function read_digits($string) {
+        return $this->readDigits($string);
+    }
+
+    public function removeFirstWord($string)
     {
         $word = $this->firstWord($string);
         return substr($string, 1, strlen($word));
+    }
+
+    public function remove_first_word($string) {
+        return $this->removeFirstWord($string);
     }
 
     public function word($string, $number, $bySpaces = null)
@@ -57,6 +69,10 @@ class Excellent extends AbstractMethodHandler implements ExcellentInterface
         return count($this->splitByPunc($string));
     }
 
+    public function word_count($string, $bySpaces = null) {
+        return $this->wordCount($string, $bySpaces);
+    }
+
     public function wordSlice($string, $start, $stop = null, $bySpaces = null)
     {
         if ($bySpaces) {
@@ -77,8 +93,11 @@ class Excellent extends AbstractMethodHandler implements ExcellentInterface
             --$start;
         }
 
-
         return implode(' ', array_slice($split, $start, $stop));
+    }
+
+    public function word_slice($string, $start, $stop = null, $bySpaces = null) {
+        return $this->wordSlice($string, $start, $stop, $bySpaces);
     }
 
     /**
@@ -110,12 +129,20 @@ class Excellent extends AbstractMethodHandler implements ExcellentInterface
         return is_numeric($value);
     }
 
+    public function is_number($value) {
+        return $this->isNumber($value);
+    }
+
     public function isString($value)
     {
         if ($value instanceof Node) {
             $value = $value->getValue();
         }
         return is_string($value) && !(is_numeric($value) || $this->isBool($value));
+    }
+
+    public function is_string($value) {
+        return $this->isString($value);
     }
 
     public function isBool($value)
@@ -129,11 +156,19 @@ class Excellent extends AbstractMethodHandler implements ExcellentInterface
         return $value === 'TRUE' || $value === 'FALSE';
     }
 
+    public function is_bool($value) {
+        return $this->isBool($value);
+    }
+
     public function rand() {
         return \lcg_value();
     }
 
     public function randBetween($min, $max) {
         return \mt_rand($min, $max);
+    }
+
+    public function rand_between($min, $max) {
+        return $this->randBetween($min, $max);
     }
 }
