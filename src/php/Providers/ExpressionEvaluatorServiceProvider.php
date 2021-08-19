@@ -21,10 +21,12 @@ use Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract\Logical as LogicalInterfa
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract\DateTime as DateTimeInterface;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract\Excellent as ExcellentInterface;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract\ArrayHandler as ArrayInterface;
+use Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract\MatchTest as MatchTestInterface;
 use Viamo\Floip\Evaluator\EscapeNodeEvaluator;
 use Viamo\Floip\Evaluator\ConcatenationNodeEvaluator;
 use Viamo\Floip\Evaluator\MathNodeEvaluator;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\ArrayHandler;
+use Viamo\Floip\Evaluator\MethodNodeEvaluator\MatchTest;
 use Viamo\Floip\Evaluator\NullNodeEvaluator;
 
 class ExpressionEvaluatorServiceProvider extends ServiceProvider
@@ -77,6 +79,7 @@ class ExpressionEvaluatorServiceProvider extends ServiceProvider
         $this->app->bind(MathInterface::class, Math::class);
         $this->app->bind(TextInterface::class, Text::class);
         $this->app->bind(ArrayInterface::class, ArrayHandler::class);
+        $this->app->bind(MatchTestInterface::class, MatchTest::class);
     }
 
     protected function getMethodHandlers()
@@ -90,6 +93,7 @@ class ExpressionEvaluatorServiceProvider extends ServiceProvider
             MathInterface::class,
             TextInterface::class,
             ArrayInterface::class,
+            MatchTestInterface::class,
         ]);
     }
 
