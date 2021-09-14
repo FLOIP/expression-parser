@@ -5,7 +5,7 @@ namespace Viamo\Floip\Tests;
 use Carbon\Carbon;
 use Viamo\Floip\Parser;
 use Viamo\Floip\Evaluator;
-use PHPUnit\Framework\TestCase;
+use Viamo\Floip\Tests\TestCase;
 use Viamo\Floip\Evaluator\MathNodeEvaluator;
 use Viamo\Floip\Contract\EvaluatesExpression;
 use Viamo\Floip\Evaluator\BoolNodeEvaluator;
@@ -46,7 +46,7 @@ class EvaluatorIntegrationTest extends TestCase
     /** @var EvaluatesExpression */
     protected $boolNodeEvaluator;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->parser = new Parser;
         $this->MethodNodeEvaluator = new MethodNodeEvaluator;
@@ -67,6 +67,8 @@ class EvaluatorIntegrationTest extends TestCase
         $this->evaluator->addNodeEvaluator($this->concatenationNodeEvaluator);
         $this->evaluator->addNodeEvaluator($this->nullNodeHandler);
         $this->evaluator->addNodeEvaluator($this->boolNodeEvaluator);
+
+        parent::setUp();
     }
 
     public function testEvaluatesMemberAccess()

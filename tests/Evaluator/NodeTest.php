@@ -2,7 +2,7 @@
 
 namespace Viamo\Floip\Tests\Evaluator;
 
-use PHPUnit\Framework\TestCase;
+use Viamo\Floip\Tests\TestCase;
 use Viamo\Floip\Evaluator\Node;
 
 class NodeTest extends TestCase

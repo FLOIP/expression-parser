@@ -2,7 +2,7 @@
 
 namespace Viamo\Floip\Tests;
 
-use PHPUnit\Framework\TestCase;
+use Viamo\Floip\Tests\TestCase;
 use Viamo\Floip\Parser;
 
 class ParserTest extends TestCase
@@ -10,7 +10,7 @@ class ParserTest extends TestCase
     /** @var Parser */
     private $parser;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->parser = new Parser;
     }

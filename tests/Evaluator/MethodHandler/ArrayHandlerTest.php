@@ -2,7 +2,7 @@
 
 namespace Viamo\Floip\Tests\Evaluator\MethodHandler;
 
-use PHPUnit\Framework\TestCase;
+use Viamo\Floip\Tests\TestCase;
 use Viamo\Floip\Evaluator\Node;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\ArrayHandler;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract\ArrayHandler as ArrayHandlerContract;
@@ -12,9 +12,10 @@ class ArrayHandlerTest extends TestCase
     /** @var ArrayHandlerContract */
     private $arrayHandler;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->arrayHandler = new ArrayHandler;
+        parent::setUp();
     }
 
     public function testConstructsArray() {

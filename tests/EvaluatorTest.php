@@ -2,9 +2,10 @@
 
 namespace Viamo\Floip\Tests;
 
-use PHPUnit\Framework\TestCase;
+use Viamo\Floip\Tests\TestCase;
 use Viamo\Floip\Evaluator;
 use Viamo\Floip\Parser;
+use Viamo\Floip\Contract\ParsesFloip;
 use Mockery;
 use Mockery\MockInterface;
 use Viamo\Floip\Contract\EvaluatesExpression;
@@ -12,15 +13,16 @@ use Viamo\Floip\Contract\EvaluatesExpression;
 class EvaluatorTest extends TestCase
 {
 
-    /** @var MockInterface  */
+    /** @var MockInterface|ParsesFloip  */
     protected $parser;
     /** @var Evaluator */
     protected $evaluator;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->parser = Mockery::mock(Parser::class);
         $this->evaluator = new Evaluator($this->parser);
+        parent::setUp();
     }
 
     public function testCanAddHandler()

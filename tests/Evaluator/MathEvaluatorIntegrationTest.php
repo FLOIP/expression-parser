@@ -3,20 +3,21 @@
 namespace Viamo\Floip\Tests\Evaluator;
 
 use Carbon\Carbon;
-use PHPUnit\Framework\TestCase;
 use Viamo\Floip\Contract\ParsesFloip;
 use Viamo\Floip\Evaluator\Node;
 use Viamo\Floip\Evaluator\MathNodeEvaluator;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\DateTime;
+use Viamo\Floip\Tests\TestCase;
 
 class MathEvaluatorIntegrationTest extends TestCase
 {
 	/** @var MathNodeEvaluator */
 	protected $mathEvaluator;
 
-	public function setUp()
+	public function setUp(): void
 	{
 		$this->mathEvaluator = new MathNodeEvaluator;
+		parent::setUp();
 	}
 
 	/**

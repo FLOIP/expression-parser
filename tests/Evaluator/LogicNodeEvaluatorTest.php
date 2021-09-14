@@ -2,7 +2,7 @@
 
 namespace Viamo\Floip\Tests\Evaluator;
 
-use PHPUnit\Framework\TestCase;
+use Viamo\Floip\Tests\TestCase;
 use Viamo\Floip\Evaluator\LogicNodeEvaluator;
 use Viamo\Floip\Evaluator\Node;
 
@@ -11,9 +11,10 @@ class LogicNodeEvaluatorTest extends TestCase
     /** @var LogicNodeEvaluator */
     private $evaluator;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->evaluator = new LogicNodeEvaluator;
+        parent::setUp();
     }
 
     /**
