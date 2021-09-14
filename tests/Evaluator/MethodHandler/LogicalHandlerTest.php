@@ -2,7 +2,7 @@
 
 namespace Viamo\Floip\Tests\Evaluator\MethodHandler;
 
-use PHPUnit\Framework\TestCase;
+use Viamo\Floip\Tests\TestCase;
 use Viamo\Floip\Evaluator\Node;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\Logical;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract\Logical as LogicalContract;
@@ -12,9 +12,10 @@ class LogicalHandlerTest extends TestCase
 	/** @var LogicalContract */
 	private $logical;
 
-	public function setUp()
+	public function setUp(): void
 	{
 		$this->logical = new Logical;
+		parent::setUp();
 	}
 
 	/**

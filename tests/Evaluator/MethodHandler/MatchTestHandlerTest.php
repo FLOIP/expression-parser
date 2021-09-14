@@ -2,7 +2,7 @@
 
 namespace Viamo\Floip\Tests\Evaluator\MethodHandler;
 
-use PHPUnit\Framework\TestCase;
+use Viamo\Floip\Tests\TestCase;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract\MatchTest as MatchTestContract;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\MatchTest;
 
@@ -11,9 +11,10 @@ class MatchTestHandlerTest extends TestCase
     /** @var MatchTestContract */
     private $handler;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->handler = new MatchTest;
+        parent::setUp();
     }
 
     /**
