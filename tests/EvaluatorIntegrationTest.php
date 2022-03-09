@@ -320,6 +320,11 @@ class EvaluatorIntegrationTest extends TestCase
                 [],
                 'foo, bar, baz'
             ],
+            'array to string, empty' => [
+                '@array()',
+                [],
+                ''
+            ],
             'in array, positive 1' => [
                 '@(in("baz", array("foo", "bar", "baz")))',
                 [],
@@ -335,10 +340,20 @@ class EvaluatorIntegrationTest extends TestCase
                 [],
                 'FALSE'
             ],
+            'in array, empty' => [
+                '@(in("foo", array()))',
+                [],
+                'FALSE',
+            ],
             'count' => [
                 '@(count(array("foo", "bar", "baz")))',
                 [],
                 '3'
+            ],
+            'count' => [
+                '@(count(array()))',
+                [],
+                '0'
             ]
         ];
     }
