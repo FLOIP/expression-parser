@@ -151,13 +151,13 @@ class ParserTest extends TestCase
     private function mathNode($lhs, $rhs, $operator)
     {
         $type = 'MATH';
-        return compact('MATH', 'lhs', 'rhs', 'operator');
+        return compact('type', 'lhs', 'rhs', 'operator');
     }
 
     private function logicNode($lhs, $rhs, $operator)
     {
         $type = 'LOGIC';
-        return compact('MATH', 'lhs', 'rhs', 'operator');
+        return compact('type', 'lhs', 'rhs', 'operator');
     }
 
     public function plainStringProvider()

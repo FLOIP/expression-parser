@@ -303,6 +303,61 @@ class EvaluatorIntegrationTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
+    /**
+     * @dataProvider arrayFunctionProvider
+     */
+    public function testArrayFunctions($expression, array $context, $expected) {
+        $this->MethodNodeEvaluator->addHandler(new ArrayHandler);
+        $result = $this->evaluator->evaluate($expression, $context);
+
+        $this->assertEquals($expected, $result);
+    }
+
+    public function arrayFunctionProvider() {
+        return [
+            'array to string' => [
+                '@(array("foo", "bar", "baz"))',
+                [],
+                'foo, bar, baz'
+            ],
+            'array to string, empty' => [
+                '@array()',
+                [],
+                ''
+            ],
+            'in array, positive 1' => [
+                '@(in("baz", array("foo", "bar", "baz")))',
+                [],
+                'TRUE'
+            ],
+            'in array, positive 2' => [
+                '@(in("bar", array("foo", "bar", "baz")))',
+                [],
+                'TRUE'
+            ],
+            'in array, negative' => [
+                '@(in("fuz", array("foo", "bar", "baz")))',
+                [],
+                'FALSE'
+            ],
+            'in array, empty' => [
+                '@(in("foo", array()))',
+                [],
+                'FALSE',
+            ],
+            'count' => [
+                '@(count(array("foo", "bar", "baz")))',
+                [],
+                '3'
+            ],
+            'count' => [
+                '@(count(array()))',
+                [],
+                '0'
+            ]
+        ];
+    }
+
     public function nullExpressionProvider()
     {
         return [
