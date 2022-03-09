@@ -19,8 +19,7 @@ class ArrayHandler extends AbstractMethodHandler implements ArrayHandlerInterfac
     }
 
     public function _array() {
-        // slice the args since the last is the eval context
-        return array_map([$this, 'value'], array_slice(func_get_args(), 0, -1));
+        return array_map([$this, 'value'], func_get_args());
     }
 
     public function in($value, $array) {

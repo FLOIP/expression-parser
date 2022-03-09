@@ -20,8 +20,7 @@ class ArrayHandlerTest extends TestCase
 
     public function testConstructsArray() {
         $expected = ['abc', '123'];
-        $args = array_merge($expected, [[]]);
-        $actual = call_user_func_array([$this->arrayHandler, 'array'], $args);
+        $actual = call_user_func_array([$this->arrayHandler, 'array'], $expected);
 
         $this->assertEquals($expected, $actual);
     }
@@ -33,14 +32,14 @@ class ArrayHandlerTest extends TestCase
         $node2->setValue('123');
 
         $expected = ['abc', '123'];
-        $actual = call_user_func_array([$this->arrayHandler, 'array'], [$node1, $node2, []]);
+        $actual = call_user_func_array([$this->arrayHandler, 'array'], [$node1, $node2]);
 
         $this->assertEquals($expected, $actual);
     }
 
     public function testTrimsContextFromArgs() {
         $expected = [1, 2, 3];
-        $actual = \call_user_func_array([$this->arrayHandler, 'array'], [1, 2, 3, []]);
+        $actual = \call_user_func_array([$this->arrayHandler, 'array'], [1, 2, 3]);
 
         $this->assertEquals($expected, $actual);
     }
