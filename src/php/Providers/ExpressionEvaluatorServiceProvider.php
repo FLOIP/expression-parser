@@ -7,6 +7,7 @@ use Viamo\Floip\Evaluator;
 use Viamo\Floip\Contract\ParsesFloip;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Contracts\Container\Container;
+use Viamo\Floip\Evaluator\BoolNodeEvaluator;
 use Viamo\Floip\Evaluator\LogicNodeEvaluator;
 use Viamo\Floip\Evaluator\MemberNodeEvaluator;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator;
@@ -105,6 +106,7 @@ class ExpressionEvaluatorServiceProvider extends ServiceProvider
             new EscapeNodeEvaluator,
             new ConcatenationNodeEvaluator,
             new MathNodeEvaluator,
+            new BoolNodeEvaluator,
             new NullNodeEvaluator,
             $this->app->make(MethodNodeEvaluator::class)
         ];
