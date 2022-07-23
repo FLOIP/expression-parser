@@ -46,6 +46,9 @@ class LogicNodeEvaluator extends AbstractNodeEvaluator
             if (\strtoupper($thing) == 'FALSE') {
                 return false;
             }
+            if ($thing === '') {
+                return null;
+            }
         }
         return $thing;
     }

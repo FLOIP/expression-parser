@@ -313,6 +313,35 @@ class EvaluatorIntegrationTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
+    /**
+     * @dataProvider boolLogicProvider
+     */
+    public function testBoolLogic($expression, array $context, $expected) {
+        $result = $this->evaluator->evaluate($expression, $context);
+
+        $this->assertEquals($expected, $result);
+    }
+
+    public function boolLogicProvider() {
+        return [
+            0 => [
+                '@(block.value = null)',
+                [],
+                'FALSE'
+            ],
+            1 => [
+                '@(block.value = null)',
+                ['block' => ['value' => 'foo']],
+                'FALSE'
+            ],
+            2 => [
+                '@(block.value = null)',
+                ['block' => ['value' => '']],
+                'TRUE'
+            ],
+        ];
+    }
+
     public function arrayFunctionProvider() {
         return [
             'array to string' => [
@@ -549,6 +578,69 @@ class EvaluatorIntegrationTest extends TestCase
                     ]
                 ],
                 "2 Hours and 30minutes from now is 2020-02-07 02:30:00. And your appointment is at 2020-02-07 04:50:00. Today's date is 2020-02-07 and it is day no. 5 in the week",
+            ],
+            'VMO-5857' => [
+                '@(SUM(flow.expressionq2, flow.expressionq3, flow.expressionq4, flow.expressionq5, flow.expressionq6, flow.expressionq7, flow.expressionq8))',
+                [
+                    'flow' => [
+                        'expressionq2' => [ '__value__' => '1'],
+                        'expressionq3' => [ '__value__' => '1'],
+                        'expressionq6' => [ '__value__' => '1'],
+                    ]
+                ],
+                '3'
+            ],
+            'VMO-5857-2' => [
+                '@SUM(flow.expressionq2, flow.expressionq3, flow.expressionq4, flow.expressionq5, flow.expressionq6, flow.expressionq7, flow.expressionq8)',
+                [
+                    'flow' => [
+                        'expressionq2' => [ '__value__' => 1],
+                        'expressionq3' => [ '__value__' => 1],
+                        'expressionq6' => [ '__value__' => 1],
+                    ]
+                ],
+                '3'
+            ],
+            'VMO-5857-2' => [
+                '@SUM(flow.expressionq2, flow.expressionq3, flow.expressionq4, flow.expressionq5, flow.expressionq6, flow.expressionq7, flow.expressionq8)',
+                [
+                    'flow' => [
+                        'expressionq2' => [ '__value__' => 30],
+                        'expressionq3' => [ '__value__' => 30],
+                        'expressionq6' => [ '__value__' => 30],
+                    ]
+                ],
+                '90'
+            ],
+            'VMO-5857 2' => [
+                "@(FIXED((flow.endlinesum/7)*100, 2))",
+                [
+                    'flow' => [
+                        'endlinesum' => '3'
+                    ]
+                ],
+                '42.85'
+            ],
+            'VMO-5624' => [
+                "@(LEN(block.value) > 0)",
+                [
+                    "flow" => [
+                        'block' => '4'
+                    ]
+                    ],
+                'TRUE'
+                ],
+            'Serigne' => [
+                "@(if(flow.q2=16, 3, 0))",
+                [
+                    'flow' => [
+                        'q2' => [
+                            '__value__' => '16',
+                            'value' => '16'
+                        ]
+                    ]
+                ],
+                '3'
             ]
         ];
     }
