@@ -49,6 +49,7 @@ class LogicNodeEvaluator extends AbstractNodeEvaluator
             if ($thing === '') {
                 return null;
             }
+            $thing = \strtolower($thing);
         }
         return $thing;
     }

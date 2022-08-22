@@ -121,6 +121,15 @@ class LogicNodeEvaluatorTest extends TestCase
                     'operator' => '=',
                 ],
                 true
+            ],
+            [
+                [
+                    'type' => 'LOGIC',
+                    'lhs' => 'FOO',
+                    'rhs' => 'foo',
+                    'operator' => '=',
+                ],
+                true
             ]
         ];
     }
