@@ -2,7 +2,9 @@
 
 namespace Viamo\Floip\Evaluator\MemberNodeEvaluator;
 
+use ArrayAccess;
 use ArrayObject;
+use Illuminate\Support\Arr;
 use JsonSerializable;
 
 /**
@@ -14,7 +16,7 @@ use JsonSerializable;
 class MemberObject extends ArrayObject implements JsonSerializable
 {
     public function __toString() {
-        return \json_encode($this, \JSON_FORCE_OBJECT);
+        return (string) \json_encode($this, \JSON_FORCE_OBJECT);
     }
 
     public function getIterator() {
@@ -22,11 +24,15 @@ class MemberObject extends ArrayObject implements JsonSerializable
     }
 
     public function &offsetGet($index) {
-        $item = array_key_exists($index, $this->data) ? $this->data[$index] : null;
-        if (is_array($item) && \array_key_exists('__value__', $item)) {
-            return $item['__value__'];
+        $item = parent::offsetGet($index);
+
+        if (\is_array($item) || $item instanceof ArrayAccess) {
+            if (Arr::has($item, '__value__')) {
+                return $item['__value__'];
+            }
+        } else {
+            return $item;
         }
-        return $item;
     }
 
     public function jsonSerialize() {

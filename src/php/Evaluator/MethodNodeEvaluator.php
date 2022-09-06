@@ -7,6 +7,7 @@ use Viamo\Floip\Evaluator\Exception\NodeEvaluatorException;
 use Viamo\Floip\Contract\ParsesFloip;
 use Viamo\Floip\Evaluator\Exception\MethodNodeException;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract\Chainable;
+use ArrayAccess;
 
 /**
  * Evaluates METHOD nodes -- expressions that look like @(FUNC(arg...))
