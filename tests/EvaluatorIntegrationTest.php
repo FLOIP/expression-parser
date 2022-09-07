@@ -2,6 +2,7 @@
 
 namespace Viamo\Floip\Tests;
 
+use ArrayObject;
 use Carbon\Carbon;
 use Viamo\Floip\Parser;
 use Viamo\Floip\Evaluator;
@@ -320,6 +321,26 @@ class EvaluatorIntegrationTest extends TestCase
         $result = $this->evaluator->evaluate($expression, $context);
 
         $this->assertEquals($expected, $result);
+    }
+
+    public function testWillAcceptNestedArrayAccessContext() {
+        $context = new ArrayObject([
+            'foo' => new ArrayObject([
+                'bar' => '42',
+                '__value__' => '42'
+            ]),
+            'foobar' => new ArrayObject([
+                'barbar' => new ArrayObject([
+                    'baz' => '420',
+                    '__value__' => '420'
+                ])
+            ])
+        ]);
+
+        $expression = '@foo.bar @foo @foobar.barbar @foobar.barbar.baz';
+        $expected   = '42 42 420 420';
+
+        $this->assertEquals($expected, $this->evaluator->evaluate($expression, $context));
     }
 
     public function boolLogicProvider() {

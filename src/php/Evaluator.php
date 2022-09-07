@@ -45,10 +45,7 @@ class Evaluator
     public function evaluate($expression, $context)
     {
         // check that our context is array accessable
-        if (!is_array($context) && !($context instanceof ArrayAccess)) {
-            var_dump([is_array($context), $context instanceof ArrayAccess]);
-            throw new EvaluatorException('Context must be array or implement ArrayAccess');
-        }
+        $this->validateContextOrThrow($context);
 
         $ast = $this->parser->parse($expression);
 
@@ -65,6 +62,21 @@ class Evaluator
         }
 
         return implode('', $nodes);
+    }
+
+    /**
+     * @param mixed $context
+     * @throws EvaluatorException
+     * @return void
+     */
+    private function validateContextOrThrow($context) {
+        if (\is_array($context)) {
+            return;
+        }
+        if ($context instanceof ArrayAccess) {
+            return;
+        }
+        throw new EvaluatorException('Context must be array or implement ArrayAccess');
     }
 
     /**
@@ -91,7 +103,12 @@ class Evaluator
         throw new EvaluatorException("Unknown node type: $type");
     }
 
-    private function evalNode(Node $node, array $context)
+    /**
+     * @param Node $node
+     * @param array|ArrayAccess $context The expression context
+     * @return mixed
+     */
+    private function evalNode(Node $node, $context)
     {
         return $this->getNodeEvaluator($node['type'])
             ->evaluate($node, $context);
@@ -99,7 +116,7 @@ class Evaluator
 
     private function getIterator(array $ast)
     {
-        // we want to recurse over the tree depth-first, starting with the 
+        // we want to recurse over the tree depth-first, starting with the
         // deepest nodes
         $arrayIterator = new RecursiveNodeIterator($ast);
         return new \RecursiveIteratorIterator($arrayIterator, \RecursiveIteratorIterator::CHILD_FIRST);

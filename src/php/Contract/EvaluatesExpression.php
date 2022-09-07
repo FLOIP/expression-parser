@@ -3,6 +3,7 @@
 namespace Viamo\Floip\Contract;
 
 use Viamo\Floip\Evaluator\Node;
+use ArrayAccess;
 
 interface EvaluatesExpression
 {
