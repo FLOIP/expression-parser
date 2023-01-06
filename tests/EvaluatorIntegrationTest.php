@@ -257,6 +257,7 @@ class EvaluatorIntegrationTest extends TestCase
         $this->MethodNodeEvaluator->addHandler(new Text);
         $this->MethodNodeEvaluator->addHandler(new Math);
         $this->MethodNodeEvaluator->addHandler(new DateTime);
+        $this->MethodNodeEvaluator->addHandler(new ArrayHandler);
         $result = $this->evaluator->evaluate($expression, $context);
 
         $this->assertEquals($expected, $result);
@@ -404,6 +405,30 @@ class EvaluatorIntegrationTest extends TestCase
                 '@(count(array()))',
                 [],
                 '0'
+            ],
+            'in with object true' => [
+                '@in("foo", groups)',
+                [
+                    'groups' => [
+                        [
+                            'value' => 'foo',
+                            '__value__' => 'foo'
+                        ]
+                    ]
+                ],
+                'TRUE'
+            ],
+            'in with object false' => [
+                '@in("bar", groups)',
+                [
+                    'groups' => [
+                        [
+                            'value' => 'foo',
+                            '__value__' => 'foo'
+                        ]
+                    ]
+                ],
+                'FALSE'
             ]
         ];
     }
@@ -622,7 +647,7 @@ class EvaluatorIntegrationTest extends TestCase
                 ],
                 '3'
             ],
-            'VMO-5857-2' => [
+            'VMO-5857-2-2' => [
                 '@SUM(flow.expressionq2, flow.expressionq3, flow.expressionq4, flow.expressionq5, flow.expressionq6, flow.expressionq7, flow.expressionq8)',
                 [
                     'flow' => [
@@ -662,6 +687,26 @@ class EvaluatorIntegrationTest extends TestCase
                     ]
                 ],
                 '3'
+            ],
+            'Hannah' => [
+                "@(AND(IN(groups.demo_day_clinic, contact.groups), IN(groups.seller, contact.groups)))",
+                [
+                    "contact" => [
+                        'groups' => [
+                            'demo_day_clinic',
+                            'seller',
+                        ]
+                    ],
+                    'groups' => [
+                        'demo_day_clinic' => [
+                            '__value__' => 'demo_day_clinic',
+                        ],
+                        'seller' => [
+                            '__value__' => 'seller',
+                        ],
+                    ]
+                ],
+                'TRUE'
             ]
         ];
     }

@@ -22,7 +22,16 @@ class ArrayHandler extends AbstractMethodHandler implements ArrayHandlerInterfac
         return array_map([$this, 'value'], func_get_args());
     }
 
+    protected function value($thing) {
+        $thing = parent::value($thing);
+        if (is_array($thing) && isset($thing['__value__'])) {
+            return $thing['__value__'];
+        }
+        return $thing;
+    }
+
     public function in($value, $array) {
+        $value = $this->value($value);
         if ($array instanceof Node) {
             $array = $array->getValue();
         }
@@ -33,6 +42,7 @@ class ArrayHandler extends AbstractMethodHandler implements ArrayHandlerInterfac
         // we can't just do in_array since we want to inspect the __value__ of
         // object-like values
         foreach ($array as $item) {
+            $item = $this->value($item);
             if ($item == $value) {
                 return true;
             }

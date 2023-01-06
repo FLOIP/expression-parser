@@ -66,6 +66,8 @@ class LogicalHandlerTest extends TestCase
 			[[$this->makeNode(false), true], false],
 			[[$this->makeNode('TRUE'), true], true],
 			[[$this->makeNode('FALSE'), true], false],
+			[['TRUE', 'TRUE'], true],
+			[[$this->makeNode('TRUE'), $this->makeNode('TRUE')], true],
 		];
 	}
 
