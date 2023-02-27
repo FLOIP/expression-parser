@@ -707,7 +707,27 @@ class EvaluatorIntegrationTest extends TestCase
                     ]
                 ],
                 'TRUE'
-            ]
+            ],
+            'logic on stringy variable' => [
+                "@AND(contact.completed_module_1_lesson_2 = TRUE)",
+                [],
+                'FALSE'
+            ],
+            'logic on stringy "true"' => [
+                "@AND('TRUE' = TRUE)",
+                [],
+                'TRUE'
+            ],
+            'logic on numeric variable 0' => [
+                "@AND(0 = TRUE)",
+                [],
+                'FALSE'
+            ],
+            'logic on numeric variable 1' => [
+                "@AND(1 = TRUE)",
+                [],
+                'FALSE'
+            ],
         ];
     }
 

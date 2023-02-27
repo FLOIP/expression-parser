@@ -26,12 +26,25 @@ class LogicNodeEvaluator extends AbstractNodeEvaluator
             case '>=':
                 return $lhs >= $rhs;
             case '=':
-                return $lhs == $rhs;
+                return $this->equals($lhs, $rhs);
             case '!=':
             case '<>':
                 return $lhs !== $rhs;
         }
         throw new NodeEvaluatorException('invalid operator ' . $operator);
+    }
+
+    private function equals($lhs, $rhs) {
+        if ($lhs === $rhs) {
+            return true;
+        }
+        if ($lhs == $rhs) {
+            // don't type juggle bools
+            if (!is_bool($lhs) && !is_bool($rhs)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private function value($thing)
