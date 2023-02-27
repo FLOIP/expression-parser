@@ -7,18 +7,17 @@ use Viamo\Floip\Contract\ParsesFloip;
 
 class LogicNodeEvaluator extends AbstractNodeEvaluator
 {
-    public function evaluate(Node $node, $context)
-    {
-        if (!isset($node['rhs'], $node['lhs'], $node['operator'])) {
-            throw new NodeEvaluatorException('Logic node is the wrong shape, should have "rhs", "lhs", "operator"');
-        }
-        $lhs = $this->value($node['lhs']);
-        $rhs = $this->value($node['rhs']);
-        $operator = $node['operator'];
-
-        switch ($operator) {
-            case '<':
-                return $lhs < $rhs;
+    public function evaluate(Node $node, $context): bool {
+	    if (!isset($node['rhs'], $node['lhs'], $node['operator'])) {
+		    throw new NodeEvaluatorException('Logic node is the wrong shape, should have "rhs", "lhs", "operator"');
+	    }
+	    $lhs = $this->value($node['lhs']);
+	    $rhs = $this->value($node['rhs']);
+	    $operator = $node['operator'];
+	
+	    switch ($operator) {
+		    case '<':
+			    return $lhs < $rhs;
             case '<=':
                 return $lhs <= $rhs;
             case '>':
@@ -53,9 +52,8 @@ class LogicNodeEvaluator extends AbstractNodeEvaluator
         }
         return $thing;
     }
-
-    public function handles()
-    {
-        return ParsesFloip::LOGIC_TYPE;
-    }
+	
+	public function handles(): string {
+		return ParsesFloip::LOGIC_TYPE;
+	}
 }

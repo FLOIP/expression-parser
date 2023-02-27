@@ -14,34 +14,31 @@ use Viamo\Floip\Evaluator\Node;
  */
 class Logical extends AbstractMethodHandler implements LogicalInterface
 {
-    public function _and()
-    {
-        foreach (array_map([$this, 'value'], func_get_args()) as $arg) {
-            if ($arg == false) {
-                return false;
-            }
-        }
-        return true;
+    public function _and(): bool {
+	    foreach (array_map([$this, 'value'], func_get_args()) as $arg) {
+		    if ($arg == false) {
+			    return false;
+		    }
+	    }
+	    return true;
     }
-
-    public function _if()
-    {
-        $args = array_map([$this, 'value'], \func_get_args());
-        if (count($args) != 3) {
-            throw new MethodNodeException('Wrong number of args for if: ', \func_num_args());
-        }
-        return $args[0] ? $args[1] : $args[2];
-    }
-
-    public function _or()
-    {
-        foreach (\array_map([$this, 'value'], func_get_args()) as $arg) {
-            if ($arg == true) {
-                return true;
-            }
-        }
-        return false;
-    }
+	
+	public function _if(): mixed {
+		$args = array_map([$this, 'value'], \func_get_args());
+		if (count($args) != 3) {
+			throw new MethodNodeException('Wrong number of args for if: ', \func_num_args());
+		}
+		return $args[0] ? $args[1] : $args[2];
+	}
+	
+	public function _or(): bool {
+		foreach (\array_map([$this, 'value'], func_get_args()) as $arg) {
+			if ($arg == true) {
+				return true;
+			}
+		}
+		return false;
+	}
 
     protected function value($thing)
     {
@@ -83,8 +80,7 @@ class Logical extends AbstractMethodHandler implements LogicalInterface
      * @inheritDoc
      * @return string[]
      */
-    public function handles()
-    {
-        return ['and', 'or', 'if'];
-    }
+	public function handles(): array {
+		return ['and', 'or', 'if'];
+	}
 }

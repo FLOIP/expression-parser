@@ -21,5 +21,5 @@ interface ParsesFloip
      * @param string $input
      * @return array
      */
-    public function parse($input);
+    public function parse($input): array;
 }

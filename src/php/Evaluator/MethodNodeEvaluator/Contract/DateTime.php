@@ -18,7 +18,7 @@ interface DateTime extends EvaluatesMethods
      * @param int $day
      * @return Carbon
      */
-    public function date($year, $month, $day);
+    public function date($year, $month, $day): Carbon;
 
     /**
      * Converts date stored in text to an actual date, using your organization's date format setting
@@ -26,7 +26,7 @@ interface DateTime extends EvaluatesMethods
      * @param string $string
      * @return Carbon
      */
-    public function dateValue($string);
+	public function dateValue($string): Carbon;
 
     /**
      * Returns only the day of the month of a date (1 to 31)
@@ -34,7 +34,7 @@ interface DateTime extends EvaluatesMethods
      * @param Carbon|string $datetime
      * @return int
      */
-    public function day($datetime);
+	public function day($datetime): int;
 
     /**
      * Moves a date by the given number of months
@@ -51,7 +51,7 @@ interface DateTime extends EvaluatesMethods
      * @param Carbon|string $datetime
      * @return int
      */
-    public function hour($datetime);
+	public function hour($datetime): int;
 
     /**
      * Returns only the minute of a datetime (0 to 59)
@@ -59,7 +59,7 @@ interface DateTime extends EvaluatesMethods
      * @param Carbon|string $datetime
      * @return int
      */
-    public function minute($datetime);
+	public function minute($datetime): int;
 
     /**
      * Returns only the month of a date (1 to 12)
@@ -67,14 +67,14 @@ interface DateTime extends EvaluatesMethods
      * @param Carbon|string $datetime
      * @return int
      */
-    public function month($datetime);
+	public function month($datetime): int;
 
     /**
      * Returns the current date and time
      *
      * @return Carbon
      */
-    public function now();
+	public function now(): Carbon;
 
     /**
      * Returns only the second of a datetime (0 to 59)
@@ -82,7 +82,7 @@ interface DateTime extends EvaluatesMethods
      * @param Carbon|string $datetime
      * @return int
      */
-    public function second($datetime);
+	public function second($datetime): int;
 
     /**
      * Defines a time value which can be used for time arithmetic
@@ -92,7 +92,7 @@ interface DateTime extends EvaluatesMethods
      * @param int $seconds
      * @return CarbonInterval
      */
-    public function time($hours, $minutes, $seconds);
+	public function time($hours, $minutes, $seconds): CarbonInterval;
 
     /**
      * Converts time stored in text to an actual time
@@ -100,14 +100,14 @@ interface DateTime extends EvaluatesMethods
      * @param string $string
      * @return CarbonInterval
      */
-    public function timeValue($string);
+	public function timeValue($string): CarbonInterval;
 
     /**
      * Returns the current date
      *
      * @return Carbon
      */
-    public function today();
+	public function today(): Carbon;
 
     /**
      * Returns the day of the week of a date (1 for Sunday to 7 for Saturday)
@@ -115,7 +115,7 @@ interface DateTime extends EvaluatesMethods
      * @param Carbon|string $date
      * @return int
      */
-    public function weekday($date);
+	public function weekday($date): int;
 
     /**
      * Returns only the year of a date
@@ -123,7 +123,7 @@ interface DateTime extends EvaluatesMethods
      * @param Carbon|string $date
      * @return int
      */
-    public function year($date);
+	public function year($date): int;
 
     /**
      * Determine if a date falls between $start and $end, inclusive.
@@ -133,5 +133,5 @@ interface DateTime extends EvaluatesMethods
      * @param Carbon|string $end
      * @return bool
      */
-    public function between($date, $start, $end);
+	public function between($date, $start, $end): bool;
 }

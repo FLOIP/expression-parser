@@ -290,11 +290,14 @@ class BaseExpressionParser {
     private $peg_c59;
     private $peg_c60;
 
-    private function peg_f0($id, $ex) { 
-        $ex['location']['start'] = $id['start'];
-        return $ex; 
-      }
-    private function peg_f1($id, $ex) { return call_user_func($this->_location); }
+    private function peg_f0($id, $ex) {
+	    $ex['location']['start'] = $id['start'];
+	    return $ex;
+    }
+	
+	private function peg_f1($id, $ex) {
+		return call_user_func($this->_location);
+	}
     private function peg_f2($id, $ex, $cp) {
         $ex['location'] = ['start' => $id['start'], 'end' => $cp['end']];
         return $ex;
@@ -2313,19 +2316,19 @@ class BaseExpressionParser {
 
       return $s0;
     }
-
-  public function parse($input) {
-    $arguments = func_get_args();
-    $options = count($arguments) > 1 ? $arguments[1] : array();
-    $this->cleanup_state();
-
-    if (is_array($input)) {
-        $this->input = $input;
-    } else {
-        preg_match_all("/./us", $input, $match);
-        $this->input = $match[0];
-    }
-    $this->input_length = count($this->input);
+	
+	public function parse($input): array {
+		$arguments = func_get_args();
+		$options = count($arguments) > 1 ? $arguments[1] : [];
+		$this->cleanup_state();
+		
+		if (is_array($input)) {
+			$this->input = $input;
+		} else {
+			preg_match_all("/./us", $input, $match);
+			$this->input = $match[0];
+		}
+		$this->input_length = count($this->input);
 
     $old_regex_encoding = mb_regex_encoding();
     mb_regex_encoding("UTF-8");

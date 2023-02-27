@@ -7,5 +7,5 @@ interface EvaluatesMethods
     /**
      * @return array
      */
-    public function handles();
+    public function handles(): array;
 }

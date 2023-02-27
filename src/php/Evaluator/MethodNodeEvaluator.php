@@ -57,17 +57,16 @@ class MethodNodeEvaluator extends AbstractNodeEvaluator
      * @param array|ArrayAccess $context
      * @return mixed
      */
-    public function evaluate(Node $node, $context)
-    {
-        if (!isset($node['call'], $node['args']) || !is_array($node['args'])) {
-            throw new NodeEvaluatorException('Method node is the wrong shape, should have "call", "args"');
-        }
-        $call = $node['call'];
-        $args = $node['args'];
-        // transform any child nodes to their value
-        $args = array_map(function ($arg) {
-            if ($arg instanceof Node) {
-                return $arg->getValue();
+    public function evaluate(Node $node, $context): mixed {
+	    if (!isset($node['call'], $node['args']) || !is_array($node['args'])) {
+		    throw new NodeEvaluatorException('Method node is the wrong shape, should have "call", "args"');
+	    }
+	    $call = $node['call'];
+	    $args = $node['args'];
+	    // transform any child nodes to their value
+	    $args = array_map(function ($arg) {
+		    if ($arg instanceof Node) {
+			    return $arg->getValue();
             }
             return $arg;
         }, $args);
@@ -91,9 +90,8 @@ class MethodNodeEvaluator extends AbstractNodeEvaluator
 
         return $result;
     }
-
-    public function handles()
-    {
-        return ParsesFloip::METHOD_TYPE;
-    }
+	
+	public function handles(): string {
+		return ParsesFloip::METHOD_TYPE;
+	}
 }

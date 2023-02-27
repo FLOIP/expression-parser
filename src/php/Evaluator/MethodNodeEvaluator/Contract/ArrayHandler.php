@@ -11,7 +11,7 @@ interface ArrayHandler extends EvaluatesMethods
      * @param array $context
      * @return array
      */
-    public function _array();
+    public function _array(): array;
 
     /**
      * Determine whether a value is contained within an array.
@@ -20,7 +20,7 @@ interface ArrayHandler extends EvaluatesMethods
      * @param array|Traversable $array
      * @return bool
      */
-    public function in($value, $array);
+	public function in($value, $array): bool;
 
 	/**
 	 * Count the number of elements in an array
@@ -28,5 +28,5 @@ interface ArrayHandler extends EvaluatesMethods
 	 * @param array|Countable $array
 	 * @return int
 	 */
-	public function count($array);
+	public function count($array): int;
 }

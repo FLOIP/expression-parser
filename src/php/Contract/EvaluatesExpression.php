@@ -14,12 +14,12 @@ interface EvaluatesExpression
      * @param array|ArrayAccess $context
      * @return mixed
      */
-    public function evaluate(Node $node, $context);
+    public function evaluate(Node $node, array|ArrayAccess $context): mixed;
 
     /**
      * Reports what type of node this evaluator handles.
      *
      * @return string
      */
-    public function handles();
+	public function handles(): string;
 }

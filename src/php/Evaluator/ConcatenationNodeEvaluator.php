@@ -9,15 +9,14 @@ use Viamo\Floip\Evaluator\Exception\NodeEvaluatorException;
 
 class ConcatenationNodeEvaluator extends AbstractNodeEvaluator
 {
-    public function evaluate(Node $node, $context)
-    {
-        if (!isset($node['rhs'], $node['lhs'])) {
-            throw new NodeEvaluatorException('Concatenation node is the wrong shape, should have "rhs", "lhs"');
-        }
-        $lhs = $this->value($node['lhs']);
-        $rhs = $this->value($node['rhs']);
-
-        return $lhs . $rhs;
+    public function evaluate(Node $node, $context): mixed {
+	    if (!isset($node['rhs'], $node['lhs'])) {
+		    throw new NodeEvaluatorException('Concatenation node is the wrong shape, should have "rhs", "lhs"');
+	    }
+	    $lhs = $this->value($node['lhs']);
+	    $rhs = $this->value($node['rhs']);
+	
+	    return $lhs . $rhs;
     }
 
     private function value($thing)
@@ -27,9 +26,8 @@ class ConcatenationNodeEvaluator extends AbstractNodeEvaluator
         }
         return $thing;
     }
-
-    public function handles()
-    {
-        return ParsesFloip::CONCATENATION_TYPE;
-    }
+	
+	public function handles(): string {
+		return ParsesFloip::CONCATENATION_TYPE;
+	}
 }

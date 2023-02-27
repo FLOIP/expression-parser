@@ -22,31 +22,29 @@ use Viamo\Floip\Evaluator\NullNodeEvaluator;
 
 class EvaluatorFactory
 {
-	public function newInstance() {
+	public function newInstance(): Evaluator {
 		$eval = new Evaluator(new Parser);
 		foreach ($this->getNodeEvaluators() as $nodeHandler) {
 			$eval->addNodeEvaluator($nodeHandler);
 		}
-
+		
 		return $eval;
 	}
-
-	public function create() {
+	
+	public function create(): Evaluator {
 		return $this->newInstance();
 	}
-
-	protected function methodNodeInstance()
-	{
+	
+	protected function methodNodeInstance(): MethodNodeEvaluator {
 		$eval = new MethodNodeEvaluator;
 		foreach ($this->getMethodHandlers() as $methodHandler) {
 			$eval->addHandler($methodHandler);
 		}
-
+		
 		return $eval;
 	}
 	
-	protected function getMethodHandlers()
-	{
+	protected function getMethodHandlers(): array {
 		return [
 			new DateTime,
 			new Excellent,
@@ -57,9 +55,8 @@ class EvaluatorFactory
 			new MatchTest,
 		];
 	}
-
-	protected function getNodeEvaluators()
-	{
+	
+	protected function getNodeEvaluators(): array {
 		return [
 			new LogicNodeEvaluator,
 			new MemberNodeEvaluator,
@@ -69,7 +66,7 @@ class EvaluatorFactory
 			new NullNodeEvaluator,
 			new MethodNodeEvaluator,
 			new BoolNodeEvaluator,
-			$this->methodNodeInstance()
+			$this->methodNodeInstance(),
 		];
 	}
 }

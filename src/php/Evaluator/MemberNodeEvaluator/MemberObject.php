@@ -19,23 +19,23 @@ class MemberObject extends ArrayObject implements JsonSerializable
         return (string) \json_encode($this, \JSON_FORCE_OBJECT);
     }
 
-    public function getIterator() {
-        return new MemberObjectIterator($this);
+    public function getIterator(): MemberObjectIterator {
+	    return new MemberObjectIterator($this);
     }
-
-    public function &offsetGet($index) {
-        $item = parent::offsetGet($index);
-
-        if (\is_array($item) || $item instanceof ArrayAccess) {
-            if (Arr::has($item, '__value__')) {
-                return $item['__value__'];
-            }
-        } else {
-            return $item;
-        }
-    }
-
-    public function jsonSerialize() {
-        return $this->getArrayCopy();
-    }
+	
+	public function &offsetGet($index): mixed {
+		$item = parent::offsetGet($index);
+		
+		if (\is_array($item) || $item instanceof ArrayAccess) {
+			if (Arr::has($item, '__value__')) {
+				return $item['__value__'];
+			}
+		} else {
+			return $item;
+		}
+	}
+	
+	public function jsonSerialize(): mixed {
+		return $this->getArrayCopy();
+	}
 }

@@ -9,11 +9,11 @@ use ArrayIterator;
  */
 class MemberObjectIterator extends ArrayIterator
 {
-    public function current() {
-        $current = parent::current();
-        if (\is_array($current) && array_key_exists('__value__', $current)) {
-            return $current['__value__'];
-        }
-        return $current;
+    public function current(): mixed {
+	    $current = parent::current();
+	    if (\is_array($current) && array_key_exists('__value__', $current)) {
+		    return $current['__value__'];
+	    }
+	    return $current;
     }
 }
