@@ -15,12 +15,12 @@ class Math extends AbstractMethodHandler implements MathInterface
     }
     
     public function max(): float|int {
-        $args = array_filter(array_map($this->value(...), func_get_args()), 'is_numeric');
+        $args = array_filter(array_map([$this, 'value'], func_get_args()), 'is_numeric');
         return array_reduce($args, 'max', static::PHP_INT_MIN);
     }
     
     public function min(): float|int {
-        $args = array_filter(array_map($this->value(...), func_get_args()), 'is_numeric');
+        $args = array_filter(array_map([$this, 'value'], func_get_args()), 'is_numeric');
         return array_reduce($args, 'min', PHP_INT_MAX);
     }
     
@@ -29,7 +29,7 @@ class Math extends AbstractMethodHandler implements MathInterface
     }
     
     public function sum(): float|int {
-        $args = array_map($this->value(...), func_get_args());
+        $args = array_map([$this, 'value'], func_get_args());
         return array_sum($args);
     }
 }

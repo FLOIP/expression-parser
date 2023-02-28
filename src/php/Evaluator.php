@@ -47,7 +47,7 @@ class Evaluator
 
         $ast = $this->parser->parse($expression);
 
-        $nodes = array_map($this->mapNodes(...), $ast);
+        $nodes = array_map([$this, 'mapNodes'], $ast);
 
         // we want to evaluate the nodes from the deepest child first
         // since some nodes will have others as arguments

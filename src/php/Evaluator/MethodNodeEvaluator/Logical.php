@@ -20,11 +20,11 @@ use const E_USER_ERROR;
 class Logical extends AbstractMethodHandler implements LogicalInterface
 {
     public function _and(): bool {
-        return !in_array(false, array_map($this->value(...), func_get_args()));
+        return !in_array(false, array_map([$this, 'value'], func_get_args()));
     }
 
     public function _if(): mixed {
-        $args = array_map($this->value(...), func_get_args());
+        $args = array_map([$this, 'value'], func_get_args());
         if (count($args) != 3) {
             throw new MethodNodeException('Wrong number of args for if: ', func_num_args());
         }
@@ -32,7 +32,7 @@ class Logical extends AbstractMethodHandler implements LogicalInterface
     }
 
     public function _or(): bool {
-        return in_array(true, array_map($this->value(...), func_get_args()));
+        return in_array(true, array_map([$this, 'value'], func_get_args()));
     }
 
     protected function value($thing)

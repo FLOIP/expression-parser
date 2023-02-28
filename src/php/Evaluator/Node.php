@@ -18,7 +18,7 @@ class Node implements ArrayAccess, Stringable {
 
     public function __construct($data)
     {
-        $this->data = array_map($this->transformData(...), $data);
+        $this->data = array_map([$this, 'transformData'], $data);
     }
 
     /**
@@ -29,7 +29,7 @@ class Node implements ArrayAccess, Stringable {
             return new self($data);
         }
         if (is_array($data)) {
-            return array_map($this->transformData(...), $data);
+            return array_map([$this, 'transformData'], $data);
         }
         return $data;
     }
@@ -126,7 +126,7 @@ class Node implements ArrayAccess, Stringable {
     /*
      * Implementation of ArrayAccess
      */
-    public function offsetExists($offset): bool {
+    public function offsetExists($offset) {
         return isset($this->data[$offset]);
     }
     

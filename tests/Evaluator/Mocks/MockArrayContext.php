@@ -15,7 +15,7 @@ class MockArrayContext implements ArrayAccess, JsonSerializable
         $this->data = $data;
     }
 
-    public function offsetExists($offset): bool {
+    public function offsetExists($offset) {
         return array_key_exists($offset, $this->data);
     }
     
