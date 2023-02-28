@@ -26,7 +26,7 @@ interface MatchTest extends EvaluatesMethods
      * @param string $words
      * @return TestResult
      */
-	public function has_any_word($text, $words): TestResult;
+    public function has_any_word($text, $words): TestResult;
 
     /**
      * Tests whether text starts with beginning.
@@ -37,7 +37,7 @@ interface MatchTest extends EvaluatesMethods
      * @param string $beginning
      * @return TestResult
      */
-	public function has_beginning($text, $beginning): TestResult;
+    public function has_beginning($text, $beginning): TestResult;
 
     /**
      * Tests whether the category of a result on of the passed in categories
@@ -46,7 +46,7 @@ interface MatchTest extends EvaluatesMethods
      * @param string ...$categories
      * @return TestResult
      */
-	public function has_category($result, $categories): TestResult;
+    public function has_category($result, $categories): TestResult;
 
     /**
      * Tests whether text contains a date formatted according to our environment.
@@ -54,7 +54,7 @@ interface MatchTest extends EvaluatesMethods
      * @param string $text
      * @return TestResult
      */
-	public function has_date($text): TestResult;
+    public function has_date($text): TestResult;
 
     /**
      * Tests whether text a date equal to date.
@@ -63,7 +63,7 @@ interface MatchTest extends EvaluatesMethods
      * @param string $date
      * @return TestResult
      */
-	public function has_date_eq($text, $date): TestResult;
+    public function has_date_eq($text, $date): TestResult;
 
     /**
      * Tests whether text a date after the date min.
@@ -72,7 +72,7 @@ interface MatchTest extends EvaluatesMethods
      * @param string $min
      * @return TestResult
      */
-	public function has_date_gt($text, $min): TestResult;
+    public function has_date_gt($text, $min): TestResult;
 
     /**
      * Tests whether text contains a date before the date max.
@@ -81,7 +81,7 @@ interface MatchTest extends EvaluatesMethods
      * @param string $max
      * @return TestResult
      */
-	public function has_date_lt($text, $max): TestResult;
+    public function has_date_lt($text, $max): TestResult;
 
     /**
      * Tests whether a district name is contained in the text.
@@ -92,7 +92,7 @@ interface MatchTest extends EvaluatesMethods
      * @param string $state
      * @return TestResult
      */
-	public function has_district($text, $state = null): TestResult;
+    public function has_district($text, $state = null): TestResult;
 
     /**
      * Tests whether an email is contained in text.
@@ -100,7 +100,7 @@ interface MatchTest extends EvaluatesMethods
      * @param string $text
      * @return TestResult
      */
-	public function has_email($text): TestResult;
+    public function has_email($text): TestResult;
 
     /**
      * Returns whether value is an error.
@@ -108,7 +108,7 @@ interface MatchTest extends EvaluatesMethods
      * @param mixed $value
      * @return TestResult
      */
-	public function has_error($value): TestResult;
+    public function has_error($value): TestResult;
 
     /**
      * Returns whether the contact is part of group with the passed in UUID.
@@ -117,7 +117,7 @@ interface MatchTest extends EvaluatesMethods
      * @param string $group_uuid
      * @return TestResult
      */
-	public function has_group($groups, $group_uuid): TestResult;
+    public function has_group($groups, $group_uuid): TestResult;
 
     /**
      * Tests whether any intent in a classification result has name and minimum
@@ -128,7 +128,7 @@ interface MatchTest extends EvaluatesMethods
      * @param float $confidence
      * @return TestResult
      */
-	public function has_intent($result, $name, $confidence): TestResult;
+    public function has_intent($result, $name, $confidence): TestResult;
 
     /**
      * Tests whether text contains a number.
@@ -136,7 +136,7 @@ interface MatchTest extends EvaluatesMethods
      * @param string $text
      * @return TestResult
      */
-	public function has_number($text): TestResult;
+    public function has_number($text): TestResult;
 
     /**
      * Tests whether text contains a number between min and max inclusive.
@@ -146,7 +146,7 @@ interface MatchTest extends EvaluatesMethods
      * @param int $max
      * @return TestResult
      */
-	public function has_number_between($text, $min, $max): TestResult;
+    public function has_number_between($text, $min, $max): TestResult;
 
     /**
      * Tests whether text contains a number equal to the value.
@@ -155,7 +155,7 @@ interface MatchTest extends EvaluatesMethods
      * @param int $value
      * @return TestResult
      */
-	public function has_number_eq($text, $value): TestResult;
+    public function has_number_eq($text, $value): TestResult;
 
     /**
      * Tests whether text contains a number greater than min.
@@ -164,7 +164,7 @@ interface MatchTest extends EvaluatesMethods
      * @param int $min
      * @return TestResult
      */
-	public function has_number_gt($text, $min): TestResult;
+    public function has_number_gt($text, $min): TestResult;
 
     /**
      * Tests whether text contains a number greater than or equal to min.
@@ -173,7 +173,7 @@ interface MatchTest extends EvaluatesMethods
      * @param int $min
      * @return TestResult
      */
-	public function has_number_gte($text, $min): TestResult;
+    public function has_number_gte($text, $min): TestResult;
 
     /**
      * Tests whether text contains a number less than max.
@@ -182,7 +182,7 @@ interface MatchTest extends EvaluatesMethods
      * @param int $max
      * @return TestResult
      */
-	public function has_number_lt($text, $max): TestResult;
+    public function has_number_lt($text, $max): TestResult;
 
     /**
      * Tests whether text contains a number less than or equal to max.
@@ -191,7 +191,7 @@ interface MatchTest extends EvaluatesMethods
      * @param int $max
      * @return TestResult
      */
-	public function has_number_lte($text, $max): TestResult;
+    public function has_number_lte($text, $max): TestResult;
 
     /**
      * Tests whether the text contains only phrase.
@@ -201,7 +201,7 @@ interface MatchTest extends EvaluatesMethods
      * @param string $phrase
      * @return TestResult
      */
-	public function has_only_phrase($text, $phrase): TestResult;
+    public function has_only_phrase($text, $phrase): TestResult;
 
     /**
      * Returns whether two text values are equal (case sensitive).
@@ -211,7 +211,7 @@ interface MatchTest extends EvaluatesMethods
      * @param string $text2
      * @return TestResult
      */
-	public function has_only_text($text1, $text2): TestResult;
+    public function has_only_text($text1, $text2): TestResult;
 
     /**
      * Tests whether text matches the regex pattern.
@@ -222,7 +222,7 @@ interface MatchTest extends EvaluatesMethods
      * @param string $pattern
      * @return TestResult
      */
-	public function has_pattern($text, $pattern): TestResult;
+    public function has_pattern($text, $pattern): TestResult;
 
     /**
      * Tests whether text contains a phone number. The optional country_code
@@ -232,7 +232,7 @@ interface MatchTest extends EvaluatesMethods
      * @param string|null $country_code
      * @return TestResult
      */
-	public function has_phone($text, $country_code = null): TestResult;
+    public function has_phone($text, $country_code = null): TestResult;
 
     /**
      * Tests whether phrase is contained in text.
@@ -243,7 +243,7 @@ interface MatchTest extends EvaluatesMethods
      * @param string $phrase
      * @return TestResult
      */
-	public function has_phrase($text, $phrase): TestResult;
+    public function has_phrase($text, $phrase): TestResult;
 
     /**
      * Tests whether a state name is contained in the text.
@@ -251,7 +251,7 @@ interface MatchTest extends EvaluatesMethods
      * @param string $text
      * @return TestResult
      */
-	public function has_state($text): TestResult;
+    public function has_state($text): TestResult;
 
     /**
      * Tests whether there the text has any characters in it.
@@ -259,7 +259,7 @@ interface MatchTest extends EvaluatesMethods
      * @param string $text
      * @return TestResult
      */
-	public function has_text($text): TestResult;
+    public function has_text($text): TestResult;
 
     /**
      * Tests whether text contains a time.
@@ -267,7 +267,7 @@ interface MatchTest extends EvaluatesMethods
      * @param string $text
      * @return TestResult
      */
-	public function has_time($text): TestResult;
+    public function has_time($text): TestResult;
 
     /**
      * Tests whether the top intent in a classification result has name and
@@ -278,7 +278,7 @@ interface MatchTest extends EvaluatesMethods
      * @param int $confidence
      * @return TestResult
      */
-	public function has_top_intent($result, $name, $confidence): TestResult;
+    public function has_top_intent($result, $name, $confidence): TestResult;
 
     /**
      * Tests whether a ward name is contained in the text.
@@ -288,6 +288,6 @@ interface MatchTest extends EvaluatesMethods
      * @param string $state
      * @return TestResult
      */
-	public function has_ward($text, $district, $state): TestResult;
+    public function has_ward($text, $district, $state): TestResult;
 
 }

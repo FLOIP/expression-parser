@@ -4,26 +4,23 @@ namespace Viamo\Floip\Evaluator;
 
 use Carbon\Carbon;
 use Carbon\CarbonInterval;
-use Carbon\CarbonPeriod;
 use DateInterval;
-use Viamo\Floip\Evaluator\Node;
 use Viamo\Floip\Contract\ParsesFloip;
-use Viamo\Floip\Evaluator\AbstractNodeEvaluator;
 use Viamo\Floip\Evaluator\Exception\NodeEvaluatorException;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract\DateTime;
 
 class MathNodeEvaluator extends AbstractNodeEvaluator
 {
     public function evaluate(Node $node, $context): mixed {
-	    if (!isset($node['rhs'], $node['lhs'], $node['operator'])) {
-		    throw new NodeEvaluatorException('Math node is the wrong shape, should have "rhs", "lhs", "operator"');
-	    }
-	    $lhs = $this->value($node['lhs']);
-	    $rhs = $this->value($node['rhs']);
-	    $operator = $node['operator'];
-	
-	    if ($this->isDateValue($rhs) || $this->isDateValue($lhs)) {
-		    return $this->evaluateDates((clone $lhs), $rhs, $operator);
+        if (!isset($node['rhs'], $node['lhs'], $node['operator'])) {
+            throw new NodeEvaluatorException('Math node is the wrong shape, should have "rhs", "lhs", "operator"');
+        }
+        $lhs = $this->value($node['lhs']);
+        $rhs = $this->value($node['rhs']);
+        $operator = $node['operator'];
+
+        if ($this->isDateValue($rhs) || $this->isDateValue($lhs)) {
+            return $this->evaluateDates((clone $lhs), $rhs, $operator);
         }
 
         switch ($operator) {
@@ -86,8 +83,8 @@ class MathNodeEvaluator extends AbstractNodeEvaluator
         return Carbon::parse($thing);
 
     }
-	
-	public function handles(): string {
-		return ParsesFloip::MATH_TYPE;
-	}
+
+    public function handles(): string {
+        return ParsesFloip::MATH_TYPE;
+    }
 }

@@ -11,15 +11,15 @@ interface Logical extends EvaluatesMethods
      * @return bool
      */
     public function _and(): bool;
-	
-	/**
-	 * Returns one value if the condition evaluates to TRUE, and another value if it evaluates to FALSE
-	 *
-	 * @param mixed ...$args
-	 *
-	 * @return mixed
-	 */
-	public function _if(): mixed;
+    
+    /**
+     * Returns one value if the condition evaluates to TRUE, and another value if it evaluates to FALSE
+     *
+     * @param mixed ...$args
+     *
+     * @return mixed
+     */
+    public function _if(): mixed;
 
     /**
      * Returns TRUE if any argument is TRUE
@@ -27,5 +27,5 @@ interface Logical extends EvaluatesMethods
      * @param mixed ...$args
      * @return bool
      */
-	public function _or(): bool;
+    public function _or(): bool;
 }

@@ -2,6 +2,8 @@
 
 namespace Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract;
 
+use Traversable;
+
 interface ArrayHandler extends EvaluatesMethods
 {
     /**
@@ -20,13 +22,13 @@ interface ArrayHandler extends EvaluatesMethods
      * @param array|Traversable $array
      * @return bool
      */
-	public function in($value, $array): bool;
+    public function in($value, $array): bool;
 
-	/**
-	 * Count the number of elements in an array
-	 *
-	 * @param array|Countable $array
-	 * @return int
-	 */
-	public function count($array): int;
+    /**
+     * Count the number of elements in an array
+     *
+     * @param array|Countable $array
+     * @return int
+     */
+    public function count($array): int;
 }

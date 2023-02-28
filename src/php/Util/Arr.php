@@ -16,16 +16,16 @@ class Arr
      * @return bool
      */
     public static function has($array, $keys): bool {
-	    $keys = (array) $keys;
-	
-	    if (!$array || $keys === []) {
-		    return false;
-	    }
-	
-	    foreach ($keys as $key) {
-		    $subKeyArray = $array;
-		
-		    if (static::exists($array, $key)) {
+        $keys = (array) $keys;
+
+        if (!$array || $keys === []) {
+            return false;
+        }
+
+        foreach ($keys as $key) {
+            $subKeyArray = $array;
+
+            if (static::exists($array, $key)) {
                 continue;
             }
 
@@ -48,13 +48,13 @@ class Arr
      * @param  string|int  $key
      * @return bool
      */
-	public static function exists($array, $key): bool {
-		if ($array instanceof ArrayAccess) {
-			return $array->offsetExists($key);
-		}
-		
-		return array_key_exists($key, $array);
-	}
+    public static function exists($array, $key): bool {
+        if ($array instanceof ArrayAccess) {
+            return $array->offsetExists($key);
+        }
+
+        return array_key_exists($key, $array);
+    }
 
     /**
      * Determine whether the given value is array accessible.
@@ -62,9 +62,9 @@ class Arr
      * @param  mixed  $value
      * @return bool
      */
-	public static function accessible($value): bool {
-		return is_array($value) || $value instanceof ArrayAccess;
-	}
+    public static function accessible($value): bool {
+        return is_array($value) || $value instanceof ArrayAccess;
+    }
 
     /**
      * Determine whether the given thing looks like an array.
@@ -72,9 +72,9 @@ class Arr
      * @param mixed $thing
      * @return bool
      */
-	public static function isArray($thing): bool {
-		return $thing instanceof ArrayAccess || is_array($thing);
-	}
+    public static function isArray($thing): bool {
+        return $thing instanceof ArrayAccess || is_array($thing);
+    }
 
     /**
      * Determines if an array is associative.
@@ -84,9 +84,9 @@ class Arr
      * @param  array  $array
      * @return bool
      */
-	public static function isAssoc(array $array): bool {
-		$keys = array_keys($array);
-		
-		return array_keys($keys) !== $keys;
-	}
+    public static function isAssoc(array $array): bool {
+        $keys = array_keys($array);
+
+        return array_keys($keys) !== $keys;
+    }
 }

@@ -3,8 +3,8 @@
 namespace Viamo\Floip\Evaluator;
 
 use ArrayAccess;
-use Viamo\Floip\Evaluator\Exception\NodeEvaluatorException;
 use Viamo\Floip\Contract\ParsesFloip;
+use Viamo\Floip\Evaluator\Exception\NodeEvaluatorException;
 use Viamo\Floip\Evaluator\MemberNodeEvaluator\MemberObject;
 use Viamo\Floip\Util\Arr;
 
@@ -14,14 +14,14 @@ class MemberNodeEvaluator extends AbstractNodeEvaluator
      * Evaluate the value of a member access node given a context.
      */
     public function evaluate(Node $node, $context): mixed {
-	    if (!isset($node['key'])) {
-		    throw new NodeEvaluatorException('Member node is the wrong shape, should have "key"');
-	    }
-	
-	    $key = $node['key'];
-	
-	    $keys = explode('.', $key);
-	    $currentContext = $context;
+        if (!isset($node['key'])) {
+            throw new NodeEvaluatorException('Member node is the wrong shape, should have "key"');
+        }
+
+        $key = $node['key'];
+
+        $keys = explode('.', $key);
+        $currentContext = $context;
 
         // if the top-level key does not exist at the top-level
         // of the context, return the expression as originally
@@ -53,8 +53,8 @@ class MemberNodeEvaluator extends AbstractNodeEvaluator
         }
         return $currentContext;
     }
-	
-	public function handles(): string {
-		return ParsesFloip::MEMBER_TYPE;
-	}
+
+    public function handles(): string {
+        return ParsesFloip::MEMBER_TYPE;
+    }
 }

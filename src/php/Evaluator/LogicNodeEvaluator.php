@@ -2,22 +2,22 @@
 
 namespace Viamo\Floip\Evaluator;
 
-use Viamo\Floip\Evaluator\Exception\NodeEvaluatorException;
 use Viamo\Floip\Contract\ParsesFloip;
+use Viamo\Floip\Evaluator\Exception\NodeEvaluatorException;
 
 class LogicNodeEvaluator extends AbstractNodeEvaluator
 {
     public function evaluate(Node $node, $context): bool {
-	    if (!isset($node['rhs'], $node['lhs'], $node['operator'])) {
-		    throw new NodeEvaluatorException('Logic node is the wrong shape, should have "rhs", "lhs", "operator"');
-	    }
-	    $lhs = $this->value($node['lhs']);
-	    $rhs = $this->value($node['rhs']);
-	    $operator = $node['operator'];
-	
-	    switch ($operator) {
-		    case '<':
-			    return $lhs < $rhs;
+        if (!isset($node['rhs'], $node['lhs'], $node['operator'])) {
+            throw new NodeEvaluatorException('Logic node is the wrong shape, should have "rhs", "lhs", "operator"');
+        }
+        $lhs = $this->value($node['lhs']);
+        $rhs = $this->value($node['rhs']);
+        $operator = $node['operator'];
+
+        switch ($operator) {
+            case '<':
+                return $lhs < $rhs;
             case '<=':
                 return $lhs <= $rhs;
             case '>':
@@ -25,12 +25,25 @@ class LogicNodeEvaluator extends AbstractNodeEvaluator
             case '>=':
                 return $lhs >= $rhs;
             case '=':
-                return $lhs == $rhs;
+                return $this->equals($lhs, $rhs);
             case '!=':
             case '<>':
                 return $lhs !== $rhs;
         }
         throw new NodeEvaluatorException('invalid operator ' . $operator);
+    }
+
+    private function equals($lhs, $rhs): bool {
+        if ($lhs === $rhs) {
+            return true;
+        }
+        if ($lhs == $rhs) {
+            // don't type juggle bools
+            if (!is_bool($lhs) && !is_bool($rhs)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private function value($thing)
@@ -52,8 +65,8 @@ class LogicNodeEvaluator extends AbstractNodeEvaluator
         }
         return $thing;
     }
-	
-	public function handles(): string {
-		return ParsesFloip::LOGIC_TYPE;
-	}
+
+    public function handles(): string {
+        return ParsesFloip::LOGIC_TYPE;
+    }
 }

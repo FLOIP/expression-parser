@@ -2,8 +2,8 @@
 
 namespace Viamo\Floip\Contract;
 
-use Viamo\Floip\Evaluator\Node;
 use ArrayAccess;
+use Viamo\Floip\Evaluator\Node;
 
 interface EvaluatesExpression
 {
@@ -21,5 +21,5 @@ interface EvaluatesExpression
      *
      * @return string
      */
-	public function handles(): string;
+    public function handles(): string;
 }

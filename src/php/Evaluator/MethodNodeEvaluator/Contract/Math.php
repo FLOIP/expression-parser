@@ -18,7 +18,7 @@ interface Math extends EvaluatesMethods
      * @param int|float ...$value
      * @return int|float
      */
-	public function max(): float|int;
+    public function max(): float|int;
 
     /**
      * Returns the minimum value of all arguments
@@ -26,7 +26,7 @@ interface Math extends EvaluatesMethods
      * @param int|float ...$value
      * @return int|float
      */
-	public function min(): float|int;
+    public function min(): float|int;
 
     /**
      * Returns the result of a number raised to a power - equivalent to the ^ operator
@@ -35,7 +35,7 @@ interface Math extends EvaluatesMethods
      * @param int|float $power
      * @return int|float
      */
-	public function power($number, $power): float|int;
+    public function power($number, $power): float|int;
 
     /**
      * Returns the sum of all arguments, equivalent to the + operator
@@ -43,5 +43,5 @@ interface Math extends EvaluatesMethods
      * @param int|float ...$value
      * @return int|float
      */
-	public function sum(): float|int;
+    public function sum(): float|int;
 }

@@ -20,7 +20,7 @@ interface Excellent extends EvaluatesMethods
      * @param int|float $number
      * @return string
      */
-	public function percent($number): string;
+    public function percent($number): string;
 
     /**
      * Formats digits in text for reading in TTS
@@ -28,7 +28,7 @@ interface Excellent extends EvaluatesMethods
      * @param string $string
      * @return mixed
      */
-	public function readDigits($string): mixed;
+    public function readDigits($string): mixed;
 
     /**
      * Removes the first word from the given text. The remaining text will
@@ -37,7 +37,7 @@ interface Excellent extends EvaluatesMethods
      * @param string $string
      * @return string
      */
-	public function removeFirstWord($string): string;
+    public function removeFirstWord($string): string;
 
     /**
      * Extracts the nth word from the given text string. If stop is a negative
@@ -52,7 +52,7 @@ interface Excellent extends EvaluatesMethods
      * @param bool|null $bySpaces
      * @return string
      */
-	public function word($string, $number, $bySpaces = null): string;
+    public function word($string, $number, $bySpaces = null): string;
 
     /**
      * Returns the number of words in the given text string. If by_spaces is
@@ -63,7 +63,7 @@ interface Excellent extends EvaluatesMethods
      * @param bool|null $bySpaces
      * @return int
      */
-	public function wordCount($string, $bySpaces = null): int;
+    public function wordCount($string, $bySpaces = null): int;
 
     /**
      * Extracts a substring of the words beginning at start, and up to but
@@ -80,7 +80,7 @@ interface Excellent extends EvaluatesMethods
      * @param int|null $bySpaces
      * @return string
      */
-	public function wordSlice($string, $start, $stop = null, $bySpaces = null): string;
+    public function wordSlice($string, $start, $stop = null, $bySpaces = null): string;
 
     /**
      * Return trues if a value is a number, false otherwise.
@@ -88,7 +88,7 @@ interface Excellent extends EvaluatesMethods
      * @param mixed $value
      * @return bool
      */
-	public function isNumber($value): bool;
+    public function isNumber($value): bool;
 
     /**
      * Return trues if a value is a string, false otherwise.
@@ -96,7 +96,7 @@ interface Excellent extends EvaluatesMethods
      * @param mixed $value
      * @return bool
      */
-	public function isString($value): bool;
+    public function isString($value): bool;
 
     /**
      * Return trues if a value is a bool, false otherwise.
@@ -104,14 +104,14 @@ interface Excellent extends EvaluatesMethods
      * @param mixed $value
      * @return bool
      */
-	public function isBool($value): bool;
+    public function isBool($value): bool;
     
     /**
      * Returns a single random number between [0.0-1.0).
      *
      * @return float
      */
-	public function rand(): float;
+    public function rand(): float;
     
     /**
      * Returns a single random integer in the given inclusive range.
@@ -121,5 +121,5 @@ interface Excellent extends EvaluatesMethods
      *
      * @return int
      */
-	public function randBetween($min, $max): int;
+    public function randBetween($min, $max): int;
 }

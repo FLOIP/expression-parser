@@ -18,7 +18,7 @@ interface Text extends EvaluatesMethods
      * @param string $string
      * @return string
      */
-	public function clean($string): string;
+    public function clean($string): string;
     
     /**
      * Returns a numeric code for the first character in a text string
@@ -26,7 +26,7 @@ interface Text extends EvaluatesMethods
      * @param string $string
      * @return int
      */
-	public function code($string): int;
+    public function code($string): int;
     
     /**
      * Joins text strings into one text string
@@ -34,7 +34,7 @@ interface Text extends EvaluatesMethods
      * @param string[] ...$args
      * @return string
      */
-	public function concatenate(): string;
+    public function concatenate(): string;
     
     /**
      * Formats the given number in decimal format using a period and commas
@@ -44,7 +44,7 @@ interface Text extends EvaluatesMethods
      * @param bool $commas
      * @return string
      */
-	public function fixed($number, $decimals = 0, $commas = false): string;
+    public function fixed($number, $decimals = 0, $commas = false): string;
     
     /**
      * Returns the first characters in a text string
@@ -53,7 +53,7 @@ interface Text extends EvaluatesMethods
      * @param int $chars
      * @return string
      */
-	public function left($string, $chars): string;
+    public function left($string, $chars): string;
     
     /**
      * Returns the number of characters in a text string
@@ -61,7 +61,7 @@ interface Text extends EvaluatesMethods
      * @param string $string
      * @return int
      */
-	public function len($string): int;
+    public function len($string): int;
     
     /**
      * Converts a text string to lowercase
@@ -69,7 +69,7 @@ interface Text extends EvaluatesMethods
      * @param string $string
      * @return string
      */
-	public function lower($string): string;
+    public function lower($string): string;
     
     /**
      * Capitalizes the first letter of every word in a text string
@@ -77,7 +77,7 @@ interface Text extends EvaluatesMethods
      * @param string $string
      * @return string
      */
-	public function proper($string): string;
+    public function proper($string): string;
     
     /**
      * Repeats text a given number of times
@@ -86,7 +86,7 @@ interface Text extends EvaluatesMethods
      * @param int $times
      * @return string
      */
-	public function rept($string, $times): string;
+    public function rept($string, $times): string;
     
     /**
      * Returns the last characters in a text string
@@ -95,7 +95,7 @@ interface Text extends EvaluatesMethods
      * @param int $chars
      * @return string
      */
-	public function right($string, $chars): string;
+    public function right($string, $chars): string;
     
     /**
      * Substitutes new_text for old_text in a text string. If instance_num
@@ -107,7 +107,7 @@ interface Text extends EvaluatesMethods
      * @param int $instances
      * @return string
      */
-	public function substitute($string, $old, $new, $instances = null): string;
+    public function substitute($string, $old, $new, $instances = null): string;
     
     /**
      * Returns the unicode character specified by a number
@@ -115,7 +115,7 @@ interface Text extends EvaluatesMethods
      * @param int $unicode
      * @return string
      */
-	public function unichar($unicode): string;
+    public function unichar($unicode): string;
     
     /**
      * Returns a numeric code for the first character in a text string
@@ -123,7 +123,7 @@ interface Text extends EvaluatesMethods
      * @param string $string
      * @return int
      */
-	public function unicode($string): int;
+    public function unicode($string): int;
     
     /**
      * Converts a text string to uppercase
@@ -131,7 +131,7 @@ interface Text extends EvaluatesMethods
      * @param string $string
      * @return string
      */
-	public function upper($string): string;
+    public function upper($string): string;
 
     /**
      * Determines whether one string may be found within another string
@@ -141,5 +141,5 @@ interface Text extends EvaluatesMethods
      *
      * @return boolean
      */
-	public function contains($needle, $haystack): bool;
+    public function contains($needle, $haystack): bool;
 }

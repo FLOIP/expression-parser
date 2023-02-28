@@ -2,12 +2,12 @@
 
 namespace Viamo\Floip\Evaluator;
 
-use Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract\EvaluatesMethods;
-use Viamo\Floip\Evaluator\Exception\NodeEvaluatorException;
+use ArrayAccess;
 use Viamo\Floip\Contract\ParsesFloip;
 use Viamo\Floip\Evaluator\Exception\MethodNodeException;
+use Viamo\Floip\Evaluator\Exception\NodeEvaluatorException;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract\Chainable;
-use ArrayAccess;
+use Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract\EvaluatesMethods;
 
 /**
  * Evaluates METHOD nodes -- expressions that look like @(FUNC(arg...))
@@ -58,15 +58,15 @@ class MethodNodeEvaluator extends AbstractNodeEvaluator
      * @return mixed
      */
     public function evaluate(Node $node, $context): mixed {
-	    if (!isset($node['call'], $node['args']) || !is_array($node['args'])) {
-		    throw new NodeEvaluatorException('Method node is the wrong shape, should have "call", "args"');
-	    }
-	    $call = $node['call'];
-	    $args = $node['args'];
-	    // transform any child nodes to their value
-	    $args = array_map(function ($arg) {
-		    if ($arg instanceof Node) {
-			    return $arg->getValue();
+        if (!isset($node['call'], $node['args']) || !is_array($node['args'])) {
+            throw new NodeEvaluatorException('Method node is the wrong shape, should have "call", "args"');
+        }
+        $call = $node['call'];
+        $args = $node['args'];
+        // transform any child nodes to their value
+        $args = array_map(function ($arg) {
+            if ($arg instanceof Node) {
+                return $arg->getValue();
             }
             return $arg;
         }, $args);
@@ -90,8 +90,8 @@ class MethodNodeEvaluator extends AbstractNodeEvaluator
 
         return $result;
     }
-	
-	public function handles(): string {
-		return ParsesFloip::METHOD_TYPE;
-	}
+
+    public function handles(): string {
+        return ParsesFloip::METHOD_TYPE;
+    }
 }

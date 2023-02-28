@@ -7,10 +7,10 @@ use Viamo\Floip\Contract\ParsesFloip;
 class EscapeNodeEvaluator extends AbstractNodeEvaluator
 {
     public function evaluate(Node $node, $context): mixed {
-	    return ParsesFloip::IDENTIFIER;
+        return ParsesFloip::IDENTIFIER;
     }
-	
-	public function handles(): string {
-		return ParsesFloip::ESCAPE_TYPE;
-	}
+
+    public function handles(): string {
+        return ParsesFloip::ESCAPE_TYPE;
+    }
 }
