@@ -12,17 +12,11 @@ interface DateTime extends EvaluatesMethods
 
     /**
      * Defines a new date value
-     *
-     * @param int $year
-     * @param int $month
-     * @param int $day
      */
     public function date(int $year, int $month, int $day): Carbon;
 
     /**
      * Converts date stored in text to an actual date, using your organization's date format setting
-     *
-     * @param string $string
      */
     public function dateValue(string $string): Carbon;
 
@@ -65,17 +59,11 @@ interface DateTime extends EvaluatesMethods
 
     /**
      * Defines a time value which can be used for time arithmetic
-     *
-     * @param int $hours
-     * @param int $minutes
-     * @param int $seconds
      */
     public function time(int $hours, int $minutes, int $seconds): CarbonInterval;
 
     /**
      * Converts time stored in text to an actual time
-     *
-     * @param string $string
      */
     public function timeValue(string $string): CarbonInterval;
 

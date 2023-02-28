@@ -6,22 +6,16 @@ interface Text extends EvaluatesMethods
 {
     /**
      * Returns the character specified by a number
-     *
-     * @param int $asciiCode
      */
     public function char(int $asciiCode): string;
     
     /**
      * Removes all non-printable characters from a text string
-     *
-     * @param string $string
      */
     public function clean(string $string): string;
     
     /**
      * Returns a numeric code for the first character in a text string
-     *
-     * @param string $string
      */
     public function code(string $string): int;
     

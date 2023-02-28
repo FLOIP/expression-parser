@@ -45,7 +45,7 @@ class Excellent extends AbstractMethodHandler implements ExcellentInterface
         return $this->removeFirstWord($string);
     }
 
-    public function word(string $string, int $number, bool $bySpaces = null): string {
+    public function word(string $string, int $number, ?bool $bySpaces = null): string {
         if ($bySpaces) {
             $split = explode(' ', $string);
         } else {
@@ -70,7 +70,7 @@ class Excellent extends AbstractMethodHandler implements ExcellentInterface
         return $this->wordCount($string, $bySpaces);
     }
 
-    public function wordSlice(string $string, int $start, int $stop = null, int $bySpaces = null): string {
+    public function wordSlice(string $string, int $start, ?int $stop = null, ?int $bySpaces = null): string {
         if ($bySpaces) {
             $split = explode(' ', $string);
         } else {
@@ -110,7 +110,7 @@ class Excellent extends AbstractMethodHandler implements ExcellentInterface
     }
 
     private function stripPunc($string): array|string {
-        return str_replace(str_split(static::PUNCTUATION), '', (string) $string);
+        return str_replace(str_split((string) static::PUNCTUATION), '', (string) $string);
     }
 
     public function isNumber($value): bool {

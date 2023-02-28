@@ -8,16 +8,6 @@ use Rector\CodeQuality\Rector\ClassMethod\OptionalParametersAfterRequiredRector;
 use Rector\Config\RectorConfig;
 use Rector\Core\ValueObject\PhpVersion;
 use Rector\DeadCode\Rector\StaticCall\RemoveParentCallWithoutParentRector;
-use Rector\Laravel\Rector\Assign\CallOnAppArrayAccessToStandaloneAssignRector;
-use Rector\Laravel\Rector\Class_\PropertyDeferToDeferrableProviderToRector;
-use Rector\Laravel\Rector\Class_\UnifyModelDatesWithCastsRector;
-use Rector\Laravel\Rector\ClassMethod\AddGenericReturnTypeToRelationsRector;
-use Rector\Laravel\Rector\ClassMethod\AddParentBootToModelClassMethodRector;
-use Rector\Laravel\Rector\ClassMethod\AddParentRegisterToEventServiceProviderRector;
-use Rector\Laravel\Rector\FuncCall\RemoveDumpDataDeadCodeRector;
-use Rector\Laravel\Rector\MethodCall\ChangeQueryWhereDateValueWithCarbonRector;
-use Rector\Laravel\Rector\MethodCall\FactoryApplyingStatesRector;
-use Rector\Laravel\Rector\StaticCall\RequestStaticValidateToInjectRector;
 use Rector\Php80\Rector\Catch_\RemoveUnusedVariableInCatchRector;
 use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
 use Rector\Php80\Rector\Class_\StringableForToStringRector;
@@ -31,7 +21,9 @@ use Rector\Php80\Rector\FunctionLike\UnionTypesRector;
 use Rector\Php80\Rector\Identical\StrEndsWithRector;
 use Rector\Php80\Rector\Identical\StrStartsWithRector;
 use Rector\Php80\Rector\NotIdentical\StrContainsRector;
+use Rector\Php80\Rector\Switch_\ChangeSwitchToMatchRector;
 use Rector\Php80\Rector\Ternary\GetDebugTypeRector;
+use Rector\Php81\Rector\Array_\FirstClassCallableRector;
 use Rector\Php81\Rector\Class_\SpatieEnumClassToEnumRector;
 use Rector\Php81\Rector\ClassMethod\NewInInitializerRector;
 use Rector\Php81\Rector\FuncCall\NullToStrictStringFuncCallArgRector;
@@ -61,7 +53,7 @@ return static function (RectorConfig $rectorConfig): void {
 	$rectorConfig->rule(TokenGetAllToObjectRector::class);
 	$rectorConfig->rule(RemoveUnusedVariableInCatchRector::class);
 	$rectorConfig->rule(ClassPropertyAssignToConstructorPromotionRector::class);
-	// $rectorConfig->rule(ChangeSwitchToMatchRector::class);
+	$rectorConfig->rule(ChangeSwitchToMatchRector::class);
 	$rectorConfig->rule(RemoveParentCallWithoutParentRector::class);
 	$rectorConfig->rule(SetStateToStaticRector::class);
 	// $rectorConfig->rule(FinalPrivateToPrivateVisibilityRector::class);
@@ -123,7 +115,7 @@ return static function (RectorConfig $rectorConfig): void {
 	$rectorConfig->rule(NewInInitializerRector::class);
 	$rectorConfig->rule(IntersectionTypesRector::class);
 	$rectorConfig->rule(NullToStrictStringFuncCallArgRector::class);
-	#$rectorConfig->rule(FirstClassCallableRector::class);
+	$rectorConfig->rule(FirstClassCallableRector::class);
 	
 	// Custom
 	$rectorConfig->rule(\Rector\TypeDeclaration\Rector\ClassMethod\ArrayShapeFromConstantArrayReturnRector::class);

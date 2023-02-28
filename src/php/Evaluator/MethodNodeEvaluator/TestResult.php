@@ -15,14 +15,11 @@ class TestResult implements TestResultInterface, Stringable
     }
 
     public function chain($method): string {
-        switch ($method) {
-            case 'value':
-                return $this->getValue();
-            case 'match':
-                return $this->getMatch();
-            default:
-                throw new MethodNodeException("Unknown chain method $method on TestResult");
-        }
+        return match ($method) {
+            'value' => $this->getValue(),
+            'match' => $this->getMatch(),
+            default => throw new MethodNodeException("Unknown chain method $method on TestResult"),
+        };
     }
     
     public function getMatch(): string {

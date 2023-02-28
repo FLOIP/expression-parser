@@ -25,20 +25,14 @@ class MathNodeEvaluator extends AbstractNodeEvaluator
         if ($this->isDateValue($rhs) || $this->isDateValue($lhs)) {
             return $this->evaluateDates((clone $lhs), $rhs, $operator);
         }
-
-        switch ($operator) {
-            case '+':
-                return $lhs + $rhs;
-            case '-':
-                return $lhs - $rhs;
-            case '/':
-                return $lhs / $rhs;
-            case '*':
-                return $lhs * $rhs;
-            case '^':
-                return $lhs ** $rhs;
-        }
-        throw new NodeEvaluatorException('invalid operator ' . $operator);
+        return match ($operator) {
+            '+' => $lhs + $rhs,
+            '-' => $lhs - $rhs,
+            '/' => $lhs / $rhs,
+            '*' => $lhs * $rhs,
+            '^' => $lhs ** $rhs,
+            default => throw new NodeEvaluatorException('invalid operator ' . $operator),
+        };
     }
 
     private function evaluateDates($lhs, $rhs, $operator) {
@@ -49,13 +43,11 @@ class MathNodeEvaluator extends AbstractNodeEvaluator
             $rhs = CarbonInterval::createFromDateString($rhs);
             // throw new NodeEvaluatorException('When performing date math, right hand side must be a time interval');
         }
-        switch ($operator) {
-            case '+':
-                return $lhs->add($rhs);
-            case '-':
-                return $lhs->sub($rhs);
-        }
-        throw new NodeEvaluatorException('invalid operator for date math: ' . $operator);
+        return match ($operator) {
+            '+' => $lhs->add($rhs),
+            '-' => $lhs->sub($rhs),
+            default => throw new NodeEvaluatorException('invalid operator for date math: ' . $operator),
+        };
     }
 
     private function isDateValue($thing): bool {

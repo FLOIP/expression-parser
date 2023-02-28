@@ -11,13 +11,11 @@ class BoolNodeEvaluator extends AbstractNodeEvaluator
         if (!isset($node['value'])) {
             throw new NodeEvaluatorException('Bool node is the wrong shape, should have "value"');
         }
-        switch (strtolower((string) $node['value'])) {
-            case 'true':
-                return true;
-            case 'false':
-                return false;
-        }
-        throw new NodeEvaluatorException("Unknown value in Bool node: {$node['value']}");
+        return match (strtolower((string) $node['value'])) {
+            'true' => true,
+            'false' => false,
+            default => throw new NodeEvaluatorException("Unknown value in Bool node: {$node['value']}"),
+        };
     }
 
     public function handles(): string {

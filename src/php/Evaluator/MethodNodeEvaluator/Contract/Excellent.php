@@ -34,22 +34,15 @@ interface Excellent extends EvaluatesMethods
      * into words only by spaces. Otherwise the text is split by punctuation
      * characters as well.
      * Note: n is 1 indexed.
-     *
-     * @param string $string
-     * @param int $number
-     * @param bool|null $bySpaces
      */
-    public function word(string $string, int $number, bool $bySpaces = null): string;
+    public function word(string $string, int $number, ?bool $bySpaces = null): string;
 
     /**
      * Returns the number of words in the given text string. If by_spaces is
      * specified and is TRUE then the functionsplits the text into words only
      * by spaces. Otherwise the text is split by punctuation characters as well
-     *
-     * @param string $string
-     * @param bool|null $bySpaces
      */
-    public function wordCount(string $string, bool $bySpaces = null): int;
+    public function wordCount(string $string, ?bool $bySpaces = null): int;
 
     /**
      * Extracts a substring of the words beginning at start, and up to but
@@ -59,13 +52,8 @@ interface Excellent extends EvaluatesMethods
      * If by_spaces is specified and is TRUE then the function splits the text
      * into words only by spaces. Otherwise the text is split by punctuation
      * characters as well
-     *
-     * @param string $string
-     * @param int $start
-     * @param int|null $stop
-     * @param int|null $bySpaces
      */
-    public function wordSlice(string $string, int $start, int $stop = null, int $bySpaces = null): string;
+    public function wordSlice(string $string, int $start, ?int $stop = null, ?int $bySpaces = null): string;
 
     /**
      * Return trues if a value is a number, false otherwise.
@@ -89,9 +77,6 @@ interface Excellent extends EvaluatesMethods
     
     /**
      * Returns a single random integer in the given inclusive range.
-     *
-     * @param int $min
-     * @param int $max
      */
     public function randBetween(int $min, int $max): int;
 }

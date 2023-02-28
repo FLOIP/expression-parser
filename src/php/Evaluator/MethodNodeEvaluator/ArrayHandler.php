@@ -22,7 +22,7 @@ class ArrayHandler extends AbstractMethodHandler implements ArrayHandlerInterfac
     }
 
     public function _array(): array {
-        return array_map([$this, 'value'], func_get_args());
+        return array_map($this->value(...), func_get_args());
     }
 
     protected function value($thing) {

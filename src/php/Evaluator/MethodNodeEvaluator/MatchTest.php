@@ -8,7 +8,6 @@ use Exception;
 use libphonenumber\PhoneNumberFormat;
 use libphonenumber\PhoneNumberUtil;
 use NajiDev\Permutation\PermutationIterator;
-use Traversable;
 use Viamo\Floip\Evaluator\Exception\MethodNodeException;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract\MatchTest as MatchTestInterface;
 use Viamo\Floip\Evaluator\Node;
@@ -30,8 +29,6 @@ class MatchTest implements MatchTestInterface
 {
     /**
      * Splits a string by punctuation or spaces
-     *
-     * @param string $string
      *
      * @return string[]
      */

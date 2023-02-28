@@ -16,23 +16,15 @@ class LogicNodeEvaluator extends AbstractNodeEvaluator
         $lhs = $this->value($node['lhs']);
         $rhs = $this->value($node['rhs']);
         $operator = $node['operator'];
-
-        switch ($operator) {
-            case '<':
-                return $lhs < $rhs;
-            case '<=':
-                return $lhs <= $rhs;
-            case '>':
-                return $lhs > $rhs;
-            case '>=':
-                return $lhs >= $rhs;
-            case '=':
-                return $this->equals($lhs, $rhs);
-            case '!=':
-            case '<>':
-                return $lhs !== $rhs;
-        }
-        throw new NodeEvaluatorException('invalid operator ' . $operator);
+        return match ($operator) {
+            '<' => $lhs < $rhs,
+            '<=' => $lhs <= $rhs,
+            '>' => $lhs > $rhs,
+            '>=' => $lhs >= $rhs,
+            '=' => $this->equals($lhs, $rhs),
+            '!=', '<>' => $lhs !== $rhs,
+            default => throw new NodeEvaluatorException('invalid operator ' . $operator),
+        };
     }
 
     private function equals($lhs, $rhs): bool {
