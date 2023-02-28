@@ -2,20 +2,16 @@
 
 namespace Viamo\Floip\Evaluator\MethodNodeEvaluator;
 
+use Stringable;
 use Viamo\Floip\Evaluator\Exception\MethodNodeException;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract\TestResult as TestResultInterface;
 
-class TestResult implements TestResultInterface
+class TestResult implements TestResultInterface, Stringable
 {
-    /** @var mixed $value */
-    private $value;
-
-    /** @var mixed $match */
-    private $match;
-
-    public function __construct($value = false, $match = null) {
-        $this->value = $value;
-        $this->match = $match;
+    public function __construct(
+        private mixed $value = false,
+        private mixed $match = null
+    ) {
     }
 
     public function chain($method): string {
@@ -43,7 +39,7 @@ class TestResult implements TestResultInterface
         }
     }
 
-    public function __toString() {
+    public function __toString(): string {
         return $this->getValue();
     }
 }

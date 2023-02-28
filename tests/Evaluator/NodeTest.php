@@ -7,8 +7,7 @@ use Viamo\Floip\Evaluator\Node;
 
 class NodeTest extends TestCase
 {
-    public function testConstructsNestedNodes()
-    {
+    public function testConstructsNestedNodes(): void {
         $rawNode = [
             'type' => 'METHOD',
             'args' => [
@@ -31,15 +30,13 @@ class NodeTest extends TestCase
     /**
      * @dataProvider nodeValuesProvider
      */
-    public function testNodeValuesToString($value, $expected)
-    {
+    public function testNodeValuesToString($value, $expected): void {
         $node = new Node([]);
         $node->setValue($value);
         $this->assertEquals($expected, (string)$node);
     }
 
-    public function nodeValuesProvider()
-    {
+    public function nodeValuesProvider(): array {
         return [
             ['one', 'one'],
             [1, '1'],

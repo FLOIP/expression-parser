@@ -11,7 +11,7 @@ class BoolNodeEvaluator extends AbstractNodeEvaluator
         if (!isset($node['value'])) {
             throw new NodeEvaluatorException('Bool node is the wrong shape, should have "value"');
         }
-        switch (strtolower($node['value'])) {
+        switch (strtolower((string) $node['value'])) {
             case 'true':
                 return true;
             case 'false':

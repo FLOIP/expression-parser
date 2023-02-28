@@ -10,12 +10,8 @@ class Arr
 {
     /**
      * Check if an item or items exist in an array using "dot" notation.
-     *
-     * @param  \ArrayAccess|array  $array
-     * @param  string|array  $keys
-     * @return bool
      */
-    public static function has($array, $keys): bool {
+    public static function has(ArrayAccess|array $array, string|array $keys): bool {
         $keys = (array) $keys;
 
         if (!$array || $keys === []) {
@@ -29,7 +25,7 @@ class Arr
                 continue;
             }
 
-            foreach (explode('.', $key) as $segment) {
+            foreach (explode('.', (string) $key) as $segment) {
                 if (static::accessible($subKeyArray) && static::exists($subKeyArray, $segment)) {
                     $subKeyArray = $subKeyArray[$segment];
                 } else {
@@ -43,12 +39,8 @@ class Arr
 
     /**
      * Determine if the given key exists in the provided array.
-     *
-     * @param  \ArrayAccess|array  $array
-     * @param  string|int  $key
-     * @return bool
      */
-    public static function exists($array, $key): bool {
+    public static function exists(ArrayAccess|array $array, string|int $key): bool {
         if ($array instanceof ArrayAccess) {
             return $array->offsetExists($key);
         }
@@ -58,21 +50,15 @@ class Arr
 
     /**
      * Determine whether the given value is array accessible.
-     *
-     * @param  mixed  $value
-     * @return bool
      */
-    public static function accessible($value): bool {
+    public static function accessible(mixed $value): bool {
         return is_array($value) || $value instanceof ArrayAccess;
     }
 
     /**
      * Determine whether the given thing looks like an array.
-     *
-     * @param mixed $thing
-     * @return bool
      */
-    public static function isArray($thing): bool {
+    public static function isArray(mixed $thing): bool {
         return $thing instanceof ArrayAccess || is_array($thing);
     }
 
@@ -81,8 +67,6 @@ class Arr
      *
      * An array is "associative" if it doesn't have sequential numerical keys beginning with zero.
      *
-     * @param  array  $array
-     * @return bool
      */
     public static function isAssoc(array $array): bool {
         $keys = array_keys($array);

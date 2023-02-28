@@ -35,10 +35,10 @@ class LogicNodeEvaluator extends AbstractNodeEvaluator
         throw new NodeEvaluatorException('invalid operator ' . $operator);
     }
 
-    private function equals($lhs, $rhs) {
-	    return $lhs === $rhs
-		    // don't type juggle bools
-		    || (($lhs == $rhs) && !is_bool($lhs) && !is_bool($rhs));
+    private function equals($lhs, $rhs): bool {
+        return $lhs === $rhs
+            // don't type juggle bools
+            || (($lhs == $rhs) && !is_bool($lhs) && !is_bool($rhs));
     }
 
     private function value($thing)

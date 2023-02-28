@@ -20,7 +20,7 @@ class MemberNodeEvaluator extends AbstractNodeEvaluator
 
         $key = $node['key'];
 
-        $keys = explode('.', $key);
+        $keys = explode('.', (string) $key);
         $currentContext = $context;
 
         // if the top-level key does not exist at the top-level

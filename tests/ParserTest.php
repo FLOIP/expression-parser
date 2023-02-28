@@ -8,15 +8,14 @@ use Viamo\Floip\Parser;
 class ParserTest extends TestCase
 {
     /** @var Parser */
-    private $parser;
+    private Parser $parser;
 
     public function setUp(): void
     {
         $this->parser = new Parser;
     }
 
-    private function buildLocation(array $start, array $end)
-    {
+    private function buildLocation(array $start, array $end): array {
         $keys = ['offset', 'line', 'column'];
         $start = array_combine($keys, $start);
         $end = array_combine($keys, $end);
@@ -142,26 +141,22 @@ class ParserTest extends TestCase
         $this->assertTrue(true);
     }
 
-    private function methodNode($call, array $args)
-    {
+    private function methodNode($call, array $args): array {
         $type = 'METHOD';
         return compact('type', 'call', 'args');
     }
 
-    private function mathNode($lhs, $rhs, $operator)
-    {
+    private function mathNode($lhs, $rhs, $operator): array {
         $type = 'MATH';
         return compact('type', 'lhs', 'rhs', 'operator');
     }
 
-    private function logicNode($lhs, $rhs, $operator)
-    {
+    private function logicNode($lhs, $rhs, $operator): array {
         $type = 'LOGIC';
         return compact('type', 'lhs', 'rhs', 'operator');
     }
 
-    public function plainStringProvider()
-    {
+    public function plainStringProvider(): array {
         return [
             ['Hello World!'],
             ['1 + 2 is math'],
@@ -171,8 +166,7 @@ class ParserTest extends TestCase
         ];
     }
 
-    public function simpleMemberAccessProvider()
-    {
+    public function simpleMemberAccessProvider(): array {
         return [
             ['Hello @contact.name', [
                 'Hello ',
@@ -210,8 +204,7 @@ class ParserTest extends TestCase
         ];
     }
 
-    public function plainFuncProvider()
-    {
+    public function plainFuncProvider(): array {
         return [
             ['The date is @(NOW())'],
             ['@(DATE(2012, 12, 25)) was a holiday.'],
@@ -219,8 +212,7 @@ class ParserTest extends TestCase
         ];
     }
 
-    public function simpleFunctionProvider()
-    {
+    public function simpleFunctionProvider(): array {
         return [
             ['The date is @(NOW())', [
                 'The date is ',
@@ -251,8 +243,7 @@ class ParserTest extends TestCase
         ];
     }
 
-    public function multipleExpressionProvider()
-    {
+    public function multipleExpressionProvider(): array {
         // last element is number of expected AST nodes
         return [
             ['Hello @contact.name today is @(NOW())', 4],
@@ -260,8 +251,7 @@ class ParserTest extends TestCase
         ];
     }
 
-    public function nestedFunctionProvider()
-    {
+    public function nestedFunctionProvider(): array {
         // 2nd param is the index of the method in the ast
         // 3rd param is expected the number of expressions as arguments
         return [
@@ -272,8 +262,7 @@ class ParserTest extends TestCase
         ];
     }
 
-    public function simpleMathProvider()
-    {
+    public function simpleMathProvider(): array {
         return [
             ['Some math is @(1 + 2)', [
                 'Some math is ',
@@ -294,8 +283,7 @@ class ParserTest extends TestCase
         ];
     }
 
-    public function mathWithExpressionOperandsProvider()
-    {
+    public function mathWithExpressionOperandsProvider(): array {
         // lhs, rhs, operator
         return [
             ['@(some.number - other.number) is a number', ['type' => 'MEMBER'], ['type' => 'MEMBER'], '-'],
@@ -304,8 +292,7 @@ class ParserTest extends TestCase
         ];
     }
 
-    public function simpleLogicProvider()
-    {
+    public function simpleLogicProvider(): array {
         return [
             ['Some logic is @(1 < 2)', [
                 'Some logic is ',
@@ -326,8 +313,7 @@ class ParserTest extends TestCase
         ];
     }
 
-    public function logicWithExpressionOperandsProvider()
-    {
+    public function logicWithExpressionOperandsProvider(): array {
         // lhs, rhs, operator
         return [
             ['@(some.number > other.number) is a number', ['type' => 'MEMBER'], ['type' => 'MEMBER'], '-'],
@@ -336,7 +322,7 @@ class ParserTest extends TestCase
         ];
     }
 
-    public function regressionProvider() {
+    public function regressionProvider(): array {
         return [
             // test evaluation of logic with complex lhs or rhs
             ['flow.case2 = flow.case1 + flow.case3 + flow.case4 + flow.case5 + flow.case6'],

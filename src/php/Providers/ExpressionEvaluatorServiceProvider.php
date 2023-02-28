@@ -34,7 +34,7 @@ class ExpressionEvaluatorServiceProvider extends ServiceProvider
 {
     /** @var Container */
     protected $app;
-    protected $defer = true;
+    protected bool $defer = true;
 
     public function register()
     {
@@ -83,8 +83,7 @@ class ExpressionEvaluatorServiceProvider extends ServiceProvider
         $this->app->bind(MatchTestInterface::class, MatchTest::class);
     }
 
-    protected function getMethodHandlers()
-    {
+    protected function getMethodHandlers(): array {
         return array_map(function ($interface) {
             return $this->app->make($interface);
         }, [
@@ -98,8 +97,7 @@ class ExpressionEvaluatorServiceProvider extends ServiceProvider
         ]);
     }
 
-    protected function getNodeEvaluators()
-    {
+    protected function getNodeEvaluators(): array {
         return [
             new LogicNodeEvaluator,
             new MemberNodeEvaluator,
@@ -112,8 +110,7 @@ class ExpressionEvaluatorServiceProvider extends ServiceProvider
         ];
     }
 
-    public function provides()
-    {
+    public function provides(): array {
         return [Evaluator::class, ParsesFloip::class, MethodNodeEvaluator::class];
     }
 }

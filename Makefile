@@ -123,3 +123,7 @@ clean:
 	rm -rf .composer
 	docker rmi $(PHP_80) 2>/dev/null || true
 	docker rmi $(PHP_81) 2>/dev/null || true
+
+rector-81:
+	$(DOCKER_RUN) -e COMPOSER=.ci/8.1/composerL8.json $(PHP_81) composer install --no-suggest
+	$(DOCKER_RUN) $(PHP_81) vendor/bin/rector process

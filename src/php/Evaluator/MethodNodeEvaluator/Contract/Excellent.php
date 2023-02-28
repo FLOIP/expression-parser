@@ -8,36 +8,24 @@ interface Excellent extends EvaluatesMethods
     /**
      * Returns the first word in the given text - equivalent to WORD(text, 1).
      * Note: n is 1 indexed.
-     *
-     * @param string $string
-     * @return string
      */
-    public function firstWord($string): string;
+    public function firstWord(string $string): string;
 
     /**
      * Formats a number as a percentage
-     *
-     * @param int|float $number
-     * @return string
      */
-    public function percent($number): string;
+    public function percent(int|float $number): string;
 
     /**
      * Formats digits in text for reading in TTS
-     *
-     * @param string $string
-     * @return mixed
      */
-    public function readDigits($string): mixed;
+    public function readDigits(string $string): mixed;
 
     /**
      * Removes the first word from the given text. The remaining text will
      * be unchanged
-     *
-     * @param string $string
-     * @return string
      */
-    public function removeFirstWord($string): string;
+    public function removeFirstWord(string $string): string;
 
     /**
      * Extracts the nth word from the given text string. If stop is a negative
@@ -50,9 +38,8 @@ interface Excellent extends EvaluatesMethods
      * @param string $string
      * @param int $number
      * @param bool|null $bySpaces
-     * @return string
      */
-    public function word($string, $number, $bySpaces = null): string;
+    public function word(string $string, int $number, bool $bySpaces = null): string;
 
     /**
      * Returns the number of words in the given text string. If by_spaces is
@@ -61,9 +48,8 @@ interface Excellent extends EvaluatesMethods
      *
      * @param string $string
      * @param bool|null $bySpaces
-     * @return int
      */
-    public function wordCount($string, $bySpaces = null): int;
+    public function wordCount(string $string, bool $bySpaces = null): int;
 
     /**
      * Extracts a substring of the words beginning at start, and up to but
@@ -78,38 +64,26 @@ interface Excellent extends EvaluatesMethods
      * @param int $start
      * @param int|null $stop
      * @param int|null $bySpaces
-     * @return string
      */
-    public function wordSlice($string, $start, $stop = null, $bySpaces = null): string;
+    public function wordSlice(string $string, int $start, int $stop = null, int $bySpaces = null): string;
 
     /**
      * Return trues if a value is a number, false otherwise.
-     *
-     * @param mixed $value
-     * @return bool
      */
-    public function isNumber($value): bool;
+    public function isNumber(mixed $value): bool;
 
     /**
      * Return trues if a value is a string, false otherwise.
-     *
-     * @param mixed $value
-     * @return bool
      */
-    public function isString($value): bool;
+    public function isString(mixed $value): bool;
 
     /**
      * Return trues if a value is a bool, false otherwise.
-     *
-     * @param mixed $value
-     * @return bool
      */
-    public function isBool($value): bool;
+    public function isBool(mixed $value): bool;
     
     /**
      * Returns a single random number between [0.0-1.0).
-     *
-     * @return float
      */
     public function rand(): float;
     
@@ -118,8 +92,6 @@ interface Excellent extends EvaluatesMethods
      *
      * @param int $min
      * @param int $max
-     *
-     * @return int
      */
-    public function randBetween($min, $max): int;
+    public function randBetween(int $min, int $max): int;
 }

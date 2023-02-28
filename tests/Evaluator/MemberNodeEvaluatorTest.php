@@ -7,11 +7,12 @@ use Viamo\Floip\Evaluator\MemberNodeEvaluator;
 use Viamo\Floip\Contract\ParsesFloip;
 use Viamo\Floip\Evaluator\Node;
 use Viamo\Floip\Tests\Evaluator\Mocks\MockArrayContext;
+use function json_encode;
 
 class MemberNodeEvaluatorTest extends TestCase
 {
     /** @var MemberNodeEvaluator */
-    private $evaluator;
+    private MemberNodeEvaluator $evaluator;
 
     public function setUp(): void
     {
@@ -22,7 +23,7 @@ class MemberNodeEvaluatorTest extends TestCase
     /**
      * @dataProvider absentKeyProvider
      */
-    public function testEvaluatesAbsentKey(Node $node, array $context, $expected) {
+    public function testEvaluatesAbsentKey(Node $node, array $context, $expected): void {
         $evaluated = $this->evaluator->evaluate($node, $context);
         $this->assertEquals($expected, $evaluated);
     }
@@ -30,7 +31,7 @@ class MemberNodeEvaluatorTest extends TestCase
     /**
      * @dataProvider arrayReturnProvider
      */
-    public function testArrayReturn(Node $node, array $context, $expected) {
+    public function testArrayReturn(Node $node, array $context, $expected): void {
         $evaluated = $this->evaluator->evaluate($node, $context);
         $this->assertEquals($expected, $evaluated);
     }
@@ -38,8 +39,7 @@ class MemberNodeEvaluatorTest extends TestCase
     /**
      * @dataProvider keyAndValueProvider
      */
-    public function testEvaluatesKeyAndValue(Node $node, array $context, $expected)
-    {
+    public function testEvaluatesKeyAndValue(Node $node, array $context, $expected): void {
         $evaluated = $this->evaluator->evaluate($node, $context);
         $this->assertEquals($expected, $evaluated);
     }
@@ -47,8 +47,7 @@ class MemberNodeEvaluatorTest extends TestCase
     /**
      * @dataProvider keyNoValueProvider
      */
-    public function testEvaluatesKeyNoValue(Node $node, array $context, $expected)
-    {
+    public function testEvaluatesKeyNoValue(Node $node, array $context, $expected): void {
         $evaluated = $this->evaluator->evaluate($node, $context);
         $this->assertEquals($expected, $evaluated);
     }
@@ -56,8 +55,7 @@ class MemberNodeEvaluatorTest extends TestCase
     /**
      * @dataProvider keyDefaultValueProvider
      */
-    public function testEvaluatesKeyWithDefaultValue(Node $node, array $context, $expected)
-    {
+    public function testEvaluatesKeyWithDefaultValue(Node $node, array $context, $expected): void {
         $evaluated = $this->evaluator->evaluate($node, $context);
         $this->assertEquals($expected, $evaluated);
     }
@@ -65,8 +63,7 @@ class MemberNodeEvaluatorTest extends TestCase
     /**
      * @dataProvider nestedContextProvider
      */
-    public function testNestedContext(Node $node, array $context, $expected)
-    {
+    public function testNestedContext(Node $node, array $context, $expected): void {
         $evaluated = $this->evaluator->evaluate($node, $context);
         $this->assertEquals($expected, $evaluated);
     }
@@ -74,7 +71,7 @@ class MemberNodeEvaluatorTest extends TestCase
     /**
      * @dataProvider numericKeyProvider
      */
-    public function testNumericKeys(Node $node, array $context, $expected) {
+    public function testNumericKeys(Node $node, array $context, $expected): void {
         $evaluated = $this->evaluator->evaluate($node, $context);
         $this->assertEquals($expected, $evaluated);
     }
@@ -82,7 +79,7 @@ class MemberNodeEvaluatorTest extends TestCase
     /**
      * @dataProvider absentKeyProvider
      */
-    public function testEvaluatesAbsentKeyObjectContext(Node $node, array $context, $expected) {
+    public function testEvaluatesAbsentKeyObjectContext(Node $node, array $context, $expected): void {
         $evaluated = $this->evaluator->evaluate($node, new MockArrayContext($context));
         $this->assertEquals($expected, $evaluated);
     }
@@ -90,7 +87,7 @@ class MemberNodeEvaluatorTest extends TestCase
     /**
      * @dataProvider arrayReturnProvider
      */
-    public function testArrayReturnObjectContext(Node $node, array $context, $expected) {
+    public function testArrayReturnObjectContext(Node $node, array $context, $expected): void {
         $evaluated = $this->evaluator->evaluate($node, new MockArrayContext($context));
         $this->assertEquals($expected, $evaluated);
     }
@@ -98,8 +95,7 @@ class MemberNodeEvaluatorTest extends TestCase
     /**
      * @dataProvider keyAndValueProvider
      */
-    public function testEvaluatesKeyAndValueObjectContext(Node $node, array $context, $expected)
-    {
+    public function testEvaluatesKeyAndValueObjectContext(Node $node, array $context, $expected): void {
         $evaluated = $this->evaluator->evaluate($node, new MockArrayContext($context));
         $this->assertEquals($expected, $evaluated);
     }
@@ -107,8 +103,7 @@ class MemberNodeEvaluatorTest extends TestCase
     /**
      * @dataProvider keyNoValueProvider
      */
-    public function testEvaluatesKeyNoValueObjectContext(Node $node, array $context, $expected)
-    {
+    public function testEvaluatesKeyNoValueObjectContext(Node $node, array $context, $expected): void {
         $evaluated = $this->evaluator->evaluate($node, new MockArrayContext($context));
         $this->assertEquals($expected, $evaluated);
     }
@@ -116,8 +111,7 @@ class MemberNodeEvaluatorTest extends TestCase
     /**
      * @dataProvider keyDefaultValueProvider
      */
-    public function testEvaluatesKeyWithDefaultValueObjectContext(Node $node, array $context, $expected)
-    {
+    public function testEvaluatesKeyWithDefaultValueObjectContext(Node $node, array $context, $expected): void {
         $evaluated = $this->evaluator->evaluate($node, new MockArrayContext($context));
         $this->assertEquals($expected, $evaluated);
     }
@@ -125,8 +119,7 @@ class MemberNodeEvaluatorTest extends TestCase
     /**
      * @dataProvider nestedContextProvider
      */
-    public function testNestedContextObjectContext(Node $node, array $context, $expected)
-    {
+    public function testNestedContextObjectContext(Node $node, array $context, $expected): void {
         $evaluated = $this->evaluator->evaluate($node, new MockArrayContext($context));
         $this->assertEquals($expected, $evaluated);
     }
@@ -134,12 +127,12 @@ class MemberNodeEvaluatorTest extends TestCase
     /**
      * @dataProvider numericKeyProvider
      */
-    public function testNumericKeysObjectContext(Node $node, array $context, $expected) {
+    public function testNumericKeysObjectContext(Node $node, array $context, $expected): void {
         $evaluated = $this->evaluator->evaluate($node, new MockArrayContext($context));
         $this->assertEquals($expected, $evaluated);
     }
 
-    private function makeNode($key, $location = []) {
+    private function makeNode($key, $location = []): Node {
         return new Node([
             'type' => ParsesFloip::MEMBER_TYPE,
             'key' => $key,
@@ -147,8 +140,7 @@ class MemberNodeEvaluatorTest extends TestCase
         ]);
     }
 
-    public function absentKeyProvider()
-    {
+    public function absentKeyProvider(): array {
         return [
             [
                 $this->makeNode('contact.name'),
@@ -160,8 +152,7 @@ class MemberNodeEvaluatorTest extends TestCase
         ];
     }
 
-    public function arrayReturnProvider()
-    {
+    public function arrayReturnProvider(): array {
         return [
             [
                 $this->makeNode('flow.multipleChoice.value'),
@@ -177,8 +168,7 @@ class MemberNodeEvaluatorTest extends TestCase
         ];
     }
 
-    public function keyAndValueProvider()
-    {
+    public function keyAndValueProvider(): array {
         return [
             [
                 $this->makeNode('contact.name'),
@@ -223,8 +213,7 @@ class MemberNodeEvaluatorTest extends TestCase
         ];
     }
 
-    public function keyNoValueProvider()
-    {
+    public function keyNoValueProvider(): array {
         return [
             [
                 $this->makeNode('contact'),
@@ -239,8 +228,7 @@ class MemberNodeEvaluatorTest extends TestCase
         ];
     }
 
-    public function keyDefaultValueProvider()
-    {
+    public function keyDefaultValueProvider(): array {
         return [
             [
                 $this->makeNode('contact'),
@@ -256,8 +244,7 @@ class MemberNodeEvaluatorTest extends TestCase
         ];
     }
 
-    public function nestedContextProvider()
-    {
+    public function nestedContextProvider(): array {
         return [
             'nested '=> [
                 $this->makeNode('contact.lang.default'),
@@ -300,7 +287,7 @@ class MemberNodeEvaluatorTest extends TestCase
                         ]
                     ]
                 ],
-                \json_encode((object)['foo' => 'bar'])
+                json_encode((object)['foo' => 'bar'])
             ],
             'nested key not found with __value__' => [
                 $this->makeNode('contact.address.business'),
@@ -335,7 +322,7 @@ class MemberNodeEvaluatorTest extends TestCase
         ];
     }
 
-    public function numericKeyProvider() {
+    public function numericKeyProvider(): array {
         return [
             [
                 $this->makeNode('flow.1570165060485_42.value'),

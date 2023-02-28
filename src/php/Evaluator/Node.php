@@ -3,17 +3,18 @@
 namespace Viamo\Floip\Evaluator;
 
 use ArrayAccess;
+use Exception;
+use Stringable;
+use function implode;
+use function is_array;
 
-class Node implements ArrayAccess {
+class Node implements ArrayAccess, Stringable {
 
-    /** @var array */
-    private $data = [];
+    private array $data = [];
 
-    /** @var mixed */
-    private $value = null;
+    private mixed $value = null;
 
-    /** @var bool */
-    private $valueSet = false;
+    private bool $valueSet = false;
 
     public function __construct($data)
     {
@@ -22,12 +23,8 @@ class Node implements ArrayAccess {
 
     /**
      * Recurse into a tree and transform node structures into Node objects.
-     *
-     * @param mixed $data
-     * @return mixed
      */
-    public function transformData($data)
-    {
+    public function transformData(mixed $data): mixed {
         if (static::isNode($data)) {
             return new self($data);
         }
@@ -39,11 +36,8 @@ class Node implements ArrayAccess {
 
     /**
      * Set a value that represents the node.
-     *
-     * @param mixed $value
-     * @return Node
      */
-    public function setValue($value): Node {
+    public function setValue(mixed $value): Node {
         if ($value === true) {
             $this->value = 'TRUE';
         } else if ($value === false) {
@@ -57,19 +51,14 @@ class Node implements ArrayAccess {
 
     /**
      * Get the value of the node.
-     *
-     * @return mixed
      */
-    public function getValue()
-    {
+    public function getValue(): mixed {
         return $this->value;
     }
 
     /**
      * Get the difference between the node's end and starting offset in the
      * expression from which it was parsed.
-     *
-     * @return int
      */
     public function getLength(): int {
         $start = $this->data['location']['start']['offset'];
@@ -77,28 +66,25 @@ class Node implements ArrayAccess {
         return $end - $start;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         if ($this->valueSet) {
             if ($this->value === null) {
                 return 'NULL';
             }
             if (is_array($this->value)) {
-                return \implode(', ', $this->value);
+                return implode(', ', $this->value);
             }
             return (string)$this->value;
         }
-        throw new \Exception;
+        throw new Exception;
     }
 
     /**
      * Determine whether something looks like a node.
-     *
-     * @param mixed $candidate
-     * @return bool
      */
-    public static function isNode($candidate): bool {
-        return \is_array($candidate) && \key_exists('type', $candidate);
+    public static function isNode(mixed $candidate): bool {
+        return is_array($candidate) && array_key_exists('type', $candidate);
     }
 
     public function getChildren(): array {

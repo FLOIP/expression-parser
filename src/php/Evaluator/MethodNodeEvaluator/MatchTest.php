@@ -8,9 +8,22 @@ use Exception;
 use libphonenumber\PhoneNumberFormat;
 use libphonenumber\PhoneNumberUtil;
 use NajiDev\Permutation\PermutationIterator;
+use Traversable;
 use Viamo\Floip\Evaluator\Exception\MethodNodeException;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract\MatchTest as MatchTestInterface;
 use Viamo\Floip\Evaluator\Node;
+use function addcslashes;
+use function func_get_args;
+use function gettype;
+use function is_numeric;
+use function json_encode;
+use function preg_match;
+use function preg_match_all;
+use function preg_replace;
+use function strcasecmp;
+use function strlen;
+use function strtotime;
+use function substr;
 
 // todo: do we need utf aware string comparison?
 class MatchTest implements MatchTestInterface
@@ -19,9 +32,10 @@ class MatchTest implements MatchTestInterface
      * Splits a string by punctuation or spaces
      *
      * @param string $string
+     *
      * @return string[]
      */
-    private function splitByPunc($string): array {
+    private function splitByPunc(string $string): array {
         $punc = static::PUNCTUATION;
         $result = preg_split("/\\s*[{$punc}]\\s*|\\s/u", $string, -1, PREG_SPLIT_NO_EMPTY);
         if ($result === false) {
@@ -30,7 +44,7 @@ class MatchTest implements MatchTestInterface
         return $result;
     }
 
-    public function has_all_words($text, $words): TestResult {
+    public function has_all_words(string $text, string $words): TestResult {
         // get a list of words
         $text = $this->splitByPunc($text);
         $words = $this->splitByPunc($words);
@@ -50,7 +64,7 @@ class MatchTest implements MatchTestInterface
         }
     }
 
-    public function has_any_word($text, $words): TestResult {
+    public function has_any_word(string $text, string $words): TestResult {
         // get a list of words
         $text = $this->splitByPunc($text);
         $words = $this->splitByPunc($words);
@@ -64,32 +78,32 @@ class MatchTest implements MatchTestInterface
         }
     }
 
-    public function has_beginning($text, $beginning): TestResult {
+    public function has_beginning(string $text, string $beginning): TestResult {
         $text = trim($text);
         $beginning = trim($beginning);
 
         $result = stripos($text, $beginning) === 0;
 
         if ($result) {
-            return new TestResult(true, \substr($text, 0, \strlen($beginning)));
+            return new TestResult(true, substr($text, 0, strlen($beginning)));
         } else {
             return new TestResult;
         }
     }
 
     // todo what exactly is the point of this...?
-    public function has_category($result, $categories): TestResult {
+    public function has_category(Node|iterable $result, $categories): TestResult {
         if ($result instanceof Node) {
             $result = $result->getValue();
         }
         if (!(is_array($result) || $result instanceof ArrayAccess)) {
-            $type = \gettype($result);
+            $type = gettype($result);
             throw new MethodNodeException("Can only perform has_category on an array or ArrayAccess, got $type");
         }
         if (!isset($result['category'])) {
-            throw new MethodNodeException("Can only perform has_category on a valid result structure, got: " . \json_encode($result));
+            throw new MethodNodeException("Can only perform has_category on a valid result structure, got: " . json_encode($result));
         }
-        $categories = array_slice(\func_get_args(), 1);
+        $categories = array_slice(func_get_args(), 1);
         foreach ($categories as $category) {
             if ($result['category'] === $category) {
                 return new TestResult(true, $category);
@@ -101,14 +115,12 @@ class MatchTest implements MatchTestInterface
     /**
      * Try very hard to parse a date from a sentence that may contain one.
      *
-     * @param string $string
-     * @return int|false
      */
-    private function parseDateTimeFromString($string): bool|int {
+    private function parseDateTimeFromString(string $string): bool|int {
         // remove non numeric or separator chars
-        $string = trim(\preg_replace('%[^\d\-/\\\:]%i', ' ', $string));
+        $string = trim(preg_replace('%[^\d\-/\\\:]%i', ' ', $string));
         // collapse whitespace
-        $string = trim(\preg_replace('/\s+/', ' ', $string));
+        $string = trim(preg_replace('/\s+/', ' ', $string));
         // try splitting the string into parts
         $parts = preg_split('%[/\-\\\]%', $string);
 
@@ -123,17 +135,17 @@ class MatchTest implements MatchTestInterface
         // try permutations of what we have
         foreach (new PermutationIterator($parts) as $permutation) {
             try {
-                if ($result = \strtotime(implode('/', $permutation))) {
+                if ($result = strtotime(implode('/', $permutation))) {
                     return $result;
                 }
-            } catch (Exception $e) {
+            } catch (Exception) {
                 continue;
             }
         }
         return false;
     }
 
-    public function has_date($text): TestResult {
+    public function has_date(string $text): TestResult {
         $result = $this->parseDateTimeFromString($text);
         if ($result === false) {
             return new TestResult;
@@ -164,30 +176,30 @@ class MatchTest implements MatchTestInterface
         }
     }
 
-    public function has_date_eq($text, $date): TestResult {
+    public function has_date_eq(string $text, string $date): TestResult {
         return $this->has_date_callback($text, $date, function (Carbon $lhs, Carbon $rhs) {
             return $lhs->startOfDay()->eq($rhs);
         });
     }
 
-    public function has_date_gt($text, $min): TestResult {
+    public function has_date_gt(string $text, string $min): TestResult {
         return $this->has_date_callback($text, $min, function (Carbon $lhs, Carbon $rhs) {
             return $lhs->gt($rhs);
         });
     }
 
-    public function has_date_lt($text, $max): TestResult {
+    public function has_date_lt(string $text, string $max): TestResult {
         return $this->has_date_callback($text, $max, function (Carbon $lhs, Carbon $rhs) {
             return $lhs->lt($rhs);
         });
     }
 
     // todo: implementation?
-    public function has_district($text, $state = null): Contract\TestResult {
+    public function has_district(string $text, ?string $state = null): Contract\TestResult {
         throw new MethodNodeException('has_district not implemented');
     }
 
-    public function has_email($text): TestResult {
+    public function has_email(string $text): TestResult {
         // this loose check should handle the cases we want.
         $regex = "/[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}/";
         $matches = [];
@@ -203,12 +215,12 @@ class MatchTest implements MatchTestInterface
         throw new MethodNodeException('has_error not implemented');
     }
 
-    public function has_group($groups, $group_uuid): TestResult {
+    public function has_group(Node|array $groups, string $group_uuid): TestResult {
         if ($groups instanceof Node) {
             $groups = $groups->getValue();
         }
         if (!(is_array($groups) || $groups instanceof ArrayAccess)) {
-            $type = \gettype($groups);
+            $type = gettype($groups);
             throw new MethodNodeException("Can only perform has_group on an array or ArrayAccess, got $type");
         }
         foreach ($groups as $group) {
@@ -219,12 +231,12 @@ class MatchTest implements MatchTestInterface
         return new TestResult;
     }
 
-    public function has_intent($result, $name, $confidence): TestResult {
+    public function has_intent(Node|array|string $result, string $name, float $confidence): TestResult {
         if ($result instanceof Node) {
             $result = $result->getValue();
         }
         if (!(is_array($result) || $result instanceof ArrayAccess)) {
-            $type = \gettype($result);
+            $type = gettype($result);
             throw new MethodNodeException("Can only perform has_group on an array or ArrayAccess, got $type");
         }
         if (!isset($result['extra']['intents'])) {
@@ -240,10 +252,10 @@ class MatchTest implements MatchTestInterface
 
     const NUMBER_REGEX = "/\d+([.,]\d+)?/u";
 
-    public function has_number($text): TestResult {
+    public function has_number(string $text): TestResult {
         $matches = [];
 
-        $result = \preg_match_all(self::NUMBER_REGEX, $text, $matches);
+        $result = preg_match_all(self::NUMBER_REGEX, $text, $matches);
 
         if ($result) {
             return new TestResult(true, $matches[0][0]);
@@ -253,16 +265,16 @@ class MatchTest implements MatchTestInterface
     }
 
     private function assertNumeric($values) {
-        foreach (\func_get_args() as $value) {
-            if (!(\is_numeric($value))) {
-                throw new MethodNodeException("Value must be a number has_number_between: " . \json_encode(\func_get_args()));
+        foreach (func_get_args() as $value) {
+            if (!(is_numeric($value))) {
+                throw new MethodNodeException("Value must be a number has_number_between: " . json_encode(func_get_args()));
             }
         }
     }
 
     private function has_number_callback($text, callable $closure): TestResult {
         $matches = [];
-        \preg_match_all(self::NUMBER_REGEX, $text, $matches);
+        preg_match_all(self::NUMBER_REGEX, (string) $text, $matches);
 
         foreach ($matches[0] as $match) {
             if ($closure($match)) {
@@ -272,50 +284,50 @@ class MatchTest implements MatchTestInterface
         return new TestResult;
     }
 
-    public function has_number_between($text, $min, $max): TestResult {
+    public function has_number_between(string $text, int $min, int $max): TestResult {
         $this->assertNumeric($min, $max);
         return $this->has_number_callback($text, function ($number) use ($min, $max) {
             return $number >= $min && $number <= $max;
         });
     }
 
-    public function has_number_eq($text, $value): TestResult {
+    public function has_number_eq(string $text, int $value): TestResult {
         $this->assertNumeric($value);
         return $this->has_number_callback($text, function ($number) use ($value) {
             return $number == $value;
         });
     }
 
-    public function has_number_gt($text, $min): TestResult {
+    public function has_number_gt(string $text, int $min): TestResult {
         $this->assertNumeric($min);
         return $this->has_number_callback($text, function ($number) use ($min) {
             return $number > $min;
         });
     }
 
-    public function has_number_gte($text, $min): TestResult {
+    public function has_number_gte(string $text, int $min): TestResult {
         $this->assertNumeric($min);
         return $this->has_number_callback($text, function ($number) use ($min) {
             return $number >= $min;
         });
     }
 
-    public function has_number_lt($text, $max): TestResult {
+    public function has_number_lt(string $text, int $max): TestResult {
         $this->assertNumeric($max);
         return $this->has_number_callback($text, function ($number) use ($max) {
             return $number < $max;
         });
     }
 
-    public function has_number_lte($text, $max): TestResult {
+    public function has_number_lte(string $text, int $max): TestResult {
         $this->assertNumeric($max);
         return $this->has_number_callback($text, function ($number) use ($max) {
             return $number <= $max;
         });
     }
 
-    public function has_only_phrase($text, $phrase): TestResult {
-        $result = \strcasecmp(trim($text), trim($phrase));
+    public function has_only_phrase(string $text, string $phrase): TestResult {
+        $result = strcasecmp(trim($text), trim($phrase));
 
         if ($result === 0) {
             return new TestResult(true, $phrase);
@@ -324,7 +336,7 @@ class MatchTest implements MatchTestInterface
         }
     }
 
-    public function has_only_text($text1, $text2): TestResult {
+    public function has_only_text(string $text1, string $text2): TestResult {
         if ($text1 === $text2) {
             return new TestResult(true, $text1);
         } else {
@@ -333,11 +345,11 @@ class MatchTest implements MatchTestInterface
     }
 
     // todo this should return an object that has an "extra" field... what's that?
-    public function has_pattern($text, $pattern): TestResult {
-        $pattern = \addcslashes($pattern, '%');
+    public function has_pattern(string $text, string $pattern): TestResult {
+        $pattern = addcslashes($pattern, '%');
 
         $matches = [];
-        $result = \preg_match("%$pattern%i", $text, $matches);
+        $result = preg_match("%$pattern%i", $text, $matches);
 
         if ($result) {
             return new TestResult(true, $matches[0]);
@@ -346,10 +358,10 @@ class MatchTest implements MatchTestInterface
         }
     }
 
-    public function has_phone($text, $country_code = null): TestResult {
+    public function has_phone(string $text, ?string $country_code = null): TestResult {
         $phoneUtil = PhoneNumberUtil::getInstance();
 
-        $text = \preg_replace('/[^\d+-]/', '', $text);
+        $text = preg_replace('/[^\d+-]/', '', $text);
 
         try {
             $number = $phoneUtil->parse($text, $country_code);
@@ -359,12 +371,12 @@ class MatchTest implements MatchTestInterface
             } else {
                 return new TestResult;
             }
-        } catch (Exception $e) {
+        } catch (Exception) {
             return new TestResult;
         }
     }
 
-    public function has_phrase($text, $phrase): TestResult {
+    public function has_phrase(string $text, string $phrase): TestResult {
         $matches = [];
         $result = preg_match("/$phrase/i", $text, $matches);
 
@@ -376,11 +388,11 @@ class MatchTest implements MatchTestInterface
     }
 
     // todo: implementation? perhaps up to the consumer
-    public function has_state($text): Contract\TestResult {
+    public function has_state(string $text): Contract\TestResult {
         throw new MethodNodeException('has_state not implemented');
     }
 
-    public function has_text($text): TestResult {
+    public function has_text(string $text): TestResult {
         $result = preg_match("/\S/", $text);
 
         if ($result) {
@@ -390,12 +402,12 @@ class MatchTest implements MatchTestInterface
         }
     }
 
-    public function has_time($text): TestResult {
+    public function has_time(string $text): TestResult {
         $matches = [];
         $result = preg_match('/\d{2}((:\d{2}){1,2}|\s[\w]{2})/', $text, $matches);
 
         if ($result) {
-            $date = \strtotime($matches[0]);
+            $date = strtotime($matches[0]);
             if ($date) {
                 return new TestResult(true, Carbon::createFromTimestamp($date)->toTimeString());
             }
@@ -404,12 +416,12 @@ class MatchTest implements MatchTestInterface
     }
 
     // todo: implementation
-    public function has_top_intent($result, $name, $confidence): Contract\TestResult {
+    public function has_top_intent(string $result, string $name, int $confidence): Contract\TestResult {
         throw new MethodNodeException('has_top_intent not implemented');
     }
 
     // todo: implementation
-    public function has_ward($text, $district, $state): Contract\TestResult {
+    public function has_ward(string $text, string $district, string $state): Contract\TestResult {
         throw new MethodNodeException('has_ward not implemented');
     }
 

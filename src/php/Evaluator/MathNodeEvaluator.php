@@ -5,9 +5,12 @@ namespace Viamo\Floip\Evaluator;
 use Carbon\Carbon;
 use Carbon\CarbonInterval;
 use DateInterval;
+use Exception;
 use Viamo\Floip\Contract\ParsesFloip;
 use Viamo\Floip\Evaluator\Exception\NodeEvaluatorException;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract\DateTime;
+use function is_numeric;
+use function preg_match;
 
 class MathNodeEvaluator extends AbstractNodeEvaluator
 {
@@ -33,7 +36,7 @@ class MathNodeEvaluator extends AbstractNodeEvaluator
             case '*':
                 return $lhs * $rhs;
             case '^':
-                return pow($lhs, $rhs);
+                return $lhs ** $rhs;
         }
         throw new NodeEvaluatorException('invalid operator ' . $operator);
     }
@@ -55,7 +58,7 @@ class MathNodeEvaluator extends AbstractNodeEvaluator
         throw new NodeEvaluatorException('invalid operator for date math: ' . $operator);
     }
 
-    private function isDateValue($thing) {
+    private function isDateValue($thing): bool {
         return $thing instanceof Carbon || $thing instanceof CarbonInterval;
     }
 
@@ -65,18 +68,18 @@ class MathNodeEvaluator extends AbstractNodeEvaluator
             $thing = $thing->getValue();
         }
         try {
-            if (!\is_numeric($thing) && !($this->isDateValue($thing))) {
+            if (!is_numeric($thing) && !($this->isDateValue($thing))) {
                 return $this->parseDateTime($thing);
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new NodeEvaluatorException("Can only perform math on numbers, got: '$thing'", 0, $e);
         }
         return $thing;
     }
 
-    private function parseDateTime($thing) {
+    private function parseDateTime($thing): CarbonInterval|Carbon {
         // does this look like a date interval string? e.g. "4 days"
-        if (\preg_match(DateTime::DATE_INTERVAL_REGEX, $thing) === 1) {
+        if (preg_match(DateTime::DATE_INTERVAL_REGEX, (string) $thing) === 1) {
             return CarbonInterval::createFromDateString($thing);
         }
         // otherwise try parsing it as a datetime

@@ -20,51 +20,51 @@ use Viamo\Floip\Evaluator\NullNodeEvaluator;
 
 class EvaluatorFactory {
 
-	public function newInstance(): Evaluator {
-		$eval = new Evaluator(new Parser);
-		foreach ($this->getNodeEvaluators() as $nodeHandler) {
-			$eval->addNodeEvaluator($nodeHandler);
-		}
+    public function newInstance(): Evaluator {
+        $eval = new Evaluator(new Parser);
+        foreach ($this->getNodeEvaluators() as $nodeHandler) {
+            $eval->addNodeEvaluator($nodeHandler);
+        }
 
-		return $eval;
-	}
+        return $eval;
+    }
 
-	public function create(): Evaluator {
-		return $this->newInstance();
-	}
+    public function create(): Evaluator {
+        return $this->newInstance();
+    }
 
-	protected function methodNodeInstance(): MethodNodeEvaluator {
-		$eval = new MethodNodeEvaluator;
-		foreach ($this->getMethodHandlers() as $methodHandler) {
-			$eval->addHandler($methodHandler);
-		}
+    protected function methodNodeInstance(): MethodNodeEvaluator {
+        $eval = new MethodNodeEvaluator;
+        foreach ($this->getMethodHandlers() as $methodHandler) {
+            $eval->addHandler($methodHandler);
+        }
 
-		return $eval;
-	}
-	
-	protected function getMethodHandlers(): array {
-		return [
-			new DateTime,
-			new Excellent,
-			new Logical,
-			new Math,
-			new Text,
-			new ArrayHandler,
-			new MatchTest,
-		];
-	}
+        return $eval;
+    }
+    
+    protected function getMethodHandlers(): array {
+        return [
+            new DateTime,
+            new Excellent,
+            new Logical,
+            new Math,
+            new Text,
+            new ArrayHandler,
+            new MatchTest,
+        ];
+    }
 
-	protected function getNodeEvaluators(): array {
-		return [
-			new LogicNodeEvaluator,
-			new MemberNodeEvaluator,
-			new EscapeNodeEvaluator,
-			new ConcatenationNodeEvaluator,
-			new MathNodeEvaluator,
-			new NullNodeEvaluator,
-			new MethodNodeEvaluator,
-			new BoolNodeEvaluator,
-			$this->methodNodeInstance(),
-		];
-	}
+    protected function getNodeEvaluators(): array {
+        return [
+            new LogicNodeEvaluator,
+            new MemberNodeEvaluator,
+            new EscapeNodeEvaluator,
+            new ConcatenationNodeEvaluator,
+            new MathNodeEvaluator,
+            new NullNodeEvaluator,
+            new MethodNodeEvaluator,
+            new BoolNodeEvaluator,
+            $this->methodNodeInstance(),
+        ];
+    }
 }

@@ -13,10 +13,8 @@ use Viamo\Floip\Contract\EvaluatesExpression;
 class EvaluatorTest extends TestCase
 {
 
-    /** @var MockInterface|ParsesFloip  */
-    protected $parser;
-    /** @var Evaluator */
-    protected $evaluator;
+    protected ParsesFloip|Mockery\LegacyMockInterface|Parser|MockInterface $parser;
+    protected Evaluator $evaluator;
 
     public function setUp(): void
     {
@@ -25,8 +23,7 @@ class EvaluatorTest extends TestCase
         parent::setUp();
     }
 
-    public function testCanAddHandler()
-    {
+    public function testCanAddHandler(): void {
         $type = 'foobar';
         $handler = Mockery::mock(EvaluatesExpression::class);
         $handler->shouldReceive('handles')->andReturn($type);
@@ -39,8 +36,7 @@ class EvaluatorTest extends TestCase
         $this->assertEquals($handler, $result);
     }
 
-    public function testCallsHandlerForType()
-    {
+    public function testCallsHandlerForType(): void {
         // arrange
         $type = 'foobar';
         $expected = '42';

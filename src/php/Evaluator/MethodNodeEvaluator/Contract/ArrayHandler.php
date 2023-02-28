@@ -2,7 +2,8 @@
 
 namespace Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract;
 
-use Traversable;
+use Countable;
+use Viamo\Floip\Evaluator\Node;
 
 interface ArrayHandler extends EvaluatesMethods
 {
@@ -19,16 +20,14 @@ interface ArrayHandler extends EvaluatesMethods
      * Determine whether a value is contained within an array.
      *
      * @param mixed $value
-     * @param array|Traversable $array
+     * @param iterable|Node $array
+     *
      * @return bool
      */
-    public function in($value, $array): bool;
+    public function in(mixed $value, Node|iterable $array): bool;
 
-    /**
-     * Count the number of elements in an array
-     *
-     * @param array|Countable $array
-     * @return int
-     */
-    public function count($array): int;
+	/**
+	 * Count the number of elements in an array
+	 */
+	public function count(Node|Countable|array $array): int;
 }

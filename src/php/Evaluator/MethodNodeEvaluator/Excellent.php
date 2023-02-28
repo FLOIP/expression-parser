@@ -5,14 +5,18 @@ namespace Viamo\Floip\Evaluator\MethodNodeEvaluator;
 use Viamo\Floip\Evaluator\Exception\MethodNodeException;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract\Excellent as ExcellentInterface;
 use Viamo\Floip\Evaluator\Node;
+use function array_reverse;
+use function lcg_value;
+use function mt_rand;
+use function str_replace;
 
 class Excellent extends AbstractMethodHandler implements ExcellentInterface
 {
-    public function firstWord($string): string {
+    public function firstWord(string $string): string {
         return $this->word($string, 1);
     }
 
-    public function first_word($string) {
+    public function first_word($string): string {
         return $this->firstWord($string);
     }
 
@@ -24,7 +28,7 @@ class Excellent extends AbstractMethodHandler implements ExcellentInterface
      * @todo implement
      * @inheritDoc
      */
-    public function readDigits($string): mixed {
+    public function readDigits(string $string): mixed {
         return $string;
     }
 
@@ -32,7 +36,7 @@ class Excellent extends AbstractMethodHandler implements ExcellentInterface
         return $this->readDigits($string);
     }
 
-    public function removeFirstWord($string): string {
+    public function removeFirstWord(string $string): string {
         $word = $this->firstWord($string);
         return substr($string, 1, strlen($word));
     }
@@ -41,7 +45,7 @@ class Excellent extends AbstractMethodHandler implements ExcellentInterface
         return $this->removeFirstWord($string);
     }
 
-    public function word($string, $number, $bySpaces = null): string {
+    public function word(string $string, int $number, bool $bySpaces = null): string {
         if ($bySpaces) {
             $split = explode(' ', $string);
         } else {
@@ -49,14 +53,13 @@ class Excellent extends AbstractMethodHandler implements ExcellentInterface
         }
 
         if ($number < 0) {
-            return \array_reverse($split)[abs(++$number)];
+            return array_reverse($split)[abs(++$number)];
         }
         // decrement the 1-indexed number
         return $split[--$number];
-        return $this->stripPunc($split[--$number]);
     }
 
-    public function wordCount($string, $bySpaces = null): int {
+    public function wordCount(string $string, bool $bySpaces = null): int {
         if ($bySpaces) {
             return count(explode(' ', $string));
         }
@@ -67,7 +70,7 @@ class Excellent extends AbstractMethodHandler implements ExcellentInterface
         return $this->wordCount($string, $bySpaces);
     }
 
-    public function wordSlice($string, $start, $stop = null, $bySpaces = null): string {
+    public function wordSlice(string $string, int $start, int $stop = null, int $bySpaces = null): string {
         if ($bySpaces) {
             $split = explode(' ', $string);
         } else {
@@ -79,7 +82,7 @@ class Excellent extends AbstractMethodHandler implements ExcellentInterface
         }
 
         if ($start < 0) {
-            $split = \array_reverse($split);
+            $split = array_reverse($split);
             ++$start;
             $stop = count($split) - $stop + 1;
         } else {
@@ -96,10 +99,8 @@ class Excellent extends AbstractMethodHandler implements ExcellentInterface
     /**
      * Splits a string by punctuation or spaces
      *
-     * @param string $string
-     * @return array
      */
-    private function splitByPunc($string): array {
+    private function splitByPunc(string $string): array {
         $punc = static::PUNCTUATION;
         $result = preg_split("/\\s*[{$punc}]\\s*|\\s/u", $string, -1, PREG_SPLIT_NO_EMPTY);
         if ($result === false) {
@@ -109,7 +110,7 @@ class Excellent extends AbstractMethodHandler implements ExcellentInterface
     }
 
     private function stripPunc($string): array|string {
-        return \str_replace(str_split(static::PUNCTUATION), '', $string);
+        return str_replace(str_split(static::PUNCTUATION), '', (string) $string);
     }
 
     public function isNumber($value): bool {
@@ -148,11 +149,11 @@ class Excellent extends AbstractMethodHandler implements ExcellentInterface
     }
 
     public function rand(): float {
-        return \lcg_value();
+        return lcg_value();
     }
 
-    public function randBetween($min, $max): int {
-        return \mt_rand($min, $max);
+    public function randBetween(int $min, int $max): int {
+        return mt_rand($min, $max);
     }
 
     public function rand_between($min, $max): int {

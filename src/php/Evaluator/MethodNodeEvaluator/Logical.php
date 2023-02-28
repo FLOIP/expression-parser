@@ -5,6 +5,12 @@ namespace Viamo\Floip\Evaluator\MethodNodeEvaluator;
 use Viamo\Floip\Evaluator\Exception\MethodNodeException;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract\Logical as LogicalInterface;
 use Viamo\Floip\Evaluator\Node;
+use function array_map;
+use function func_get_args;
+use function func_num_args;
+use function strtoupper;
+use function trigger_error;
+use const E_USER_ERROR;
 
 /**
  * @method and
@@ -14,29 +20,19 @@ use Viamo\Floip\Evaluator\Node;
 class Logical extends AbstractMethodHandler implements LogicalInterface
 {
     public function _and(): bool {
-        foreach (array_map([$this, 'value'], func_get_args()) as $arg) {
-            if ($arg == false) {
-                return false;
-            }
-        }
-        return true;
+        return !in_array(false, array_map([$this, 'value'], func_get_args()));
     }
 
     public function _if(): mixed {
-        $args = array_map([$this, 'value'], \func_get_args());
+        $args = array_map([$this, 'value'], func_get_args());
         if (count($args) != 3) {
-            throw new MethodNodeException('Wrong number of args for if: ', \func_num_args());
+            throw new MethodNodeException('Wrong number of args for if: ', func_num_args());
         }
         return $args[0] ? $args[1] : $args[2];
     }
 
     public function _or(): bool {
-        foreach (\array_map([$this, 'value'], func_get_args()) as $arg) {
-            if ($arg == true) {
-                return true;
-            }
-        }
-        return false;
+        return in_array(true, array_map([$this, 'value'], func_get_args()));
     }
 
     protected function value($thing)
@@ -44,7 +40,7 @@ class Logical extends AbstractMethodHandler implements LogicalInterface
         if ($thing instanceof Node) {
             $thing = $thing->getValue();
             if (is_string($thing)) {
-                switch (\strtoupper($thing)) {
+                switch (strtoupper($thing)) {
                     case 'TRUE':
                         return true;
                     case 'FALSE':
@@ -72,7 +68,7 @@ class Logical extends AbstractMethodHandler implements LogicalInterface
             case 'if':
                 return call_user_func_array([$this, "_$name"], $args);
         }
-        \trigger_error('Call to undefined method ' . static::class . '::' . $name . '()', \E_USER_ERROR);
+        trigger_error('Call to undefined method ' . static::class . '::' . $name . '()', E_USER_ERROR);
     }
 
     /**
