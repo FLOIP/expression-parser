@@ -18,5 +18,5 @@ interface ParsesFloip
      * Parse the $input string to produce an abstract syntax tree representing
      * FLOIP expressions found within.
      */
-    public function parse(string $input): array;
+    public function parse($input);
 }

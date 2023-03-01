@@ -2314,7 +2314,7 @@ class BaseExpressionParser {
       return $s0;
     }
 
-  public function parse(string $input): array {
+  public function parse($input) {
     $arguments = func_get_args();
     $options = count($arguments) > 1 ? $arguments[1] : array();
     $this->cleanup_state();
