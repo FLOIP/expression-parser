@@ -9,7 +9,7 @@ use Viamo\Floip\Evaluator\MathNodeEvaluator;
 class MathEvaluatorTest extends TestCase
 {
     /** @var MathNodeEvaluator */
-    protected $evaluator;
+    protected MathNodeEvaluator $evaluator;
 
     public function setUp(): void
     {
@@ -27,8 +27,7 @@ class MathEvaluatorTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function mathProvider()
-    {
+    public function mathProvider(): array {
         return [
             [
                 [

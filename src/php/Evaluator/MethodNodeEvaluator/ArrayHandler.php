@@ -7,10 +7,13 @@ use Traversable;
 use Viamo\Floip\Evaluator\Exception\MethodNodeException;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract\ArrayHandler as ArrayHandlerInterface;
 use Viamo\Floip\Evaluator\Node;
+use function gettype;
+use function trigger_error;
+use const E_USER_ERROR;
 
 class ArrayHandler extends AbstractMethodHandler implements ArrayHandlerInterface
 {
-    public function handles() {
+    public function handles(): array {
         return [
             'array',
             'in',
@@ -18,7 +21,7 @@ class ArrayHandler extends AbstractMethodHandler implements ArrayHandlerInterfac
         ];
     }
 
-    public function _array() {
+    public function _array(): array {
         return array_map([$this, 'value'], func_get_args());
     }
 
@@ -30,13 +33,13 @@ class ArrayHandler extends AbstractMethodHandler implements ArrayHandlerInterfac
         return $thing;
     }
 
-    public function in($value, $array) {
+    public function in(mixed $value, Node|Traversable|array $array): bool {
         $value = $this->value($value);
         if ($array instanceof Node) {
             $array = $array->getValue();
         }
         if (!(is_array($array) || $array instanceof Traversable)) {
-            $type = \gettype($array);
+            $type = gettype($array);
             throw new MethodNodeException("Can only perform IN on an array or Traversable, got $type");
         }
         // we can't just do in_array since we want to inspect the __value__ of
@@ -50,12 +53,12 @@ class ArrayHandler extends AbstractMethodHandler implements ArrayHandlerInterfac
         return false;
     }
 
-    public function count($array) {
+    public function count(Node|Countable|array $array): int {
         if ($array instanceof Node) {
             $array = $array->getValue();
         }
         if (!(is_array($array) || $array instanceof Countable)) {
-            $type = \gettype($array);
+            $type = gettype($array);
             throw new MethodNodeException("Can only perform COUNT on an array or Countable, got $type");
         }
         return count($array);
@@ -70,6 +73,6 @@ class ArrayHandler extends AbstractMethodHandler implements ArrayHandlerInterfac
                     return call_user_func_array([$this, $name], $args);
                 }
         }
-        \trigger_error('Call to undefined method ' . static::class . '::' . $name . '()', \E_USER_ERROR);
+        trigger_error('Call to undefined method ' . static::class . '::' . $name . '()', E_USER_ERROR);
     }
 }

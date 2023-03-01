@@ -5,11 +5,12 @@ namespace Viamo\Floip\Tests\Evaluator\MethodHandler;
 use Viamo\Floip\Tests\TestCase;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract\MatchTest as MatchTestContract;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\MatchTest;
+use function json_decode;
 
 class MatchTestHandlerTest extends TestCase
 {
     /** @var MatchTestContract */
-    private $handler;
+    private MatchTestContract|MatchTest $handler;
 
     public function setUp(): void
     {
@@ -39,14 +40,14 @@ class MatchTestHandlerTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function hasAllWordsProvider() {
+    public function hasAllWordsProvider(): array {
         return [
             [["the quick brown FOX", "the fox"], "TRUE"],
             [["the quick brown FOX", "red fox"], "FALSE"]
         ];
     }
 
-    public function hasAllWordsMatchProvider() {
+    public function hasAllWordsMatchProvider(): array {
         return [
             [["the quick brown FOX", "the fox"], "the FOX"],
             [["the quick brown FOX", "foo bar"], ""]
@@ -75,14 +76,14 @@ class MatchTestHandlerTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function hasAnyWordProvider() {
+    public function hasAnyWordProvider(): array {
         return [
             [["The Quick Brown Fox", "fox quick"], "TRUE"],
             [["The Quick Brown Fox", "foo bar"], "FALSE"],
         ];
     }
 
-    public function hasAnyWordMatchProvider() {
+    public function hasAnyWordMatchProvider(): array {
         return [
             [["The Quick Brown Fox", "fox quick"], "Quick Fox"],
             [["The Quick Brown Fox", "red fox"], "Fox"],
@@ -111,7 +112,7 @@ class MatchTestHandlerTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function hasBeginningProvider() {
+    public function hasBeginningProvider(): array {
         return [
             [["The Quick Brown Fox", "the quick"], "TRUE"],
             [["The Quick Brown Fox", "quick brown"], "FALSE"],
@@ -119,7 +120,7 @@ class MatchTestHandlerTest extends TestCase
         ];
     }
 
-    public function hasBeginningMatchProvider() {
+    public function hasBeginningMatchProvider(): array {
         return [
             [["The Quick Brown Fox", "the quick"], "The Quick"],
             [["The Quick Brown Fox", "red fox"], ""],
@@ -148,14 +149,14 @@ class MatchTestHandlerTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function hasCategoryProvider() {
+    public function hasCategoryProvider(): array {
         return [
             [[$this->getResultsData()['webhook'], 'Success', 'Failure' ], "TRUE"],
             [[$this->getResultsData()['webhook'], 'Failure' ], "FALSE"],
         ];
     }
 
-    public function hasCategoryMatchProvider() {
+    public function hasCategoryMatchProvider(): array {
         return [
             [[$this->getResultsData()['webhook'], 'Success', 'Failure' ], 'Success'],
         ];
@@ -183,14 +184,14 @@ class MatchTestHandlerTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function hasDateProvider() {
+    public function hasDateProvider(): array {
         return [
             ["the date is 15/01/2017", "TRUE"],
             ["there is no date here, just a year 2017", "FALSE"],
         ];
     }
 
-    public function hasDateMatchProvider() {
+    public function hasDateMatchProvider(): array {
         return [
             ["the date is 15/01/2017", "2017-01-15 00:00:00"],
         ];
@@ -218,14 +219,14 @@ class MatchTestHandlerTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function hasDateEqProvider() {
+    public function hasDateEqProvider(): array {
         return [
             [["the date is 15/01/2017", "2017-01-15"], "TRUE"],
             [["there is no date here, just a year 2017", "2017-06-01"], "FALSE"],
         ];
     }
 
-    public function hasDateEqMatchProvider() {
+    public function hasDateEqMatchProvider(): array {
         return [
             [["the date is 15/01/2017", "2017-01-15"], "2017-01-15 00:00:00"],
             [["the date is 15/01/2017 15:00", "2017-01-15"], "2017-01-15 15:00:00"]
@@ -254,7 +255,7 @@ class MatchTestHandlerTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function hasDateGtProvider() {
+    public function hasDateGtProvider(): array {
         return [
             [["the date is 15/01/2017", "2017-01-01"], "TRUE"],
             [["the date is 15/01/2017", "2017-03-15"], "FALSE"],
@@ -262,7 +263,7 @@ class MatchTestHandlerTest extends TestCase
         ];
     }
 
-    public function hasDateGtMatchProvider() {
+    public function hasDateGtMatchProvider(): array {
         return [
             [["the date is 15/01/2017", "2017-01-01"], "2017-01-15 00:00:00"],
             [["the date is 15/01/2017 15:00", "2017-01-15"], "2017-01-15 15:00:00"]
@@ -293,7 +294,7 @@ class MatchTestHandlerTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function hasDistrictProvider() {
+    public function hasDistrictProvider(): array {
         return [
             [["Gasabo", "Kigali"], "TRUE"],
             [["I live in Gasabo", "Kigali"], "TRUE"],
@@ -301,7 +302,7 @@ class MatchTestHandlerTest extends TestCase
         ];
     }
 
-    public function hasDistrictMatchProvider() {
+    public function hasDistrictMatchProvider(): array {
         return [
             [["Gasabo", "Kigali"], "Rwanda > Kigali City > Gasabo"],
             [["I live in Gasabo"], "Kigali", "Rwanda > Kigali City > Gasabo"],
@@ -331,7 +332,7 @@ class MatchTestHandlerTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function hasEmailProvider() {
+    public function hasEmailProvider(): array {
         return [
             [["my email is foo1@bar.com, please respond"], "TRUE"],
             [["my email is <foo@bar2.com>"], "TRUE"],
@@ -339,7 +340,7 @@ class MatchTestHandlerTest extends TestCase
         ];
     }
 
-    public function hasEmailMatchProvider() {
+    public function hasEmailMatchProvider(): array {
         return [
             [["my email is foo1@bar.com, please respond"], "foo1@bar.com"],
             [["my email is <foo@bar2.com>"], "foo@bar2.com"]
@@ -368,14 +369,14 @@ class MatchTestHandlerTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function hasGroupProvider() {
+    public function hasGroupProvider(): array {
         return [
             [[$this->getContactData()['groups'], "b7cf0d83-f1c9-411c-96fd-c511a4cfa86d"], "TRUE"],
             [[$this->getContactData()['groups'], "97fe7029-3a15-4005-b0c7-277b884fc1d5"], "FALSE"],
         ];
     }
 
-    public function hasGroupMatchProvider() {
+    public function hasGroupMatchProvider(): array {
         return [
             [[$this->getContactData()['groups'], "b7cf0d83-f1c9-411c-96fd-c511a4cfa86d"], '{"name":"Testers","uuid":"b7cf0d83-f1c9-411c-96fd-c511a4cfa86d"}'],
         ];
@@ -403,7 +404,7 @@ class MatchTestHandlerTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function hasIntentProvider() {
+    public function hasIntentProvider(): array {
         return [
             [[$this->getResultsData()['intent'], "book_flight", 0.5], "TRUE"],
             [[$this->getResultsData()['intent'], "book_hotel", 0.2], "TRUE"],
@@ -411,7 +412,7 @@ class MatchTestHandlerTest extends TestCase
         ];
     }
 
-    public function hasIntentMatchProvider() {
+    public function hasIntentMatchProvider(): array {
         return [
         ];
     }
@@ -438,7 +439,7 @@ class MatchTestHandlerTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function hasNumberProvider() {
+    public function hasNumberProvider(): array {
         return [
             [["the number is 42"], "TRUE"],
             [["العدد ٤٢"], "TRUE"],
@@ -446,7 +447,7 @@ class MatchTestHandlerTest extends TestCase
         ];
     }
 
-    public function hasNumberMatchProvider() {
+    public function hasNumberMatchProvider(): array {
         return [
             [["the number is 42"], 42],
             [["العدد ٤٢"], "٤٢"]
@@ -475,7 +476,7 @@ class MatchTestHandlerTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function hasNumberBetweenProvider() {
+    public function hasNumberBetweenProvider(): array {
         return [
             [["the number is 42", 40, 44], "TRUE"],
             [["the number is 42", 50, 60], "FALSE"],
@@ -483,7 +484,7 @@ class MatchTestHandlerTest extends TestCase
         ];
     }
 
-    public function hasNumberBetweenMatchProvider() {
+    public function hasNumberBetweenMatchProvider(): array {
         return [
             [["the number is 42", 40, 44], 42],
         ];
@@ -511,7 +512,7 @@ class MatchTestHandlerTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function hasNumberEqProvider() {
+    public function hasNumberEqProvider(): array {
         return [
             [["the number is 42", 42], "TRUE"],
             [["the number is not 42", 40], "FALSE"],
@@ -519,7 +520,7 @@ class MatchTestHandlerTest extends TestCase
         ];
     }
 
-    public function hasNumberEqMatchProvider() {
+    public function hasNumberEqMatchProvider(): array {
         return [
             [["the number is 42", 42], 42],
         ];
@@ -547,7 +548,7 @@ class MatchTestHandlerTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function hasNumberGtProvider() {
+    public function hasNumberGtProvider(): array {
         return [
             [["the number is 42", 40], "TRUE"],
             [["the number is 42", 42], "FALSE"],
@@ -555,7 +556,7 @@ class MatchTestHandlerTest extends TestCase
         ];
     }
 
-    public function hasNumberGtMatchProvider() {
+    public function hasNumberGtMatchProvider(): array {
         return [
             [["the number is 42", 40], 42],
         ];
@@ -583,7 +584,7 @@ class MatchTestHandlerTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function hasNumberGteProvider() {
+    public function hasNumberGteProvider(): array {
         return [
             [["the number is 42", 42], "TRUE"],
             [["the number is 42", 45], "FALSE"],
@@ -591,7 +592,7 @@ class MatchTestHandlerTest extends TestCase
         ];
     }
 
-    public function hasNumberGteMatchProvider() {
+    public function hasNumberGteMatchProvider(): array {
         return [
             [["the number is 42", 42], 42],
         ];
@@ -619,7 +620,7 @@ class MatchTestHandlerTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function hasNumberLtProvider() {
+    public function hasNumberLtProvider(): array {
         return [
             [["the number is 42", 44], "TRUE"],
             [["the number is 42", 40], "FALSE"],
@@ -627,7 +628,7 @@ class MatchTestHandlerTest extends TestCase
         ];
     }
 
-    public function hasNumberLtMatchProvider() {
+    public function hasNumberLtMatchProvider(): array {
         return [
             [["the number is 42", 44], 42],
         ];
@@ -655,7 +656,7 @@ class MatchTestHandlerTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function hasNumberLteProvider() {
+    public function hasNumberLteProvider(): array {
         return [
             [["the number is 42", 42], "TRUE"],
             [["the number is 42", 40], "FALSE"],
@@ -663,7 +664,7 @@ class MatchTestHandlerTest extends TestCase
         ];
     }
 
-    public function hasNumberLteMatchProvider() {
+    public function hasNumberLteMatchProvider(): array {
         return [
             [["the number is 42", 42], 42],
         ];
@@ -691,7 +692,7 @@ class MatchTestHandlerTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function hasOnlyPhraseProvider() {
+    public function hasOnlyPhraseProvider(): array {
         return [
             [["Quick Brown", "quick brown"], "TRUE"],
             [["The Quick Brown Fox", "quick brown"], "FALSE"],
@@ -701,7 +702,7 @@ class MatchTestHandlerTest extends TestCase
         ];
     }
 
-    public function hasOnlyPhraseMatchProvider() {
+    public function hasOnlyPhraseMatchProvider(): array {
         return [
             [["Quick Brown", "quick brown"], "quick brown"],
             [["", ""], ""]
@@ -730,7 +731,7 @@ class MatchTestHandlerTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function hasOnlyTextProvider() {
+    public function hasOnlyTextProvider(): array {
         return [
             [["foo", "foo"], "TRUE"],
             [["foo", "FOO"], "FALSE"],
@@ -740,7 +741,7 @@ class MatchTestHandlerTest extends TestCase
         ];
     }
 
-    public function hasOnlyTextMatchProvider() {
+    public function hasOnlyTextMatchProvider(): array {
         return [
             [["foo", "foo"], "foo"],
             [["FOO", "FOO"], "FOO"],
@@ -769,14 +770,14 @@ class MatchTestHandlerTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function hasPatternProvider() {
+    public function hasPatternProvider(): array {
         return [
             [["Buy cheese please", "buy (\w+)"], "TRUE"],
             [["Sell cheese please", "buy (\w+)"], "FALSE"],
         ];
     }
 
-    public function hasPatternMatchProvider() {
+    public function hasPatternMatchProvider(): array {
         return [
             [["Buy cheese please", "buy (\w+)"], "Buy cheese"],
         ];
@@ -804,7 +805,7 @@ class MatchTestHandlerTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function hasPhoneProvider() {
+    public function hasPhoneProvider(): array {
         return [
             [["my number is +12067799294 thanks", null], "TRUE"],
             [["my number is 2067799294", "US"], "TRUE"],
@@ -812,7 +813,7 @@ class MatchTestHandlerTest extends TestCase
         ];
     }
 
-    public function hasPhoneMatchProvider() {
+    public function hasPhoneMatchProvider(): array {
         return [
             [["my number is +12067799294 thanks", null], "+12067799294"],
             [["my number is 2067799294", "US"], "+12067799294"],
@@ -842,14 +843,14 @@ class MatchTestHandlerTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function hasPhraseProvider() {
+    public function hasPhraseProvider(): array {
         return [
             [["the quick brown fox", "brown fox"], "TRUE"],
             [["the Quick Brown fox", "quick fox"], "FALSE"],
         ];
     }
 
-    public function hasPhraseMatchProvider() {
+    public function hasPhraseMatchProvider(): array {
         return [
             [["the quick brown fox", "brown fox"], "brown fox"],
             [["the Quick Brown fox", ""], ""],
@@ -878,7 +879,7 @@ class MatchTestHandlerTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function hasTextProvider() {
+    public function hasTextProvider(): array {
         return [
             [["quick brown"], "TRUE"],
             [[""], "FALSE"],
@@ -887,7 +888,7 @@ class MatchTestHandlerTest extends TestCase
         ];
     }
 
-    public function hasTextMatchProvider() {
+    public function hasTextMatchProvider(): array {
         return [
             [["quick brown"], "quick brown"],
             [[123], "123"]
@@ -916,7 +917,7 @@ class MatchTestHandlerTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function hasTimeProvider() {
+    public function hasTimeProvider(): array {
         return [
             [["the time is 10:30"], "TRUE"],
             [["the time is 10 PM"], "TRUE"],
@@ -925,7 +926,7 @@ class MatchTestHandlerTest extends TestCase
         ];
     }
 
-    public function hasTimeMatchProvider() {
+    public function hasTimeMatchProvider(): array {
         return [
             [["the time is 10:30"], "10:30:00"],
             [["the time is 10 PM"], "22:00:00"],
@@ -955,8 +956,8 @@ JSON
      *
      * @return array
      */
-    private function getResultsData() {
-        return \json_decode(
+    private function getResultsData(): array {
+        return json_decode(
 <<<JSON
 {
     "2factor": {

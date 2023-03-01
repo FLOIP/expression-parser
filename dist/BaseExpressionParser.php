@@ -290,9 +290,9 @@ class BaseExpressionParser {
     private $peg_c59;
     private $peg_c60;
 
-    private function peg_f0($id, $ex) { 
+    private function peg_f0($id, $ex) {
         $ex['location']['start'] = $id['start'];
-        return $ex; 
+        return $ex;
       }
     private function peg_f1($id, $ex) { return call_user_func($this->_location); }
     private function peg_f2($id, $ex, $cp) {

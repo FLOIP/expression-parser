@@ -10,7 +10,7 @@ use Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract\Excellent as ExcellentCon
 class ExcellentHandlerTest extends TestCase
 {
     /** @var ExcellentContract */
-    private $excellent;
+    private ExcellentContract|Excellent $excellent;
 
     public function setUp(): void
     {
@@ -21,76 +21,68 @@ class ExcellentHandlerTest extends TestCase
     /**
      * @dataProvider wordProvider
      */
-    public function testWord($string, $number, $bySpaces, $expected)
-    {
+    public function testWord($string, $number, $bySpaces, $expected): void {
         $this->assertEquals($expected, $this->excellent->word($string, $number, $bySpaces));
     }
 
         /**
      * @dataProvider firstWordProvider
      */
-    public function testFirstWord($input, $expected)
-    {
+    public function testFirstWord($input, $expected): void {
         $this->assertEquals($expected, $this->excellent->firstWord($input));
     }
 
     /**
      * @dataProvider wordCountProvider
      */
-    public function testWordCount($input, $expected)
-    {
+    public function testWordCount($input, $expected): void {
         $this->assertEquals($expected, $this->excellent->wordCount($input));
     }
 
     /**
      * @dataProvider wordSliceProvider
      */
-    public function testWordSlice($string, $start, $stop, $bySpaces, $expected)
-    {
+    public function testWordSlice($string, $start, $stop, $bySpaces, $expected): void {
         $this->assertEquals($expected, $this->excellent->wordSlice($string, $start, $stop, $bySpaces));
     }
 
     /**
      * @dataProvider isNumberProvider
      */
-    public function testIsNumber($value, $expected)
-    {
+    public function testIsNumber($value, $expected): void {
         $this->assertEquals($expected, $this->excellent->isNumber($value));
-
+        
         $node = new Node([]);
         $node->setValue($value);
-
+        
         $this->assertEquals($expected, $this->excellent->isNumber($value));
     }
 
     /**
      * @dataProvider isStringProvider
      */
-    public function testIsString($value, $expected)
-    {
+    public function testIsString($value, $expected): void {
         $this->assertEquals($expected, $this->excellent->isString($value));
-
+        
         $node = new Node([]);
         $node->setValue($value);
-
+        
         $this->assertEquals($expected, $this->excellent->isString($value));
     }
 
     /**
      * @dataProvider isBoolProvider
      */
-    public function testIsBool($value, $expected)
-    {
+    public function testIsBool($value, $expected): void {
         $this->assertEquals($expected, $this->excellent->isBool($value));
-
+        
         $node = new Node([]);
         $node->setValue($value);
-
+        
         $this->assertEquals($expected, $this->excellent->isBool($value));
     }
-
-    public function wordCountProvider()
-    {
+    
+    public function wordCountProvider(): array {
         return [
             ['I am a little teapot.', 5],
             ['I.am.a.little.teapot', 5],
@@ -98,9 +90,8 @@ class ExcellentHandlerTest extends TestCase
             ['I.Am,A!Little;Teapot:', 5],
         ];
     }
-
-    public function firstWordProvider()
-    {
+    
+    public function firstWordProvider(): array {
         return [
             ['Foo Bar', 'Foo'],
             ['Foo,Bar', 'Foo'],
@@ -108,28 +99,25 @@ class ExcellentHandlerTest extends TestCase
             ['Foo...bar!', 'Foo'],
         ];
     }
-
-    public function wordProvider()
-    {
+    
+    public function wordProvider(): array {
         return [
             ['hello cow-boy', 2, false, 'cow'],
             ['hello cow-boy', 2, true, 'cow-boy'],
             ['hello cow-boy', -1, false, 'boy'],
         ];
     }
-
-    public function wordSliceProvider()
-    {
+    
+    public function wordSliceProvider(): array {
         return [
             ['RapidPro expressions are fun', 2, 4, null, 'expressions are'],
             ['RapidPro expressions are fun', 2, null, null, 'expressions are fun'],
             ['RapidPro expressions are fun', 1, -2, null, 'RapidPro expressions'],
-            ['RapidPro expressions are fun', -1, 2, null, 'fun']
+            ['RapidPro expressions are fun', -1, 2, null, 'fun'],
         ];
     }
-
-    public function isNumberProvider()
-    {
+    
+    public function isNumberProvider(): array {
         return [
             [0, true],
             [-1, true],
@@ -139,12 +127,11 @@ class ExcellentHandlerTest extends TestCase
             ['100', true],
             [true, false],
             ['string', false],
-            ['TRUE', false]
+            ['TRUE', false],
         ];
     }
-
-    public function isStringProvider()
-    {
+    
+    public function isStringProvider(): array {
         return [
             ['yes', true],
             ['', true],
@@ -154,21 +141,20 @@ class ExcellentHandlerTest extends TestCase
             ['0', false],
             ['1', false],
             ['-1', false],
-            [true, false]
+            [true, false],
         ];
     }
-
-    public function isBoolProvider()
-    {
+    
+    public function isBoolProvider(): array {
         $n1 = new Node([]);
         $n1->setValue(true);
-
+        
         $n2 = new Node([]);
         $n2->setValue(false);
-
+        
         $n3 = new Node([]);
         $n3->setValue('foo');
-
+        
         $n4 = new Node([]);
         $n4->setValue(4);
 

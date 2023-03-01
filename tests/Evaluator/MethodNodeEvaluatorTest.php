@@ -2,6 +2,8 @@
 
 namespace Viamo\Floip\Tests\Evaluator;
 
+use Mockery;
+use Mockery\MockInterface;
 use Viamo\Floip\Tests\TestCase;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract\EvaluatesMethods;
@@ -11,15 +13,15 @@ use Viamo\Floip\Evaluator\Node;
 class MethodNodeEvaluatorTest extends TestCase
 {
     /** @var MethodNodeEvaluator */
-    private $evaluator;
+    private MethodNodeEvaluator $evaluator;
 
-    /** @var \Mockery\MockInterface */
-    private $handler;
+    /** @var MockInterface */
+    private Mockery\LegacyMockInterface|EvaluatesMethods|MockInterface $handler;
 
     public function setUp(): void
     {
         $this->evaluator = new MethodNodeEvaluator;
-        $this->handler = \Mockery::mock(EvaluatesMethods::class);
+        $this->handler = Mockery::mock(EvaluatesMethods::class);
         $this->handler->shouldReceive('handles')->andReturn(['foo']);
         parent::setUp();
     }

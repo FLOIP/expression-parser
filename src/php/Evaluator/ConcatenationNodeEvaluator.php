@@ -2,15 +2,12 @@
 
 namespace Viamo\Floip\Evaluator;
 
-use Viamo\Floip\Evaluator\Node;
 use Viamo\Floip\Contract\ParsesFloip;
-use Viamo\Floip\Evaluator\AbstractNodeEvaluator;
 use Viamo\Floip\Evaluator\Exception\NodeEvaluatorException;
 
 class ConcatenationNodeEvaluator extends AbstractNodeEvaluator
 {
-    public function evaluate(Node $node, $context)
-    {
+    public function evaluate(Node $node, $context): mixed {
         if (!isset($node['rhs'], $node['lhs'])) {
             throw new NodeEvaluatorException('Concatenation node is the wrong shape, should have "rhs", "lhs"');
         }
@@ -28,8 +25,7 @@ class ConcatenationNodeEvaluator extends AbstractNodeEvaluator
         return $thing;
     }
 
-    public function handles()
-    {
+    public function handles(): string {
         return ParsesFloip::CONCATENATION_TYPE;
     }
 }

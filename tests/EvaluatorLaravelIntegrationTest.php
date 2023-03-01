@@ -8,8 +8,7 @@ use Viamo\Floip\Providers\ExpressionEvaluatorServiceProvider;
 
 class EvaluatorLaravelIntegrationTest extends TestCase
 {
-    protected function getPackageProviders($app)
-    {
+    protected function getPackageProviders($app): array {
         return [ExpressionEvaluatorServiceProvider::class];
     }
 
@@ -23,8 +22,7 @@ class EvaluatorLaravelIntegrationTest extends TestCase
         $this->assertEquals($expected, $evaluator->evaluate($string, $context));
     }
 
-    public function expressionProvider()
-    {
+    public function expressionProvider(): array {
         return [
             [
                 'Hello John Smith, 2 = 2, 3, TRUE, @world',

@@ -9,7 +9,7 @@ use Viamo\Floip\Evaluator\Node;
 class LogicNodeEvaluatorTest extends TestCase
 {
     /** @var LogicNodeEvaluator */
-    private $evaluator;
+    private LogicNodeEvaluator $evaluator;
 
     public function setUp(): void
     {
@@ -20,15 +20,13 @@ class LogicNodeEvaluatorTest extends TestCase
     /**
      * @dataProvider logicProvider
      */
-    public function testLogicalOperations(array $node, $expected)
-    {
+    public function testLogicalOperations(array $node, $expected): void {
         $result = $this->evaluator->evaluate(new Node($node), []);
 
         $this->assertEquals($expected, $result);
     }
 
-    public function logicProvider()
-    {
+    public function logicProvider(): array {
         $tn = new Node([]);
         $tn->setValue(3);
         return [

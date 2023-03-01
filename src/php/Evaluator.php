@@ -3,22 +3,21 @@
 namespace Viamo\Floip;
 
 use ArrayAccess;
-use Viamo\Floip\Contract\ParsesFloip;
+use RecursiveIteratorIterator;
 use Viamo\Floip\Contract\EvaluatesExpression;
+use Viamo\Floip\Contract\ParsesFloip;
+use Viamo\Floip\Evaluator\Exception\EvaluatorException;
 use Viamo\Floip\Evaluator\Node;
 use Viamo\Floip\Evaluator\RecursiveNodeIterator;
-use Viamo\Floip\Evaluator\Exception\EvaluatorException;
+use function is_array;
 
 class Evaluator
 {
-    /** @var ParsesFloip */
-    protected $parser;
-    /** @var array */
-    protected $evaluators = [];
+    protected array $evaluators = [];
 
-    public function __construct(ParsesFloip $parser)
-    {
-        $this->parser = $parser;
+    public function __construct(
+        protected ParsesFloip $parser
+    ) {
     }
 
     private function mapNodes($item)
@@ -38,12 +37,11 @@ class Evaluator
      *
      * @param string $expression Expression to evaluate
      * @param array|ArrayAccess $context The expression context
+     *
      * @throws EvaluatorException
      * @see Evaluator::addNodeEvaluator
-     * @return string
      */
-    public function evaluate($expression, $context)
-    {
+    public function evaluate(string $expression, array|ArrayAccess $context): string {
         // check that our context is array accessable
         $this->validateContextOrThrow($context);
 
@@ -65,12 +63,10 @@ class Evaluator
     }
 
     /**
-     * @param mixed $context
      * @throws EvaluatorException
-     * @return void
      */
-    private function validateContextOrThrow($context) {
-        if (\is_array($context)) {
+    private function validateContextOrThrow(mixed $context): void {
+        if (is_array($context)) {
             return;
         }
         if ($context instanceof ArrayAccess) {
@@ -80,45 +76,30 @@ class Evaluator
     }
 
     /**
-     * @param EvaluatesExpression $evaluator
-     * @see Floip\Contact\ParsesFloip for node types
-     * @return Evaluator
+     * @see ParsesFloip for node types
      */
-    public function addNodeEvaluator(EvaluatesExpression $evaluator)
-    {
+    public function addNodeEvaluator(EvaluatesExpression $evaluator): Evaluator {
         $type = $evaluator->handles();
         $this->evaluators[$type] = $evaluator;
         return $this;
     }
 
-    /**
-     * @param string $type
-     * @return EvaluatesExpression
-     */
-    public function getNodeEvaluator($type)
-    {
+    public function getNodeEvaluator(string $type): EvaluatesExpression {
         if (isset($this->evaluators[$type])) {
             return $this->evaluators[$type];
         }
         throw new EvaluatorException("Unknown node type: $type");
     }
 
-    /**
-     * @param Node $node
-     * @param array|ArrayAccess $context The expression context
-     * @return mixed
-     */
-    private function evalNode(Node $node, $context)
-    {
+    private function evalNode(Node $node, array|ArrayAccess $expressionContext): mixed {
         return $this->getNodeEvaluator($node['type'])
-            ->evaluate($node, $context);
+            ->evaluate($node, $expressionContext);
     }
 
-    private function getIterator(array $ast)
-    {
+    private function getIterator(array $ast): RecursiveIteratorIterator {
         // we want to recurse over the tree depth-first, starting with the
         // deepest nodes
         $arrayIterator = new RecursiveNodeIterator($ast);
-        return new \RecursiveIteratorIterator($arrayIterator, \RecursiveIteratorIterator::CHILD_FIRST);
+        return new RecursiveIteratorIterator($arrayIterator, RecursiveIteratorIterator::CHILD_FIRST);
     }
 }

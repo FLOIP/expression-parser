@@ -2,7 +2,9 @@
 
 namespace Viamo\Floip\Evaluator\Exception;
 
-class EvaluatorException extends \RuntimeException
+use RuntimeException;
+
+class EvaluatorException extends RuntimeException
 {
     //
 }

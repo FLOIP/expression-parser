@@ -27,25 +27,25 @@ use Viamo\Floip\Evaluator\NullNodeEvaluator;
 class EvaluatorIntegrationTest extends TestCase
 {
     /** @var Evaluator */
-    protected $evaluator;
+    protected Evaluator $evaluator;
     /** @var Parser */
-    protected $parser;
+    protected Parser $parser;
     /** @var MethodNodeEvaluator */
-    protected $MethodNodeEvaluator;
+    protected MethodNodeEvaluator $MethodNodeEvaluator;
     /** @var EvaluatesExpression */
-    protected $MemberNodeEvaluator;
+    protected EvaluatesExpression|MemberNodeEvaluator $MemberNodeEvaluator;
     /** @var EvaluatesExpression */
-    protected $LogicNodeEvaluator;
+    protected EvaluatesExpression|LogicNodeEvaluator $LogicNodeEvaluator;
     /** @var MathNodeEvaluator */
-    protected $mathNodeEvaluator;
+    protected MathNodeEvaluator $mathNodeEvaluator;
     /** @var EvaluatesExpression */
-    protected $escapeNodeEvaluator;
+    protected EvaluatesExpression|EscapeNodeEvaluator $escapeNodeEvaluator;
     /** @var EvaluatesExpression */
-    protected $concatenationNodeEvaluator;
+    protected ConcatenationNodeEvaluator|EvaluatesExpression $concatenationNodeEvaluator;
     /** @var EvaluatesExpression */
-    protected $nullNodeHandler;
+    protected EvaluatesExpression|NullNodeEvaluator $nullNodeHandler;
     /** @var EvaluatesExpression */
-    protected $boolNodeEvaluator;
+    protected BoolNodeEvaluator|EvaluatesExpression $boolNodeEvaluator;
 
     public function setUp(): void
     {
@@ -344,7 +344,7 @@ class EvaluatorIntegrationTest extends TestCase
         $this->assertEquals($expected, $this->evaluator->evaluate($expression, $context));
     }
 
-    public function boolLogicProvider() {
+    public function boolLogicProvider(): array {
         return [
             0 => [
                 '@(block.value = null)',
@@ -364,7 +364,7 @@ class EvaluatorIntegrationTest extends TestCase
         ];
     }
 
-    public function arrayFunctionProvider() {
+    public function arrayFunctionProvider(): array {
         return [
             'array to string' => [
                 '@(array("foo", "bar", "baz"))',
@@ -433,8 +433,7 @@ class EvaluatorIntegrationTest extends TestCase
         ];
     }
 
-    public function nullExpressionProvider()
-    {
+    public function nullExpressionProvider(): array {
         return [
             [
                 '@(contact.name = NULL)',
@@ -454,8 +453,7 @@ class EvaluatorIntegrationTest extends TestCase
         ];
     }
 
-    public function concatenationExpressionProvider()
-    {
+    public function concatenationExpressionProvider(): array {
         return [
             'simple case' => ['@("Hello " & "World")', [], 'Hello World'],
             'multiple' => ['@("One" & " " & "Two")', [], 'One Two'],
@@ -466,16 +464,14 @@ class EvaluatorIntegrationTest extends TestCase
         ];
     }
 
-    public function escapedExpressionProvider()
-    {
+    public function escapedExpressionProvider(): array {
         return [
             ['Follow us @@twitterHandle', [], 'Follow us @twitterHandle'],
             ['Email us @@ contact@@example.com', [], 'Email us @ contact@example.com'],
         ];
     }
 
-    public function mathExpressionProvider()
-    {
+    public function mathExpressionProvider(): array {
         return [
             'simple case' => [
                 '2 + 2 is @(2 + 2)', [], '2 + 2 is 4'
@@ -506,8 +502,7 @@ class EvaluatorIntegrationTest extends TestCase
         ];
     }
 
-    public function mathFnProvider()
-    {
+    public function mathFnProvider(): array {
         return [
             ['@(abs(-6))', '6'],
             ['@(max(6, 19, 7))', '19'],
@@ -517,8 +512,7 @@ class EvaluatorIntegrationTest extends TestCase
         ];
     }
 
-    public function logicProvider()
-    {
+    public function logicProvider(): array {
         return [
             ['@(and(contact.gender = "f", contact.age >= 10))', [
                 'contact' => [
@@ -531,8 +525,7 @@ class EvaluatorIntegrationTest extends TestCase
         ];
     }
 
-    public function textMethodsProvider()
-    {
+    public function textMethodsProvider(): array {
         return [
             'char' => ['As easy as @(CHAR(65)), @(CHAR(66)), @(CHAR(67))', [], 'As easy as A, B, C'],
             'clean' => ['You entered @(CLEAN(step.value))', [
@@ -583,8 +576,7 @@ class EvaluatorIntegrationTest extends TestCase
         ];
     }
 
-    public function flowProvider()
-    {
+    public function flowProvider(): array {
         $now = Carbon::parse("2020-02-07 12:00:00");
         Carbon::setTestNow($now);
         return [
@@ -731,8 +723,7 @@ class EvaluatorIntegrationTest extends TestCase
         ];
     }
 
-    public function isXXXProvider()
-    {
+    public function isXXXProvider(): array {
         return [
             'is number true' => [
                 '@(isnumber(val.num))',
@@ -792,7 +783,7 @@ class EvaluatorIntegrationTest extends TestCase
         ];
     }
 
-    public function emailsProvider() {
+    public function emailsProvider(): array {
         return [
             [
                 'Contact us at foo@example.com',
@@ -812,8 +803,7 @@ class EvaluatorIntegrationTest extends TestCase
         ];
     }
 
-    public function dateStringProvider()
-    {
+    public function dateStringProvider(): array {
         $now = Carbon::parse("2020-02-07 00:00:00");
         Carbon::setTestNow($now);
         return [

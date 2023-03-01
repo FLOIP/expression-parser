@@ -2,48 +2,41 @@
 
 namespace Viamo\Floip\Evaluator\MethodNodeEvaluator;
 
+use Stringable;
 use Viamo\Floip\Evaluator\Exception\MethodNodeException;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract\TestResult as TestResultInterface;
 
-class TestResult implements TestResultInterface
+class TestResult implements TestResultInterface, Stringable
 {
-    /** @var mixed $value */
-    private $value;
-
-    /** @var mixed $match */
-    private $match;
-
-    public function __construct($value = false, $match = null) {
-        $this->value = $value;
-        $this->match = $match;
+    public function __construct(
+        private mixed $value = false,
+        private mixed $match = null
+    ) {
     }
 
-    public function chain($method) {
-        switch ($method) {
-            case 'value':
-                return $this->getValue();
-            case 'match':
-                return $this->getMatch();
-            default:
-                throw new MethodNodeException("Unknown chain method $method on TestResult");
-        }
+    public function chain($method): string {
+        return match ($method) {
+            'value' => $this->getValue(),
+            'match' => $this->getMatch(),
+            default => throw new MethodNodeException("Unknown chain method $method on TestResult"),
+        };
     }
     
-    public function getMatch() {
+    public function getMatch(): string {
         return (string) $this->match;
     }
 
-    public function getValue() {
+    public function getValue(): string {
         if ($this->value === true) {
             return 'TRUE';
-        } elseif ($this->value === false) {
+        } else if ($this->value === false) {
             return 'FALSE';
         } else {
             return (string) $this->value;
         }
     }
 
-    public function __toString() {
+    public function __toString(): string {
         return $this->getValue();
     }
 }
