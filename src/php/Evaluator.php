@@ -4,6 +4,8 @@ namespace Viamo\Floip;
 
 use ArrayAccess;
 use RecursiveIteratorIterator;
+use Throwable;
+use TypeError;
 use Viamo\Floip\Contract\EvaluatesExpression;
 use Viamo\Floip\Contract\ParsesFloip;
 use Viamo\Floip\Evaluator\Exception\EvaluatorException;
@@ -53,9 +55,14 @@ class Evaluator
         // since some nodes will have others as arguments
         $it = $this->getIterator($nodes);
         foreach ($it as $node) {
-            if ($node instanceof Node) {
-                $value = $this->evalNode($node, $context);
-                $node->setValue($value);
+            try {
+                if ($node instanceof Node) {
+                    $value = $this->evalNode($node, $context);
+                    $node->setValue($value);
+                }
+            } catch (Throwable $e) {
+                $jsonNode = \json_encode($node);
+                throw new EvaluatorException("Error in expression \"$expression\" at node $jsonNode", 0, $e);
             }
         }
 
