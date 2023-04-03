@@ -4,11 +4,12 @@ namespace Viamo\Floip\Evaluator;
 
 use ArrayAccess;
 use Exception;
+use JsonSerializable;
 use Stringable;
 use function implode;
 use function is_array;
 
-class Node implements ArrayAccess, Stringable {
+class Node implements ArrayAccess, Stringable, JsonSerializable {
 
     private array $data = [];
 
@@ -19,6 +20,10 @@ class Node implements ArrayAccess, Stringable {
     public function __construct($data)
     {
         $this->data = array_map([$this, 'transformData'], $data);
+    }
+
+    public function jsonSerialize(): mixed {
+        return $this->data;
     }
 
     /**

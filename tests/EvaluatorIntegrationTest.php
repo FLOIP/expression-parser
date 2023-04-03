@@ -17,6 +17,7 @@ use Viamo\Floip\Evaluator\MethodNodeEvaluator;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\Math;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\Text;
 use Viamo\Floip\Evaluator\ConcatenationNodeEvaluator;
+use Viamo\Floip\Evaluator\Exception\EvaluatorException;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\ArrayHandler;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\Logical;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\DateTime;
@@ -342,6 +343,15 @@ class EvaluatorIntegrationTest extends TestCase
         $expected   = '42 42 420 420';
 
         $this->assertEquals($expected, $this->evaluator->evaluate($expression, $context));
+    }
+
+    public function testWillThrowMeaningfulErrors() {
+        $context = ['bar' => ['a', 'b']];
+        $expression = "@contains('foo', bar)";
+
+        $this->expectException(EvaluatorException::class);
+        $this->expectExceptionMessageMatches("/@contains\('foo', bar\)/");
+        $this->evaluator->evaluate($expression, $context);
     }
 
     public function boolLogicProvider(): array {
