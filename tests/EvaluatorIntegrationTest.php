@@ -354,6 +354,17 @@ class EvaluatorIntegrationTest extends TestCase
         $this->evaluator->evaluate($expression, $context);
     }
 
+    public function testCastsMatchTestResultsForLogicMethods(): void {
+        $context = [];
+        $this->MethodNodeEvaluator->addHandler(new MatchTest);
+        $this->MethodNodeEvaluator->addHandler(new Text);
+        $this->MethodNodeEvaluator->addHandler(new Excellent);
+        $this->MethodNodeEvaluator->addHandler(new Logical);
+        $expression = "@OR(len('Soupe') <2, len('Soupe') >34, word_count('Soupe') >1, has_number('Soupe'))";
+        $result = $this->evaluator->evaluate($expression, $context);
+        $this->assertEquals('FALSE', $result);
+    }
+
     public function boolLogicProvider(): array {
         return [
             0 => [
