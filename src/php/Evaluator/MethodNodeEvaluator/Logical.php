@@ -2,9 +2,9 @@
 
 namespace Viamo\Floip\Evaluator\MethodNodeEvaluator;
 
+use Stringable;
 use Viamo\Floip\Evaluator\Exception\MethodNodeException;
 use Viamo\Floip\Evaluator\MethodNodeEvaluator\Contract\Logical as LogicalInterface;
-use Viamo\Floip\Evaluator\Node;
 use function array_map;
 use function func_get_args;
 use function func_num_args;
@@ -37,8 +37,8 @@ class Logical extends AbstractMethodHandler implements LogicalInterface
 
     protected function value($thing)
     {
-        if ($thing instanceof Node) {
-            $thing = $thing->getValue();
+        if ($thing instanceof Stringable) {
+            $thing = (string)$thing;
             if (is_string($thing)) {
                 switch (strtoupper($thing)) {
                     case 'TRUE':
