@@ -1,13 +1,13 @@
-PEGJS_TAG="node:8-alpine"
+PEGGY_TAG="node:20-alpine"
 PHP_80="floip-php:8.0-alpine"
 PHP_81="floip-php:8.1-alpine"
 DOCKER_RUN=docker run $(DOCKER_OPTS) -v `pwd`:/src -u `id -u` -w '/src' -e COMPOSER_HOME=.composer
-PEGJS=$(DOCKER_RUN) $(PEGJS_TAG) npx pegjs
+PEGGY=$(DOCKER_RUN) $(PEGGY_TAG) npx peggy
 PARSER_NAME=Parser
 PARSER_SOURCE=src/pegjs/floip.pegjs
 PARSER_CLASS=BaseExpressionParser
 PHP_OUT=dist/$(PARSER_CLASS).php
-PHPEGJS_OPTIONS={"cache" : "true", "phpegjs":{"parserNamespace": "Viamo", "parserClassName": "$(PARSER_CLASS)"}}
+PHPEGGY_OPTIONS={"cache" : "true", "phpeggy":{"parserNamespace": "Viamo", "parserClassName": "$(PARSER_CLASS)"}}
 TSPEGJS_OPTIONS={"cache" : "true", "tspegjs":{}}
 JS_OUT=dist/$(PARSER_NAME).js
 TS_OUT=src/ts/$(PARSER_NAME).ts
@@ -31,24 +31,24 @@ default: parsers
 
 node_modules: package.json
 ifeq ($(USE_DOCKER),true)
-	docker run --rm -v `pwd`:`pwd` -w `pwd` -u `id -u` $(PEGJS_TAG) npm install
+	docker run --rm -v `pwd`:`pwd` -w `pwd` -u `id -u` $(PEGGY_TAG) npm install
 else
 	npm install
 endif
 
 $(PHP_OUT): node_modules $(PARSER_SOURCE)
 ifeq ($(USE_DOCKER),true)
-	$(PEGJS) --plugin phpegjs -o $(PHP_OUT) --extra-options '$(PHPEGJS_OPTIONS)' $(PARSER_SOURCE)
+	$(PEGGY) --plugin phpeggy -o $(PHP_OUT) --extra-options '$(PHPEGGY_OPTIONS)' $(PARSER_SOURCE)
 else
-	npx pegjs --plugin phpegjs -o $(PHP_OUT) --extra-options '$(PHPEGJS_OPTIONS)' $(PARSER_SOURCE)
+	npx peggy --plugin phpeggy -o $(PHP_OUT) --extra-options '$(PHPEGGY_OPTIONS)' $(PARSER_SOURCE)
 endif
 
 $(TS_OUT): node_modules $(PARSER_SOURCE)
 ifeq ($(USE_DOCKER),true)
-	$(PEGJS) --plugin ts-pegjs -o $(TS_OUT) --extra-options '$(TSPEGJS_OPTIONS)' $(PARSER_SOURCE)
-	$(DOCKER_RUN) $(PEGJS_TAG) npm run build
+	$(PEGGY) --plugin ts-pegjs -o $(TS_OUT) --extra-options '$(TSPEGJS_OPTIONS)' $(PARSER_SOURCE)
+	$(DOCKER_RUN) $(PEGGY_TAG) npm run build
 else
-	npx pegjs --plugin ts-pegjs -o $(TS_OUT) --extra-options '$(TSPEGJS_OPTIONS)' $(PARSER_SOURCE)
+	npx peggy --plugin ts-pegjs -o $(TS_OUT) --extra-options '$(TSPEGJS_OPTIONS)' $(PARSER_SOURCE)
 	npm run build
 endif
 

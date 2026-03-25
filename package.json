@@ -13,11 +13,10 @@
   "author": "Kyle Seifert",
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "^12.7.4",
-    "pegjs": "^0.10.0",
-    "phpegjs": "^1.0.0-beta7",
-    "ts-pegjs": "^0.2.6",
-    "tsc": "^1.20150623.0",
-    "typescript": "^3.6.2"
+    "@types/node": "^20.0.0",
+    "peggy": "^3.0.2",
+    "phpeggy": "^2.0.1",
+    "ts-pegjs": "^4.2.1",
+    "typescript": "^5.0.0"
   }
 }
