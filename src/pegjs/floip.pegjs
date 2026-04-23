@@ -12,6 +12,18 @@
     }
   }
   /** <?php
+  private \Closure $_member;
+  private \Closure $_method;
+  private \Closure $_math;
+  private \Closure $_logic;
+  private \Closure $_escape;
+  private \Closure $_concatenate;
+  private \Closure $_null;
+  private \Closure $_bool;
+  private \Closure $_location;
+  private \Closure $_text;
+
+  public function initialize() {
   $this->_member = function($key) {
     return [
       'type' => 'MEMBER',
@@ -161,13 +173,13 @@
       return [
         'start' => [
           'offset' => $offset_start,
-          'line' => $compute_pd_start['line'],
-          'column' => $compute_pd_start['column'],
+          'line' => $compute_pd_start->line,
+          'column' => $compute_pd_start->column,
         ],
         'end' => [
           'offset' => $offset_end,
-          'line' => $compute_pd_end['line'],
-          'column' => $compute_pd_end['column'],
+          'line' => $compute_pd_end->line,
+          'column' => $compute_pd_end->column,
         ]
       ];
     };
@@ -179,6 +191,7 @@
       return substr(implode($this->input), $this->peg_reportedPos, $this->peg_currPos - $this->peg_reportedPos);
     };
     $this->_text = $_text->bindTo($this);
+  } // end initialize()
   ?> **/
 }
 
@@ -229,7 +242,7 @@ Expression_Types = Escaped_Identifier / Logic / Math / Concatenation / Function 
  * Function looks like @(SOME_METHOD(argument, argument...))
  * Functions always wrap their arguments in parens.
  */
-Function = call:$valid_expression_characters* OpenParen args:( Function_Args* ) CloseParen chain:Chain_Function* {
+Function = call:$valid_expression_characters+ OpenParen args:( Function_Args* ) CloseParen chain:Chain_Function* {
   return method(call, args, chain, location())
   /** <?php
     return call_user_func_array($this->_method, [$call, $args, $chain]);
