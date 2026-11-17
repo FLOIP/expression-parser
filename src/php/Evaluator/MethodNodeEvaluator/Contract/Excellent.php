@@ -38,6 +38,15 @@ interface Excellent extends EvaluatesMethods
     public function word(string $string, int $number, ?bool $bySpaces = null): string;
 
     /**
+     * Extracts the field at the given 1-based index from text, split on the
+     * given delimiter string (default ","). Negative indices count from the
+     * end. Each field is trimmed of surrounding whitespace, so "a, b" and
+     * "a,b" split the same way. An index out of range (including 0) or an
+     * empty text returns an empty string.
+     */
+    public function field(string $string, int $index, string $delimiter = ","): string;
+
+    /**
      * Returns the number of words in the given text string. If by_spaces is
      * specified and is TRUE then the functionsplits the text into words only
      * by spaces. Otherwise the text is split by punctuation characters as well

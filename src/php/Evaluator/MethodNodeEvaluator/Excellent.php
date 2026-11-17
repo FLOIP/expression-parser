@@ -59,6 +59,32 @@ class Excellent extends AbstractMethodHandler implements ExcellentInterface
         return $split[--$number];
     }
 
+    public function field(string $string, int $index, string $delimiter = ","): string {
+        // Empty text has no fields to pull out.
+        if ($string === '') {
+            return '';
+        }
+
+        // No delimiter means the whole text is the only field.
+        $fields = $delimiter === ''
+            ? [$string]
+            : explode($delimiter, $string);
+
+        // Trim each field, so text joined with ", " or "," splits the same way on the default ",".
+        $fields = array_map('trim', $fields);
+
+        if ($index < 0) {
+            $index += count($fields) + 1;
+        }
+
+        // 1 indexed; anything out of range (including 0) is an empty string, never an error.
+        if ($index < 1 || $index > count($fields)) {
+            return '';
+        }
+
+        return $fields[$index - 1];
+    }
+
     public function wordCount(string $string, bool $bySpaces = null): int {
         if ($bySpaces) {
             return count(explode(' ', $string));

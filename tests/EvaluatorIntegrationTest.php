@@ -265,6 +265,17 @@ class EvaluatorIntegrationTest extends TestCase
     }
 
     /**
+     * @dataProvider fieldProvider
+     */
+    public function testEvaluatesField($expression, array $context, $expected)
+    {
+        $this->MethodNodeEvaluator->addHandler(new Excellent);
+        $result = $this->evaluator->evaluate($expression, $context);
+
+        $this->assertEquals($expected, $result);
+    }
+
+    /**
      * @dataProvider  isXXXProvider
      */
     public function testIsXXXFunctions($expression, array $context, $expected)
@@ -801,6 +812,37 @@ class EvaluatorIntegrationTest extends TestCase
                 [],
                 'TRUE'
             ]
+        ];
+    }
+
+    public function fieldProvider(): array
+    {
+        return [
+            'pulls a level out of a stored location, uppercase function name' => [
+                '@FIELD(contact.location, 2, ",")',
+                ['contact' => ['location' => 'Umujyi wa Kigali, Gasabo, Kimironko']],
+                'Gasabo',
+            ],
+            'extracts the multi-word broadest level' => [
+                '@FIELD(contact.location, 1, ",")',
+                ['contact' => ['location' => 'Umujyi wa Kigali, Gasabo, Kimironko']],
+                'Umujyi wa Kigali',
+            ],
+            'negative index from the full evaluator' => [
+                '@FIELD(contact.location, -1, ",")',
+                ['contact' => ['location' => 'Umujyi wa Kigali, Gasabo, Kimironko']],
+                'Kimironko',
+            ],
+            'default delimiter is a comma' => [
+                '@FIELD(contact.location, 2)',
+                ['contact' => ['location' => 'Umujyi wa Kigali,Gasabo,Kimironko']],
+                'Gasabo',
+            ],
+            'out of range yields empty string' => [
+                '@FIELD(contact.location, 9, ",")',
+                ['contact' => ['location' => 'Umujyi wa Kigali, Gasabo']],
+                '',
+            ],
         ];
     }
 

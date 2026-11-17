@@ -47,6 +47,21 @@ class ExcellentHandlerTest extends TestCase
     }
 
     /**
+     * @dataProvider fieldProvider
+     */
+    public function testField($string, $index, $delimiter, $expected): void {
+        $this->assertEquals($expected, $this->excellent->field($string, $index, $delimiter));
+    }
+
+    /**
+     * The default delimiter is a bare comma; trimming covers ", " too.
+     */
+    public function testFieldDefaultsToComma(): void {
+        $this->assertEquals('Gasabo', $this->excellent->field('Umujyi wa Kigali, Gasabo, Kimironko', 2));
+        $this->assertEquals('Gasabo', $this->excellent->field('Umujyi wa Kigali,Gasabo,Kimironko', 2));
+    }
+
+    /**
      * @dataProvider isNumberProvider
      */
     public function testIsNumber($value, $expected): void {
@@ -108,6 +123,32 @@ class ExcellentHandlerTest extends TestCase
         ];
     }
     
+    public function fieldProvider(): array {
+        return [
+            // 1-based index pulls the chosen level out of a stored location.
+            'first field' => ['Umujyi wa Kigali, Gasabo, Kimironko', 1, ',', 'Umujyi wa Kigali'],
+            'middle field' => ['Umujyi wa Kigali, Gasabo, Kimironko', 2, ',', 'Gasabo'],
+            'last field by positive index' => ['Umujyi wa Kigali, Gasabo, Kimironko', 3, ',', 'Kimironko'],
+            // Negative index counts from the end, like WORD.
+            'negative one is the last field' => ['Umujyi wa Kigali, Gasabo, Kimironko', -1, ',', 'Kimironko'],
+            'negative two counts from the end' => ['Umujyi wa Kigali, Gasabo, Kimironko', -2, ',', 'Gasabo'],
+            // Out of range (including 0) is an empty string, never an error.
+            'zero is out of range' => ['Umujyi wa Kigali, Gasabo, Kimironko', 0, ',', ''],
+            'past the end is out of range' => ['Umujyi wa Kigali, Gasabo, Kimironko', 9, ',', ''],
+            'before the start is out of range' => ['Umujyi wa Kigali, Gasabo, Kimironko', -9, ',', ''],
+            // Trimming makes text joined with ", " or "," split the same way.
+            'trims whitespace around each field' => ['Kigali , Gasabo , Kimironko', 2, ',', 'Gasabo'],
+            // Empty delimiter: the whole text is the only field.
+            'empty delimiter, index one' => ['Umujyi wa Kigali', 1, '', 'Umujyi wa Kigali'],
+            'empty delimiter, negative one' => ['Umujyi wa Kigali', -1, '', 'Umujyi wa Kigali'],
+            'empty delimiter, out of range' => ['Umujyi wa Kigali', 2, '', ''],
+            // Edge cases.
+            'empty text' => ['', 1, ',', ''],
+            'single field, index one' => ['Gasabo', 1, ',', 'Gasabo'],
+            'single field, negative index' => ['Gasabo', -1, ',', 'Gasabo'],
+        ];
+    }
+
     public function wordSliceProvider(): array {
         return [
             ['RapidPro expressions are fun', 2, 4, null, 'expressions are'],
